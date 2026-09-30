@@ -1,0 +1,547 @@
+{
+  "@@locale": "sw",
+  "appTitle": "CHIMBO",
+  "@appTitle": {
+    "description": "App name shown in the task switcher."
+  },
+  "navHome": "Nyumbani",
+  "navDiscover": "Gundua",
+  "navCart": "Kikapu",
+  "navOrders": "Oda",
+  "navProfile": "Wasifu",
+  "comingSoonTitle": "Inakuja hivi karibuni",
+  "comingSoonMessage": "Sehemu hii itakuwa tayari hivi punde.",
+  "actionContinue": "Endelea",
+  "actionAddToCart": "Ongeza Kikapuni",
+  "actionRetry": "Jaribu tena",
+  "phoneLabel": "Namba ya simu",
+  "phoneHint": "7XX XXX XXX",
+  "priceFrom": "kuanzia {price}",
+  "@priceFrom": {
+    "description": "Lowest tier price on a product card, e.g. 'kuanzia TZS 4,400'.",
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "TZS 4,400"
+      }
+    }
+  },
+  "verifiedBusiness": "Imethibitishwa",
+  "errorNetwork": "Hakuna mtandao. Angalia intaneti yako kisha ujaribu tena.",
+  "errorTimeout": "Mtandao uko polepole. Tafadhali jaribu tena.",
+  "errorUnknown": "Kuna tatizo limetokea. Tafadhali jaribu tena.",
+  "debugOpenTools": "Zana za wasanidi",
+  "debugTitle": "Zana za wasanidi",
+  "debugServerSection": "Seva",
+  "debugApiAddress": "Anwani ya API",
+  "debugServerStatus": "Hali ya seva",
+  "debugDatabaseStatus": "Hifadhidata",
+  "debugApiVersion": "Toleo la API",
+  "debugServerTime": "Muda wa seva",
+  "debugStatusOk": "Iko sawa",
+  "debugStatusProblem": "Ina tatizo",
+  "debugUiKitSection": "Vipengele vya muonekano",
+  "brandTaglineQuality": "BIDHAA BORA",
+  "brandTaglinePrice": "BEI NAFUU",
+  "brandTaglineBusiness": "BIASHARA IMARA",
+  "sloganOrder": "Agiza.",
+  "sloganTrust": "Amini.",
+  "sloganReceive": "Pokea.",
+  "sloganGrow": "Kuza Biashara.",
+  "categoryJewelry": "Jewelry",
+  "categoryCosmetics": "Cosmetics",
+  "actionGetStarted": "Anza Sasa",
+  "onboardingProductsTitle": "Bidhaa za Biashara Yako",
+  "onboardingProductsSubtitle": "Jewelry na Cosmetics — zote sehemu moja.",
+  "onboardingWholesaleTitle": "Bei za Jumla Zinazokulipa",
+  "onboardingWholesaleSubtitle": "Nunua zaidi. Okoa zaidi. Pata faida zaidi.",
+  "onboardingSaveMore": "OKOA ZAIDI",
+  "onboardingDeliveryTitle": "Agiza kwa Urahisi. Pokea Haraka.",
+  "onboardingStepChoose": "Chagua",
+  "onboardingStepPay": "Lipa",
+  "onboardingStepReceive": "Pokea",
+  "onboardingDeliveryPromise": "Tunafikisha oda yako salama na kwa wakati.",
+  "onboardingPageIndicator": "Ukurasa {current} kati ya {total}",
+  "@onboardingPageIndicator": {
+    "description": "Screen-reader label for the slide dots.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "stepProgress": "Hatua {current} kati ya {total}",
+  "@stepProgress": {
+    "description": "Progress label above a multi-step form.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "actionBack": "Rudi",
+  "actionLogout": "Toka",
+  "optionalField": "Si lazima",
+  "phoneTitle": "Karibu CHIMBO",
+  "phoneSubtitle": "Anza kwa namba yako ya simu.",
+  "phoneHelper": "Tutaitumia kuthibitisha akaunti na kukufikishia oda.",
+  "phoneInvalid": "Weka namba sahihi ya simu, mfano 712 345 678.",
+  "termsNoticeStart": "Kwa kuendelea, unakubali",
+  "termsLink": "Masharti",
+  "termsNoticeAnd": "na",
+  "privacyLink": "Sera ya Faragha",
+  "otpTitle": "Thibitisha Namba",
+  "otpSentTo": "Tumeweka namba ya uthibitisho kwenye",
+  "otpFieldLabel": "Namba ya uthibitisho ya tarakimu {length}",
+  "@otpFieldLabel": {
+    "description": "Screen-reader label for the code boxes.",
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "actionVerify": "Thibitisha",
+  "otpNotReceived": "Hukupokea namba?",
+  "otpResend": "Tuma tena",
+  "otpResendIn": "Tuma tena baada ya {seconds}s",
+  "@otpResendIn": {
+    "description": "Resend link while the wait timer runs.",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "otpResent": "Tumetuma namba mpya ya uthibitisho.",
+  "otpChangeNumber": "Badilisha namba",
+  "otpIncomplete": "Weka tarakimu zote {length}.",
+  "@otpIncomplete": {
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "otpInvalid": "Namba ya uthibitisho si sahihi. Jaribu tena.",
+  "businessTitle": "Tuambie Kuhusu Biashara Yako",
+  "businessSubtitle": "Taarifa chache tu, kisha unaanza.",
+  "fullNameLabel": "Jina kamili",
+  "fullNameRequired": "Andika jina lako kamili.",
+  "businessNameLabel": "Jina la biashara / duka",
+  "regionLabel": "Mkoa",
+  "regionHint": "Chagua mkoa",
+  "regionRequired": "Chagua mkoa wako.",
+  "districtLabel": "Wilaya",
+  "locationsLoadFailed": "Imeshindikana kupakia orodha. Gusa kujaribu tena.",
+  "locationSearchHint": "Tafuta kwa jina...",
+  "locationNoResults": "Hakuna eneo linalolingana na utafutaji wako.",
+  "actionEnterChimbo": "Ingia CHIMBO",
+  "businessEditLater": "Unaweza kubadilisha taarifa hizi baadaye.",
+  "actionCancel": "Ghairi",
+  "actionSave": "Hifadhi",
+  "actionDelete": "Futa",
+  "comingSoonShort": "Inakuja",
+  "profileEdit": "Hariri Wasifu",
+  "profileBusinessOwner": "Mmiliki wa Biashara",
+  "profileEditPhoto": "Badilisha picha",
+  "menuBusinessInfo": "Taarifa za Biashara",
+  "menuBusinessInfoHint": "Jina la duka na mawasiliano",
+  "menuAddresses": "Anwani za Usafirishaji",
+  "menuAddressesHint": "Mahali pa kupokea oda",
+  "menuPayments": "Njia za Malipo",
+  "menuPaymentsHint": "Simamia malipo yako",
+  "menuReceipts": "Risiti na Historia",
+  "menuReceiptsHint": "Ona oda na risiti zako",
+  "menuNotifications": "Arifa",
+  "menuNotificationsHint": "Chagua taarifa unazotaka",
+  "menuHelp": "Msaada",
+  "menuHelpHint": "Piga simu au pata maelekezo",
+  "menuSettings": "Mipangilio",
+  "menuSettingsHint": "Lugha na usalama",
+  "logoutAccount": "Toka kwenye Akaunti",
+  "logoutConfirmTitle": "Toka kwenye akaunti?",
+  "logoutConfirmMessage": "Utahitaji namba yako ya simu kuingia tena.",
+  "profileSaved": "Taarifa zimehifadhiwa.",
+  "settingsLanguage": "Lugha",
+  "languageSwahili": "Kiswahili",
+  "languageEnglish": "English",
+  "settingsAccount": "Akaunti",
+  "deleteAccount": "Futa akaunti",
+  "deleteAccountHint": "Taarifa zako binafsi zitafutwa",
+  "deleteAccountConfirmTitle": "Futa akaunti yako?",
+  "deleteAccountConfirmMessage": "Hatua hii haiwezi kurudishwa. Taarifa zako binafsi zitafutwa; rekodi za oda zinabaki kwa ajili ya hesabu.",
+  "greetingMorning": "Habari za asubuhi,",
+  "greetingAfternoon": "Habari za mchana,",
+  "greetingEvening": "Habari za jioni,",
+  "greetingName": "{name}! 👋",
+  "@greetingName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "searchProductsHint": "Tafuta bidhaa...",
+  "searchInCategoryHint": "Tafuta kwenye {category}...",
+  "@searchInCategoryHint": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "actionBrowse": "Angalia",
+  "actionShopNow": "Nunua Sasa",
+  "actionViewAll": "Ona zote",
+  "quickDeals": "Ofa",
+  "quickNewArrivals": "Bidhaa Mpya",
+  "quickBestSellers": "Zinazouzwa Sana",
+  "trendingNow": "Zinazovuma Sasa",
+  "allProducts": "Bidhaa Zote",
+  "quickReorder": "Agiza Tena",
+  "bannerTitle": "BEI ZA JUMLA",
+  "bannerSubtitle": "Nunua zaidi, okoa zaidi!",
+  "recentlyOrdered": "Uliagiza Hivi Karibuni",
+  "chipAll": "Zote",
+  "filterAction": "Chuja",
+  "sortAction": "Panga",
+  "priceFilter": "Bei",
+  "moqFilter": "MOQ",
+  "minPriceHint": "Bei ya chini",
+  "maxPriceHint": "Bei ya juu",
+  "minMoqHint": "MOQ ya chini",
+  "maxMoqHint": "MOQ ya juu",
+  "invalidFilterAmount": "Weka namba sahihi.",
+  "invalidFilterRange": "Kiasi cha chini kisiwe kikubwa kuliko cha juu.",
+  "sortPopular": "Maarufu zaidi",
+  "sortNewest": "Mpya zaidi",
+  "sortPriceLow": "Bei ya chini kwanza",
+  "sortPriceHigh": "Bei ya juu kwanza",
+  "priceUnder5000": "Chini ya TZS 5,000",
+  "price5000To10000": "TZS 5,000 – 10,000",
+  "priceOver10000": "Zaidi ya TZS 10,000",
+  "moqSingle": "MOQ 1 tu",
+  "moqUpTo6": "MOQ hadi 6",
+  "moqUpTo12": "MOQ hadi 12",
+  "actionClearFilters": "Futa vichujio",
+  "actionShowResults": "Onyesha bidhaa",
+  "productsEmptyTitle": "Hakuna bidhaa",
+  "productsEmptyMessage": "Jaribu neno lingine au ondoa vichujio.",
+  "productMoq": "{count, plural, =1{MOQ 1 pc} other{MOQ {count} pcs}}",
+  "@productMoq": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verifiedSeller": "Muuzaji Aliyethibitishwa",
+  "badgeBestseller": "Inauzwa Sana",
+  "badgeNew": "Mpya",
+  "badgeDeal": "Ofa",
+  "infoStock": "Stock",
+  "infoDelivery": "Uwasilishaji",
+  "stockAtLeast": "{count}+ pcs",
+  "@stockAtLeast": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deliveryDays": "siku {min}–{max}",
+  "@deliveryDays": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "tiersTitle": "Nunua zaidi, lipa kidogo",
+  "tierRange": "{min}–{max} pcs",
+  "@tierRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "tierFrom": "{min}+ pcs",
+  "@tierFrom": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "quantityLabel": "Kiasi",
+  "savingsLabel": "Unaokoa {amount}",
+  "@savingsLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "nextTierHint": "Ongeza pcs {count} upate {price} kila moja",
+  "@nextTierHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "actionAskSeller": "Uliza Muuzaji",
+  "descriptionTitle": "Maelezo",
+  "actionFavourite": "Penda",
+  "actionShare": "Shiriki",
+  "actionZoom": "Kuza picha",
+  "actionIncrease": "Ongeza",
+  "actionDecrease": "Punguza",
+  "piecesCount": "{count, plural, =1{1 pc} other{{count} pcs}}",
+  "@piecesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cartTitle": "Kikapu Chako",
+  "actionEdit": "Hariri",
+  "actionDone": "Maliza",
+  "cartEmptyTitle": "Kikapu chako ni tupu",
+  "cartEmptyMessage": "Ongeza bidhaa uanze kuagiza kwa bei za jumla.",
+  "actionStartShopping": "Anza kununua",
+  "cartNudge": "Ongeza pcs {count} za {product} upate {price} kila moja.",
+  "@cartNudge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "product": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesalePriceTag": "Bei ya jumla",
+  "cartTierLabel": "{min}+ pcs @ {price}",
+  "@cartTierLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "moqMet": "MOQ imetimia",
+  "actionRemove": "Ondoa",
+  "summaryItems": "Bidhaa ({count})",
+  "@summaryItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryDelivery": "Usafirishaji",
+  "summaryTotal": "Jumla",
+  "summaryItemsTotal": "Jumla ya Bidhaa",
+  "summaryAmountToPay": "Jumla ya Kulipa",
+  "cartDeliveryNote": "Gharama ya usafirishaji huongezwa kwenye malipo.",
+  "actionContinueToCheckout": "Endelea kwenye Malipo",
+  "addedToCart": "Imeongezwa kikapuni.",
+  "actionViewCart": "Ona Kikapu",
+  "quickAddTotal": "Jumla: {amount}",
+  "@quickAddTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "errorMoqNotMet": "Kiasi ni chini ya MOQ ya bidhaa hii.",
+  "errorOutOfStock": "Stock haitoshi kwa kiasi hiki.",
+  "errorPriceChanged": "Bei zimebadilika. Hakiki jumla mpya kisha uthibitishe tena.",
+  "checkoutTitle": "Malipo na Usafirishaji",
+  "stepAddress": "Anwani",
+  "stepDelivery": "Usafirishaji",
+  "stepPayment": "Malipo",
+  "stepReview": "Hakiki",
+  "deliveryAddressTitle": "Anwani ya Uwasilishaji",
+  "actionChange": "Badilisha",
+  "actionAddAddress": "Ongeza anwani",
+  "noAddressMessage": "Ongeza anwani ya kupokelea oda yako.",
+  "chooseDeliveryTitle": "Chagua Usafirishaji",
+  "deliveryTomorrow": "kesho",
+  "deliveryOption": "{name} ({eta})",
+  "@deliveryOption": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "eta": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentMethodTitle": "Njia ya Malipo",
+  "paymentBank": "Benki",
+  "paymentCashOnDelivery": "Lipa ukipokea",
+  "actionContinueToReview": "Endelea Kuhakiki",
+  "reviewTitle": "Hakiki Oda",
+  "deliveryMethodTitle": "Njia ya Usafirishaji",
+  "orderSummaryTitle": "Muhtasari wa Oda",
+  "actionConfirmOrder": "Thibitisha Oda",
+  "paymentSecure": "Malipo yako ni salama.",
+  "orderReceivedTitle": "Oda Imepokelewa!",
+  "orderReceivedMessage": "Asante, {name}. Tumeanza kuandaa oda yako.",
+  "@orderReceivedMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "orderNumber": "#{number}",
+  "@orderNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "actionTrackOrder": "Fuatilia Oda",
+  "actionBackHome": "Rudi Nyumbani",
+  "addressFormTitle": "Anwani Mpya",
+  "recipientNameLabel": "Jina la mpokeaji",
+  "streetLabel": "Mtaa / eneo",
+  "streetHint": "Mfano: Kariakoo, Mtaa wa Lumumba",
+  "streetRequired": "Andika mtaa au eneo.",
+  "landmarkLabel": "Alama ya karibu",
+  "actionSaveAddress": "Hifadhi anwani",
+  "chooseAddressTitle": "Chagua anwani",
+  "ordersTitle": "Oda Zangu",
+  "tabActiveOrders": "Zinazoendelea",
+  "tabDeliveredOrders": "Zimefika",
+  "ordersEmptyTitle": "Hakuna oda hapa",
+  "ordersEmptyMessage": "Oda zako zitaonekana hapa.",
+  "statusPendingPayment": "Inasubiri malipo",
+  "statusConfirmed": "Imethibitishwa",
+  "statusPacked": "Imepakiwa",
+  "statusDispatched": "Imetumwa",
+  "statusInTransit": "Inasafirishwa",
+  "statusDelivered": "Imewasili",
+  "statusCancelled": "Imeghairiwa",
+  "statusExpired": "Muda umeisha",
+  "trackingPendingPayment": "Kamilisha malipo ili tuanze kuandaa oda yako.",
+  "trackingConfirmed": "Tunaandaa oda yako.",
+  "trackingPacked": "Oda yako iko tayari kutumwa.",
+  "trackingDispatched": "Oda yako imekabidhiwa wakala.",
+  "trackingInTransitTitle": "Njiani",
+  "trackingInTransit": "Oda yako inakuja.",
+  "trackingDelivered": "Asante kwa kununua CHIMBO!",
+  "trackingCancelled": "Oda hii imeghairiwa.",
+  "trackingExpired": "Muda wa malipo umeisha.",
+  "estimatedDeliveryTitle": "Makadirio ya Uwasilishaji",
+  "deliveredOnTitle": "Imefika tarehe",
+  "actionDownloadReceipt": "Pakua Risiti",
+  "reorderDone": "Bidhaa zimerudishwa kikapuni.",
+  "deliveryAgentTitle": "Wakala wa Uwasilishaji",
+  "actionCall": "Piga simu",
+  "actionMessage": "Tuma ujumbe",
+  "actionCancelOrder": "Ghairi oda",
+  "cancelOrderConfirmTitle": "Ghairi oda hii?",
+  "cancelOrderConfirmMessage": "Oda itaghairiwa na bidhaa kurudishwa stock. Huwezi kutendua hili.",
+  "orderCancelledMessage": "Oda imeghairiwa.",
+  "orderItemLine": "{quantity} × {price}",
+  "@orderItemLine": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "savedToWishlist": "Imehifadhiwa kwenye vipendwa.",
+  "actionUnfavourite": "Ondoa kwenye vipendwa",
+  "discountPercent": "-{percent}%",
+  "@discountPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "menuWishlist": "Vipendwa",
+  "menuWishlistHint": "Bidhaa ulizohifadhi",
+  "wishlistEmptyTitle": "Hakuna vipendwa bado",
+  "wishlistEmptyMessage": "Gusa ♡ kwenye bidhaa ili kuihifadhi hapa.",
+  "outOfStock": "Imeisha",
+  "actionOutOfStock": "Imeisha stock",
+  "otpTestModeHint": "Hali ya majaribio: namba ni {code}",
+  "@otpTestModeHint": {
+    "description": "Shown only when a test server sends the code (never in production).",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "cartProblemNotEnoughStock": "Stock haitoshi — zimebaki {count}",
+  "@cartProblemNotEnoughStock": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cartProblemBelowMoq": "Chini ya MOQ ({moq})",
+  "@cartProblemBelowMoq": {
+    "placeholders": {
+      "moq": {
+        "type": "int"
+      }
+    }
+  },
+  "cartFixLowerTo": "Punguza hadi {count}",
+  "@cartFixLowerTo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cartFixRaiseTo": "Ongeza hadi {count}",
+  "@cartFixRaiseTo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cartCannotCheckout": "Rekebisha bidhaa zilizowekwa alama nyekundu ili kuendelea.",
+  "summarySavings": "Unaokoa"
+}

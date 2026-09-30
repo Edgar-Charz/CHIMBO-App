@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Same cream as AppColors.background, so launch and splash look continuous. -->
+    <color name="splash_background">#FBF6EE</color>
+</resources>
