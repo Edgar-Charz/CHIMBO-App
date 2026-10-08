@@ -21,4 +21,29 @@ class ApiAddressRepository implements AddressRepository {
     final response = await _apiClient.post('/addresses', body: input.toJson());
     return Address.fromJson(response.dataAsMap);
   }
+
+  @override
+  Future<Address> updateAddress(int addressId, AddressInput input) async {
+    final response = await _apiClient.patch(
+      '/addresses/$addressId',
+      body: input.toJson(),
+    );
+    return Address.fromJson(response.dataAsMap);
+  }
+
+  @override
+  Future<List<Address>> setDefaultAddress(int addressId) async {
+    final response = await _apiClient.post('/addresses/$addressId/default');
+    return response.dataAsList
+        .map((json) => Address.fromJson(json! as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<Address>> deleteAddress(int addressId) async {
+    final response = await _apiClient.delete('/addresses/$addressId');
+    return response.dataAsList
+        .map((json) => Address.fromJson(json! as Map<String, dynamic>))
+        .toList();
+  }
 }

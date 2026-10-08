@@ -37,6 +37,7 @@ class HomeData {
     required this.recentlyOrdered,
     this.banners = const [],
     this.deals = const [],
+    this.offers = const [],
     this.newArrivals = const [],
   });
 
@@ -56,6 +57,7 @@ class HomeData {
           .map((item) => HomeBanner.fromJson(item as Map<String, dynamic>))
           .toList(),
       deals: products('deals'),
+      offers: products('offers'),
       newArrivals: products('new_arrivals'),
       bestSellers: products('best_sellers'),
       recentlyOrdered: products('recently_ordered'),
@@ -65,6 +67,9 @@ class HomeData {
   final List<Category> topCategories;
   final List<HomeBanner> banners;
   final List<ProductSummary> deals;
+
+  /// "Ofa za muda": running offers, ending soonest first (the rail hides when empty).
+  final List<ProductSummary> offers;
   final List<ProductSummary> newArrivals;
   final List<ProductSummary> bestSellers;
 

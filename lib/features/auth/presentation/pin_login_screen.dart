@@ -58,7 +58,7 @@ class _PinLoginScreenState extends ConsumerState<PinLoginScreen> {
       await ref
           .read(authControllerProvider.notifier)
           .loginWithPin(phone: widget.args.phone, pin: _pin);
-    } on ApiException catch (error) {
+    } catch (error) {
       if (!mounted) {
         return;
       }
@@ -69,7 +69,7 @@ class _PinLoginScreenState extends ConsumerState<PinLoginScreen> {
         _errorText = context.l10n.errorMessage(error);
       });
       // Too many wrong PINs: the only way in is a new PIN after an SMS code.
-      if (error.code == ApiErrorCode.pinLocked) {
+      if (error is ApiException && error.code == ApiErrorCode.pinLocked) {
         await _forgotPin();
       }
     }
@@ -97,7 +97,7 @@ class _PinLoginScreenState extends ConsumerState<PinLoginScreen> {
           ),
         ),
       );
-    } on ApiException catch (error) {
+    } catch (error) {
       if (mounted) {
         AppToast.of(context).error(context.l10n.errorMessage(error));
       }

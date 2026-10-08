@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:chimbo/core/assets/app_images.dart';
 import 'package:chimbo/core/l10n/l10n.dart';
-import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
@@ -112,7 +111,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
             code: _code,
             isPinReset: widget.args.isPinReset,
           );
-    } on ApiException catch (error) {
+    } catch (error) {
       if (mounted) {
         setState(() {
           _isVerifying = false;
@@ -137,7 +136,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
         _code = result.debugCode ?? '';
       });
       AppToast.of(context).success(context.l10n.otpResent);
-    } on ApiException catch (error) {
+    } catch (error) {
       if (mounted) {
         setState(() => _errorText = context.l10n.errorMessage(error));
       }

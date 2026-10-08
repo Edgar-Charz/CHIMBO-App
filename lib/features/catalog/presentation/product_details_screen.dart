@@ -8,11 +8,16 @@ import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/quantity_stepper.dart';
 import 'package:chimbo/features/cart/presentation/add_to_cart.dart';
 import 'package:chimbo/features/catalog/application/catalog_providers.dart';
+import 'package:chimbo/features/catalog/application/product_actions.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
+import 'package:chimbo/features/catalog/data/product_links.dart';
 import 'package:chimbo/features/catalog/data/tier_pricing.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/offer_widgets.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_gallery.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_info_strip.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/tier_table.dart';
+import 'package:chimbo/features/support/application/support_providers.dart';
+import 'package:chimbo/features/support/data/models/support_contacts.dart';
 import 'package:chimbo/features/wishlist/presentation/wishlist_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,22 +77,51 @@ class _ProductViewState extends ConsumerState<_ProductView> {
     }
   }
 
-  // Share and chat come later (D-14 WhatsApp).
-  void _showComingSoon() {
-    AppToast.of(context).info(context.l10n.comingSoonMessage);
+  Future<void> _shareProduct() async {
+    final product = widget.details.summary;
+    final message =
+        '${product.name} — ${Money.format(product.price)} kwenye CHIMBO\n'
+        '${ProductLinks.webUrl(product)}';
+    await ref.read(productShareProvider)(message);
+  }
+
+  Future<void> _askSeller(AsyncValue<SupportContacts> supportState) async {
+    final toast = AppToast.of(context);
+    final l10n = context.l10n;
+    try {
+      final contacts = switch (supportState) {
+        AsyncData(:final value) => value,
+        AsyncLoading() || AsyncError() =>
+          await ref.refresh(supportContactsProvider.future),
+      };
+      final product = widget.details.summary;
+      final message =
+          'Habari CHIMBO, nina swali kuhusu ${product.name}: '
+          '${ProductLinks.webUrl(product)}';
+      final whatsappUrl = Uri.parse(contacts.whatsappUrl).replace(
+        queryParameters: {'text': message},
+      );
+      final opened = await ref.read(externalUrlLauncherProvider)(whatsappUrl);
+      if (!opened) {
+        toast.error(l10n.helpCannotOpen);
+      }
+    } on Exception catch (error) {
+      toast.error(l10n.errorMessage(error));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final details = widget.details;
+    final supportState = ref.watch(supportContactsProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         actions: [
           WishlistButton(productId: widget.details.summary.id, onImage: false),
           IconButton(
-            onPressed: _showComingSoon,
+            onPressed: _shareProduct,
             tooltip: l10n.actionShare,
             icon: const Icon(Icons.ios_share_rounded),
           ),
@@ -102,6 +136,25 @@ class _ProductViewState extends ConsumerState<_ProductView> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _NameAndSeller(details: details),
+                if (details.summary.offer case final offer?) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  Row(
+                    children: [
+                      OfferLabel(percent: offer.percent),
+                      const SizedBox(width: AppSpacing.sm),
+                      Flexible(
+                        child: OfferCountdown(
+                          endsAt: offer.endsAt,
+                          showLabel: true,
+                          // The server decides the new price: load the product again.
+                          onEnded: () => ref.invalidate(
+                            productDetailsProvider(details.summary.id),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: AppSpacing.lg),
                 ProductInfoStrip(details: details),
                 const SizedBox(height: AppSpacing.lg),
@@ -143,7 +196,7 @@ class _ProductViewState extends ConsumerState<_ProductView> {
                   label: l10n.actionAskSeller,
                   icon: Icons.chat_bubble_outline_rounded,
                   variant: AppButtonVariant.outlined,
-                  onPressed: _showComingSoon,
+                  onPressed: () => _askSeller(supportState),
                 ),
               ),
               Expanded(

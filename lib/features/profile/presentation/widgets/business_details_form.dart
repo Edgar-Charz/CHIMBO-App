@@ -1,5 +1,4 @@
 import 'package:chimbo/core/l10n/l10n.dart';
-import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_text_field.dart';
@@ -87,7 +86,7 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
           districtId: _district?.id,
         ),
       );
-    } on ApiException catch (error) {
+    } catch (error) {
       if (mounted) {
         AppToast.of(context).error(context.l10n.errorMessage(error));
       }

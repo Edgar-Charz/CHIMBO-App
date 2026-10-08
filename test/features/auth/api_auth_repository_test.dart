@@ -95,6 +95,39 @@ void main() {
     expect(session.isProfileComplete, isTrue);
   });
 
+  test(
+    'login still goes through when the device name cannot be read (web build)',
+    () async {
+      final (client, adapter) = clientReplying(
+        (_) => jsonReply({
+          'success': true,
+          'data': {
+            'user': _profile,
+            'auth_token': 'b27acdb',
+            'auth_token_expires_at': '2026-11-27T14:39:44+00:00',
+          },
+        }),
+      );
+      final repository = ApiAuthRepository(
+        apiClient: client,
+        tokenStorage: tokenStorage,
+        // What device_info_plus does in a browser when asked for phone details
+        readDeviceName: () async => throw UnsupportedError('iosInfo on web'),
+      );
+
+      final session = await repository.verifyOtp(
+        phone: '+255712000111',
+        code: '849144',
+      );
+
+      final sent = adapter.lastRequest!.data as Map<String, Object?>;
+      expect(adapter.lastRequest!.uri.path, endsWith('/auth/otp/verify'));
+      expect(sent.containsKey('auth_token_device_name'), isFalse);
+      expect(await tokenStorage.readToken(), 'b27acdb');
+      expect(session.user.fullName, 'Joyce Joseph');
+    },
+  );
+
   test('the phone screen learns which step comes next', () async {
     Future<LoginStart> startWith(Map<String, Object?> data) async {
       final (client, adapter) = clientReplying(

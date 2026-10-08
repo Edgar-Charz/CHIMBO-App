@@ -395,10 +395,45 @@ class AppLocalizationsSw extends AppLocalizations {
   String get menuAddressesHint => 'Mahali pa kupokea oda';
 
   @override
-  String get menuPayments => 'Njia za Malipo';
+  String get menuPayments => 'Malipo yangu';
 
   @override
-  String get menuPaymentsHint => 'Simamia malipo yako';
+  String get menuPaymentsHint => 'Historia ya malipo na njia tunazokubali';
+
+  @override
+  String get myPaymentsTabHistory => 'Historia';
+
+  @override
+  String get myPaymentsTabMethods => 'Njia za malipo';
+
+  @override
+  String get myPaymentsEmpty =>
+      'Bado hujafanya malipo. Malipo ya oda zako yataonekana hapa.';
+
+  @override
+  String get acceptedMethodsTitle => 'Njia za malipo tunazokubali';
+
+  @override
+  String get acceptedMethodsCash => 'Lipa kwa pesa taslimu unapopokea mzigo.';
+
+  @override
+  String get paymentStatusSubmitted => 'Inakaguliwa';
+
+  @override
+  String get paymentStatusConfirmed => 'Imethibitishwa';
+
+  @override
+  String get paymentStatusRejected => 'Imekataliwa';
+
+  @override
+  String paymentOrderLine(String number, String date) {
+    return 'Oda #$number · $date';
+  }
+
+  @override
+  String paymentReferenceLine(String reference) {
+    return 'Namba ya muamala: $reference';
+  }
 
   @override
   String get menuReceipts => 'Risiti na Historia';
@@ -410,7 +445,7 @@ class AppLocalizationsSw extends AppLocalizations {
   String get menuNotifications => 'Arifa';
 
   @override
-  String get menuNotificationsHint => 'Chagua taarifa unazotaka';
+  String get menuNotificationsHint => 'Taarifa za oda na malipo';
 
   @override
   String get notificationsTitle => 'Arifa';
@@ -570,6 +605,19 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get quickDeals => 'Ofa';
+
+  @override
+  String get timedOffersTitle => 'Ofa za muda';
+
+  @override
+  String offerPercentLabel(int percent) {
+    return 'Ofa −$percent%';
+  }
+
+  @override
+  String offerEndsIn(String time) {
+    return 'Inaisha baada ya $time';
+  }
 
   @override
   String get quickNewArrivals => 'Bidhaa Mpya';
@@ -1031,6 +1079,31 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get addressFormTitle => 'Anwani Mpya';
+
+  @override
+  String get editAddressFormTitle => 'Hariri Anwani';
+
+  @override
+  String get addressesEmpty => 'Hakuna anwani bado';
+
+  @override
+  String get defaultAddressLabel => 'Chaguo-msingi';
+
+  @override
+  String get addressActions => 'Vitendo vya anwani';
+
+  @override
+  String get actionEditAddress => 'Hariri';
+
+  @override
+  String get actionSetDefaultAddress => 'Fanya chaguo-msingi';
+
+  @override
+  String get deleteAddressConfirmTitle => 'Futa anwani?';
+
+  @override
+  String get deleteAddressConfirmMessage =>
+      'Anwani hii itaondolewa kwenye anwani zako za usafirishaji.';
 
   @override
   String get recipientNameLabel => 'Jina la mpokeaji';

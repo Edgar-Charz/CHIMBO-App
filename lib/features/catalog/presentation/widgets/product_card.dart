@@ -6,9 +6,13 @@ import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_network_image.dart';
 import 'package:chimbo/core/widgets/price_text.dart';
 import 'package:chimbo/features/cart/presentation/quick_add_sheet.dart';
+import 'package:chimbo/features/catalog/application/catalog_providers.dart';
+import 'package:chimbo/features/catalog/data/models/product_offer.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/offer_widgets.dart';
 import 'package:chimbo/features/wishlist/presentation/wishlist_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// The one product card used everywhere (blueprint I-7): square picture with one badge and the
@@ -23,6 +27,7 @@ class ProductCard extends StatelessWidget {
   static const ProductSummary skeletonProduct = ProductSummary(
     id: 0,
     name: 'Jina la bidhaa ya mfano',
+    slug: '',
     categoryId: 0,
     price: 5500,
     priceFrom: 4400,
@@ -211,7 +216,8 @@ class _CardInfo extends StatelessWidget {
   }
 }
 
-/// One badge at most (§6.2): "-17%" for a deal, otherwise Inauzwa Sana / Mpya / Ofa.
+/// One badge at most (§6.2): a time-limited offer ("Ofa −15%" and its countdown), else
+/// "-17%" for a deal, otherwise Inauzwa Sana / Mpya / Ofa.
 class _CardBadge extends StatelessWidget {
   const _CardBadge({required this.product});
 
@@ -220,6 +226,9 @@ class _CardBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    if (product.offer case final offer?) {
+      return _OfferBadge(offer: offer);
+    }
     final discount = product.discountPercent;
     if (discount != null) {
       return _Pill(
@@ -241,6 +250,8 @@ class _CardBadge extends StatelessWidget {
         foreground: AppColors.info,
         background: AppColors.surface,
       ),
+      // Without its offer data (just ended) the badge has nothing to show.
+      ProductBadge.offer => const SizedBox.shrink(),
       ProductBadge.deal => _Pill(
         label: l10n.badgeDeal,
         icon: Icons.local_offer_rounded,
@@ -249,6 +260,46 @@ class _CardBadge extends StatelessWidget {
       ),
       null => const SizedBox.shrink(),
     };
+  }
+}
+
+/// "Ofa −15%" with "Inaisha baada ya saa 5" under it, on the picture. When the offer ends
+/// the lists reload, so the card shows the server's price again.
+class _OfferBadge extends ConsumerWidget {
+  const _OfferBadge({required this.offer});
+
+  final ProductOffer offer;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        OfferLabel(percent: offer.percent),
+        const SizedBox(height: AppSpacing.xs),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.small),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xs,
+              vertical: AppSpacing.xs / 2,
+            ),
+            child: OfferCountdown(
+              endsAt: offer.endsAt,
+              onEnded: ref.reloadCatalogPrices,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: AppColors.danger,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 

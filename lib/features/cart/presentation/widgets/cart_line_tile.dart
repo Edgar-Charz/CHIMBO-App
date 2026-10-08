@@ -6,6 +6,7 @@ import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_network_image.dart';
 import 'package:chimbo/core/widgets/quantity_stepper.dart';
 import 'package:chimbo/features/cart/data/models/cart.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/offer_widgets.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -95,6 +96,10 @@ class CartLineTile extends StatelessWidget {
                           color: AppColors.textSecondary,
                         ),
                       ),
+                      if (line.offerPercent > 0) ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        OfferLabel(percent: line.offerPercent),
+                      ],
                       const SizedBox(height: AppSpacing.sm),
                       // Stepper bottom-left; line total above "MOQ imetimia" on the right
                       // (design PDF p.7).

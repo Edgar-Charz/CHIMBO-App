@@ -4,8 +4,10 @@ import 'package:chimbo/core/config/env.dart';
 import 'package:chimbo/core/l10n/locale_provider.dart';
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/core/network/api_headers_interceptor.dart';
+import 'package:chimbo/core/network/server_time_interceptor.dart';
 import 'package:chimbo/core/network/session_expired_interceptor.dart';
 import 'package:chimbo/core/storage/token_storage.dart';
+import 'package:chimbo/core/time/server_clock.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -35,6 +37,10 @@ final apiClientProvider = Provider<ApiClient>((ref) {
     ),
     SessionExpiredInterceptor(
       onSessionExpired: () => sessionExpiredEvents.add(null),
+    ),
+    // Offer countdowns use the server's time, not the phone's.
+    ServerTimeInterceptor(
+      onServerTime: (time) => ref.read(serverClockProvider.notifier).sync(time),
     ),
   ]);
   ref.onDispose(dio.close);

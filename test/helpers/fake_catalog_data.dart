@@ -86,6 +86,10 @@ DevProduct _product({
       summary: ProductSummary(
         id: id,
         name: name,
+        slug: name
+            .toLowerCase()
+            .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
+            .replaceAll(RegExp(r'^-|-$'), ''),
         categoryId: categoryId,
         price: priceTiers.first.unitPrice,
         priceFrom: priceTiers.last.unitPrice,

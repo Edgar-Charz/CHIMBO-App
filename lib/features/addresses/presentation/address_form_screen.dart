@@ -1,5 +1,4 @@
 import 'package:chimbo/core/l10n/l10n.dart';
-import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/phone.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
@@ -20,7 +19,9 @@ import 'package:go_router/go_router.dart';
 /// "Anwani Mpya": saves an address and returns it to the screen that opened the form.
 /// Name, phone and region start from the profile, so most customers only add the street.
 class AddressFormScreen extends ConsumerStatefulWidget {
-  const AddressFormScreen({super.key});
+  const AddressFormScreen({super.key, this.address});
+
+  final Address? address;
 
   @override
   ConsumerState<AddressFormScreen> createState() => _AddressFormScreenState();
@@ -39,8 +40,28 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
   @override
   void initState() {
     super.initState();
-    // Loads the profile if Wasifu hasn't yet; fields fill in when it arrives.
-    ref.read(profileControllerProvider.future).then(_prefillFrom).ignore();
+    final address = widget.address;
+    if (address == null) {
+      // Loads the profile if Wasifu hasn't yet; fields fill in when it arrives.
+      ref.read(profileControllerProvider.future).then(_prefillFrom).ignore();
+    } else {
+      _nameController.text = address.recipientName;
+      _phoneController.text = TzPhone.groupLocalDigits(
+        address.phone.substring(TzPhone.countryCode.length),
+      );
+      _streetController.text = address.street;
+      _landmarkController.text = address.landmark ?? '';
+      _region = Region(id: address.regionId, name: address.regionName);
+      final districtId = address.districtId;
+      final districtName = address.districtName;
+      if (districtId != null && districtName != null) {
+        _district = District(
+          id: districtId,
+          regionId: address.regionId,
+          name: districtName,
+        );
+      }
+    }
   }
 
   /// Starts from the customer's own details, without overwriting anything already typed.
@@ -79,23 +100,24 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
     }
     setState(() => _isSaving = true);
     try {
-      final address = await ref
-          .read(addressesControllerProvider.notifier)
-          .add(
-            AddressInput(
-              recipientName: _nameController.text,
-              phone: _phoneController.text,
-              regionId: _region!.id,
-              districtId: _district?.id,
-              street: _streetController.text,
-              landmark: _landmarkController.text,
-            ),
-          );
+      final controller = ref.read(addressesControllerProvider.notifier);
+      final input = AddressInput(
+        recipientName: _nameController.text,
+        phone: _phoneController.text,
+        regionId: _region!.id,
+        districtId: _district?.id,
+        street: _streetController.text,
+        landmark: _landmarkController.text,
+      );
+      final existingAddress = widget.address;
+      final address = existingAddress == null
+          ? await controller.add(input)
+          : await controller.editAddress(existingAddress.id, input);
       if (mounted) {
         // The screen that opened the form decides what to do with the new address.
         context.pop(address);
       }
-    } on ApiException catch (error) {
+    } catch (error) {
       if (mounted) {
         setState(() => _isSaving = false);
         AppToast.of(context).error(context.l10n.errorMessage(error));
@@ -107,7 +129,13 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.addressFormTitle)),
+      appBar: AppBar(
+        title: Text(
+          widget.address == null
+              ? l10n.addressFormTitle
+              : l10n.editAddressFormTitle,
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Form(

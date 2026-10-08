@@ -1,6 +1,8 @@
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/router/auth_redirect.dart';
+import 'package:chimbo/features/addresses/data/models/address.dart';
 import 'package:chimbo/features/addresses/presentation/address_form_screen.dart';
+import 'package:chimbo/features/addresses/presentation/addresses_screen.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/auth/presentation/business_info_screen.dart';
 import 'package:chimbo/features/auth/presentation/create_pin_screen.dart';
@@ -21,6 +23,7 @@ import 'package:chimbo/features/onboarding/presentation/splash_screen.dart';
 import 'package:chimbo/features/orders/presentation/order_success_screen.dart';
 import 'package:chimbo/features/orders/presentation/order_tracking_screen.dart';
 import 'package:chimbo/features/orders/presentation/orders_screen.dart';
+import 'package:chimbo/features/payments/presentation/my_payments_screen.dart';
 import 'package:chimbo/features/profile/presentation/change_pin_screen.dart';
 import 'package:chimbo/features/profile/presentation/edit_profile_screen.dart';
 import 'package:chimbo/features/profile/presentation/profile_screen.dart';
@@ -184,12 +187,37 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     builder: (context, state) => const EditProfileScreen(),
                   ),
                   GoRoute(
+                    path: _childPath(AppRoutes.profileAddresses),
+                    builder: (context, state) => const AddressesScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'add',
+                        builder: (context, state) => const AddressFormScreen(),
+                      ),
+                      GoRoute(
+                        path: _childPath(
+                          AppRoutes.editProfileAddressPattern,
+                          levels: 2,
+                        ),
+                        redirect: (context, state) => state.extra is Address
+                            ? null
+                            : AppRoutes.profileAddresses,
+                        builder: (context, state) =>
+                            AddressFormScreen(address: state.extra! as Address),
+                      ),
+                    ],
+                  ),
+                  GoRoute(
                     path: _childPath(AppRoutes.settings),
                     builder: (context, state) => const SettingsScreen(),
                   ),
                   GoRoute(
                     path: _childPath(AppRoutes.wishlist),
                     builder: (context, state) => const WishlistScreen(),
+                  ),
+                  GoRoute(
+                    path: _childPath(AppRoutes.myPayments),
+                    builder: (context, state) => const MyPaymentsScreen(),
                   ),
                   GoRoute(
                     path: _childPath(AppRoutes.changePin),

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:chimbo/core/assets/app_images.dart';
 import 'package:chimbo/core/l10n/l10n.dart';
-import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
@@ -66,7 +65,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
       setState(() => _isSubmitting = false);
       // Not awaited: after a successful login the router replaces these screens by itself.
       unawaited(_openNextStep(start));
-    } on ApiException catch (error) {
+    } catch (error) {
       if (mounted) {
         setState(() {
           _isSubmitting = false;

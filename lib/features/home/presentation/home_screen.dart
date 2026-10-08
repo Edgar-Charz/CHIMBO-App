@@ -285,6 +285,17 @@ class _HomeSections extends StatelessWidget {
           ),
         if (data.banners.isEmpty)
           WholesaleBanner(onShopNow: () => context.go(AppRoutes.discover)),
+        if (data.offers.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.lg),
+          ProductRail(
+            title: l10n.timedOffersTitle,
+            products: data.offers,
+            actionLabel: l10n.actionViewAll,
+            onViewAll: () => context.go(
+              AppRoutes.collection(ProductCollection.offers.apiValue),
+            ),
+          ),
+        ],
         if (data.deals.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.lg),
           ProductRail(

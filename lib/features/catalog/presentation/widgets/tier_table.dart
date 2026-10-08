@@ -40,6 +40,10 @@ class TierTable extends StatelessWidget {
                 null => l10n.tierFrom(tier.minQuantity),
               },
               price: Money.format(tier.unitPrice),
+              priceBeforeOffer: switch (tier.priceBeforeOffer) {
+                final before? => Money.format(before),
+                null => null,
+              },
               isActive: identical(tier, activeTier),
             ),
         ],
@@ -53,11 +57,15 @@ class _TierRow extends StatelessWidget {
     required this.range,
     required this.price,
     required this.isActive,
+    this.priceBeforeOffer,
   });
 
   final String range;
   final String price;
   final bool isActive;
+
+  /// Crossed out before [price] while an offer runs.
+  final String? priceBeforeOffer;
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +82,17 @@ class _TierRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: Text(range, style: style)),
+          if (priceBeforeOffer case final before?) ...[
+            Text(
+              before,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppColors.textSecondary,
+                decoration: TextDecoration.lineThrough,
+                decorationColor: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+          ],
           Text(price, style: style),
         ],
       ),

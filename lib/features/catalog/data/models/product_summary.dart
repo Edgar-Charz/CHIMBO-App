@@ -1,5 +1,8 @@
+import 'package:chimbo/features/catalog/data/models/product_offer.dart';
+
 /// The one badge a product card may carry (blueprint §6.2: max one per card).
 enum ProductBadge {
+  offer('offer'),
   bestseller('bestseller'),
   newArrival('new'),
   deal('deal');
@@ -23,6 +26,7 @@ class ProductSummary {
   const ProductSummary({
     required this.id,
     required this.name,
+    required this.slug,
     required this.categoryId,
     required this.price,
     required this.priceFrom,
@@ -33,12 +37,14 @@ class ProductSummary {
     this.imageUrl,
     this.badge,
     this.compareAtPrice,
+    this.offer,
   });
 
   factory ProductSummary.fromJson(Map<String, dynamic> json) {
     return ProductSummary(
       id: json['product_id'] as int,
       name: json['product_name'] as String,
+      slug: json['product_slug'] as String? ?? '',
       categoryId: json['category_id'] as int,
       price: json['product_price'] as int,
       priceFrom: json['product_price_from'] as int,
@@ -49,11 +55,16 @@ class ProductSummary {
       imageUrl: json['product_image_url'] as String?,
       badge: ProductBadge.fromApi(json['product_badge'] as String?),
       compareAtPrice: json['product_compare_at_price'] as int?,
+      offer: switch (json['product_offer']) {
+        final Map<String, dynamic> offer => ProductOffer.fromJson(offer),
+        _ => null,
+      },
     );
   }
 
   final int id;
   final String name;
+  final String slug;
 
   /// The leaf (sub-)category.
   final int categoryId;
@@ -64,7 +75,8 @@ class ProductSummary {
   /// Best (lowest) tier price. Sent by the API; not shown on cards for now (user choice).
   final int priceFrom;
 
-  /// The old price of a Hot Deal (struck through); null when not on offer.
+  /// The crossed-out price: the normal price during a time-limited [offer], otherwise the old
+  /// price of a Hot Deal; null when neither.
   final int? compareAtPrice;
 
   /// Minimum order quantity.
@@ -79,6 +91,9 @@ class ProductSummary {
   final String? imageUrl;
   final ProductBadge? badge;
 
+  /// Null unless a time-limited offer runs ("Ofa −15%", countdown).
+  final ProductOffer? offer;
+
   /// "-17%" for a deal; null when not on offer.
   int? get discountPercent {
     final oldPrice = compareAtPrice;
@@ -91,6 +106,7 @@ class ProductSummary {
   Map<String, dynamic> toJson() => {
     'product_id': id,
     'product_name': name,
+    'product_slug': slug,
     'category_id': categoryId,
     'product_price': price,
     'product_price_from': priceFrom,
@@ -101,5 +117,6 @@ class ProductSummary {
     'product_in_stock': isInStock,
     'product_image_url': imageUrl,
     'product_badge': badge?.apiValue,
+    'product_offer': offer?.toJson(),
   };
 }

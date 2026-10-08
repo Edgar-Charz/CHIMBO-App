@@ -1,5 +1,4 @@
 import 'package:chimbo/core/l10n/l10n.dart';
-import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
@@ -62,7 +61,7 @@ class _ChangePaymentMethodSheetState
             : l10n.paymentMethodChanged(method.name),
       );
       navigator.pop();
-    } on ApiException catch (error) {
+    } catch (error) {
       // E.g. cash above the limit, already under review, time over: the server's message.
       if (mounted) {
         setState(() {

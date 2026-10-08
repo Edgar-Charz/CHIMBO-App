@@ -821,14 +821,74 @@ abstract class AppLocalizations {
   /// No description provided for @menuPayments.
   ///
   /// In sw, this message translates to:
-  /// **'Njia za Malipo'**
+  /// **'Malipo yangu'**
   String get menuPayments;
 
   /// No description provided for @menuPaymentsHint.
   ///
   /// In sw, this message translates to:
-  /// **'Simamia malipo yako'**
+  /// **'Historia ya malipo na njia tunazokubali'**
   String get menuPaymentsHint;
+
+  /// No description provided for @myPaymentsTabHistory.
+  ///
+  /// In sw, this message translates to:
+  /// **'Historia'**
+  String get myPaymentsTabHistory;
+
+  /// No description provided for @myPaymentsTabMethods.
+  ///
+  /// In sw, this message translates to:
+  /// **'Njia za malipo'**
+  String get myPaymentsTabMethods;
+
+  /// No description provided for @myPaymentsEmpty.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bado hujafanya malipo. Malipo ya oda zako yataonekana hapa.'**
+  String get myPaymentsEmpty;
+
+  /// No description provided for @acceptedMethodsTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Njia za malipo tunazokubali'**
+  String get acceptedMethodsTitle;
+
+  /// No description provided for @acceptedMethodsCash.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa kwa pesa taslimu unapopokea mzigo.'**
+  String get acceptedMethodsCash;
+
+  /// No description provided for @paymentStatusSubmitted.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inakaguliwa'**
+  String get paymentStatusSubmitted;
+
+  /// No description provided for @paymentStatusConfirmed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imethibitishwa'**
+  String get paymentStatusConfirmed;
+
+  /// No description provided for @paymentStatusRejected.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imekataliwa'**
+  String get paymentStatusRejected;
+
+  /// No description provided for @paymentOrderLine.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda #{number} · {date}'**
+  String paymentOrderLine(String number, String date);
+
+  /// No description provided for @paymentReferenceLine.
+  ///
+  /// In sw, this message translates to:
+  /// **'Namba ya muamala: {reference}'**
+  String paymentReferenceLine(String reference);
 
   /// No description provided for @menuReceipts.
   ///
@@ -851,7 +911,7 @@ abstract class AppLocalizations {
   /// No description provided for @menuNotificationsHint.
   ///
   /// In sw, this message translates to:
-  /// **'Chagua taarifa unazotaka'**
+  /// **'Taarifa za oda na malipo'**
   String get menuNotificationsHint;
 
   /// No description provided for @notificationsTitle.
@@ -1147,6 +1207,24 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Ofa'**
   String get quickDeals;
+
+  /// No description provided for @timedOffersTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ofa za muda'**
+  String get timedOffersTitle;
+
+  /// No description provided for @offerPercentLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ofa −{percent}%'**
+  String offerPercentLabel(int percent);
+
+  /// No description provided for @offerEndsIn.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inaisha baada ya {time}'**
+  String offerEndsIn(String time);
 
   /// No description provided for @quickNewArrivals.
   ///
@@ -1951,6 +2029,54 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Anwani Mpya'**
   String get addressFormTitle;
+
+  /// No description provided for @editAddressFormTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hariri Anwani'**
+  String get editAddressFormTitle;
+
+  /// No description provided for @addressesEmpty.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna anwani bado'**
+  String get addressesEmpty;
+
+  /// No description provided for @defaultAddressLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chaguo-msingi'**
+  String get defaultAddressLabel;
+
+  /// No description provided for @addressActions.
+  ///
+  /// In sw, this message translates to:
+  /// **'Vitendo vya anwani'**
+  String get addressActions;
+
+  /// No description provided for @actionEditAddress.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hariri'**
+  String get actionEditAddress;
+
+  /// No description provided for @actionSetDefaultAddress.
+  ///
+  /// In sw, this message translates to:
+  /// **'Fanya chaguo-msingi'**
+  String get actionSetDefaultAddress;
+
+  /// No description provided for @deleteAddressConfirmTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Futa anwani?'**
+  String get deleteAddressConfirmTitle;
+
+  /// No description provided for @deleteAddressConfirmMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anwani hii itaondolewa kwenye anwani zako za usafirishaji.'**
+  String get deleteAddressConfirmMessage;
 
   /// No description provided for @recipientNameLabel.
   ///

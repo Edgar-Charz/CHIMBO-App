@@ -392,10 +392,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuAddressesHint => 'Where you receive orders';
 
   @override
-  String get menuPayments => 'Payment methods';
+  String get menuPayments => 'My payments';
 
   @override
-  String get menuPaymentsHint => 'Manage your payments';
+  String get menuPaymentsHint => 'Payment history and accepted methods';
+
+  @override
+  String get myPaymentsTabHistory => 'History';
+
+  @override
+  String get myPaymentsTabMethods => 'Payment methods';
+
+  @override
+  String get myPaymentsEmpty =>
+      'No payments yet. Payments for your orders will appear here.';
+
+  @override
+  String get acceptedMethodsTitle => 'Payment methods we accept';
+
+  @override
+  String get acceptedMethodsCash => 'Pay in cash when you receive your order.';
+
+  @override
+  String get paymentStatusSubmitted => 'Being checked';
+
+  @override
+  String get paymentStatusConfirmed => 'Confirmed';
+
+  @override
+  String get paymentStatusRejected => 'Rejected';
+
+  @override
+  String paymentOrderLine(String number, String date) {
+    return 'Order #$number · $date';
+  }
+
+  @override
+  String paymentReferenceLine(String reference) {
+    return 'Reference: $reference';
+  }
 
   @override
   String get menuReceipts => 'Receipts & history';
@@ -407,7 +442,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuNotifications => 'Notifications';
 
   @override
-  String get menuNotificationsHint => 'Choose what you hear about';
+  String get menuNotificationsHint => 'Order and payment updates';
 
   @override
   String get notificationsTitle => 'Notifications';
@@ -567,6 +602,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickDeals => 'Hot Deals';
+
+  @override
+  String get timedOffersTitle => 'Limited-time offers';
+
+  @override
+  String offerPercentLabel(int percent) {
+    return 'Offer −$percent%';
+  }
+
+  @override
+  String offerEndsIn(String time) {
+    return 'Ends in $time';
+  }
 
   @override
   String get quickNewArrivals => 'New Arrivals';
@@ -1028,6 +1076,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addressFormTitle => 'New address';
+
+  @override
+  String get editAddressFormTitle => 'Edit address';
+
+  @override
+  String get addressesEmpty => 'No addresses yet';
+
+  @override
+  String get defaultAddressLabel => 'Default';
+
+  @override
+  String get addressActions => 'Address actions';
+
+  @override
+  String get actionEditAddress => 'Edit';
+
+  @override
+  String get actionSetDefaultAddress => 'Make default';
+
+  @override
+  String get deleteAddressConfirmTitle => 'Delete address?';
+
+  @override
+  String get deleteAddressConfirmMessage =>
+      'This address will be removed from your delivery addresses.';
 
   @override
   String get recipientNameLabel => 'Recipient name';

@@ -1,3 +1,4 @@
+import 'package:chimbo/features/catalog/application/product_list_controller.dart';
 import 'package:chimbo/features/catalog/data/catalog_repository.dart';
 import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
@@ -131,3 +132,12 @@ final productDetailsProvider = FutureProvider.autoDispose
       (ref, productId) =>
           ref.watch(catalogRepositoryProvider).getProduct(productId),
     );
+
+/// A time-limited offer just ended on a card: Home and the product lists load again, so they
+/// show the prices the server now charges.
+extension ReloadCatalogPrices on WidgetRef {
+  void reloadCatalogPrices() {
+    invalidate(homeDataProvider);
+    invalidate(productListControllerProvider);
+  }
+}

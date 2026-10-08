@@ -35,6 +35,7 @@ class CartLine {
     this.nextTierUnitPrice,
     this.problem,
     this.availableQuantity,
+    this.offerPercent = 0,
   });
 
   factory CartLine.fromJson(Map<String, dynamic> json) {
@@ -50,6 +51,7 @@ class CartLine {
       nextTierUnitPrice: hint?['unit_price'] as int?,
       problem: CartLineProblem.fromApi(json['line_problem'] as String?),
       availableQuantity: json['available_quantity'] as int?,
+      offerPercent: json['offer_percent'] as int? ?? 0,
     );
   }
 
@@ -73,6 +75,9 @@ class CartLine {
 
   /// How many are left in stock (the stepper's upper limit).
   final int? availableQuantity;
+
+  /// A running offer's discount ("Ofa −15%"); 0 when none.
+  final int offerPercent;
 
   /// MOQ is a hard minimum (D-8).
   bool get isMoqMet =>

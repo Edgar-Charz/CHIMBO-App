@@ -1,4 +1,5 @@
 import 'package:chimbo/core/widgets/app_text_field.dart';
+import 'package:chimbo/features/notifications/presentation/notifications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -106,4 +107,43 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Hakuna vipendwa bado'), findsOneWidget);
   });
+
+  testWidgets('Arifa opens the notifications list', (tester) async {
+    await openWasifu(tester);
+    await tapText(tester, 'Taarifa za oda na malipo');
+
+    expect(find.byType(NotificationsScreen), findsOneWidget);
+  });
+
+  testWidgets('Anwani za Usafirishaji opens the address list', (tester) async {
+    await openWasifu(tester);
+    await tapText(tester, 'Anwani za Usafirishaji');
+
+    expect(find.text('Hakuna anwani bado'), findsOneWidget);
+    expect(find.text('Ongeza anwani'), findsOneWidget);
+  });
+
+  testWidgets(
+    'Malipo yangu: history in one tab, accepted methods in the other',
+    (tester) async {
+      await openWasifu(tester);
+      await tapText(tester, 'Malipo yangu');
+
+      expect(find.text('Imethibitishwa'), findsOneWidget);
+      expect(find.text('Imekataliwa'), findsOneWidget);
+      expect(find.text('Hatukupata malipo haya.'), findsOneWidget);
+      expect(find.text('Namba ya muamala: QJK3X7ABC1'), findsOneWidget);
+      expect(find.text('123456'), findsNothing);
+
+      await tester.tap(find.text('Njia za malipo'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Njia za malipo tunazokubali'), findsOneWidget);
+      expect(find.text('123456'), findsOneWidget);
+      expect(
+        find.text('Lipa kwa pesa taslimu unapopokea mzigo.'),
+        findsOneWidget,
+      );
+    },
+  );
 }

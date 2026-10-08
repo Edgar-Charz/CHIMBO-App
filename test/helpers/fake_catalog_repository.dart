@@ -95,6 +95,7 @@ class FakeCatalogRepository implements CatalogRepository {
 
   bool _inCollection(ProductSummary summary, ProductCollection collection) {
     return switch (collection) {
+      ProductCollection.offers => summary.offer != null,
       ProductCollection.deals => summary.badge == ProductBadge.deal,
       ProductCollection.newArrivals => summary.badge == ProductBadge.newArrival,
       // Best sellers = every product, ordered by sales.

@@ -14,6 +14,7 @@ import 'package:chimbo/features/locations/data/location_repository.dart';
 import 'package:chimbo/features/notifications/data/notifications_repository.dart';
 import 'package:chimbo/features/onboarding/presentation/splash_screen.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
+import 'package:chimbo/features/payments/data/payments_repository.dart';
 import 'package:chimbo/features/profile/data/profile_repository.dart';
 import 'package:chimbo/features/support/data/support_repository.dart';
 import 'package:chimbo/features/wishlist/data/wishlist_repository.dart';
@@ -34,6 +35,7 @@ import 'fake_customer_store.dart';
 import 'fake_location_repository.dart';
 import 'fake_notifications_repository.dart';
 import 'fake_orders_repository.dart';
+import 'fake_payments_repository.dart';
 import 'fake_profile_repository.dart';
 import 'fake_support_repository.dart';
 import 'fake_wishlist_repository.dart';
@@ -94,6 +96,7 @@ Future<SharedPreferences> pumpApp(
         supportRepositoryProvider.overrideWithValue(
           const FakeSupportRepository(),
         ),
+        paymentsRepositoryProvider.overrideWithValue(FakePaymentsRepository()),
         locationRepositoryProvider.overrideWithValue(
           const FakeLocationRepository(),
         ),

@@ -4,15 +4,13 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/dates.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
-import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
-import 'package:chimbo/features/checkout/data/models/payment_method.dart';
+import 'package:chimbo/features/checkout/presentation/widgets/payment_method_details.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/presentation/widgets/change_payment_method_sheet.dart';
 import 'package:chimbo/features/orders/presentation/widgets/payment_submit_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// Paying a mobile money / bank order (staff check it by hand):
 /// - waiting for payment → where to pay and "Nimelipa" (after a rejection, staff's note first);
@@ -92,20 +90,9 @@ class _PayToCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (method != null) ...[
-            if (method.accountNumber case final number?)
-              _CopyRow(label: _numberLabel(l10n, method), value: number),
-            if (method.accountName case final name?)
-              _InfoRow(label: l10n.payToAccountName, value: name),
-            if (method.bankName case final bank?)
-              _InfoRow(label: l10n.payToBank, value: bank),
-            if (method.instructions case final instructions?) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Text(instructions, style: textTheme.bodyMedium),
-            ],
-          ],
+          if (method != null) PaymentMethodDetails(method: method),
           const Divider(height: AppSpacing.lg),
-          _CopyRow(label: l10n.payToNoteHint, value: payment.noteHint),
+          CopyValueRow(label: l10n.payToNoteHint, value: payment.noteHint),
           if (deadline != null) ...[
             const SizedBox(height: AppSpacing.xs),
             Text(
@@ -115,83 +102,6 @@ class _PayToCard extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-
-  String _numberLabel(AppLocalizations l10n, PaymentMethod method) =>
-      method.type == PaymentMethodType.bank
-      ? l10n.payToBankAccount
-      : l10n.payToNumber;
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.xs),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: Text(label, style: textTheme.bodySmall)),
-          Flexible(
-            flex: 2,
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: textTheme.bodyMedium,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// A value the customer types into their phone's payment menu, with a copy button.
-class _CopyRow extends StatelessWidget {
-  const _CopyRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  Future<void> _copy(BuildContext context) async {
-    final toast = AppToast.of(context);
-    final message = context.l10n.copiedMessage;
-    await Clipboard.setData(ClipboardData(text: value));
-    toast.success(message);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label, style: textTheme.bodySmall),
-              SelectableText(
-                value,
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        IconButton(
-          onPressed: () => _copy(context),
-          tooltip: context.l10n.actionCopy,
-          icon: const Icon(Icons.copy_rounded, color: AppColors.primary),
-        ),
-      ],
     );
   }
 }

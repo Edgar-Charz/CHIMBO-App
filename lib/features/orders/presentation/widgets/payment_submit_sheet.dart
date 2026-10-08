@@ -99,6 +99,14 @@ class _PaymentSubmitSheetState extends ConsumerState<_PaymentSubmitSheet> {
             ? l10n.errorMessage(error)
             : null;
       });
+    } catch (error) {
+      // Not an API answer (a bug or a device problem): stop the spinner and say so.
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+          _formError = l10n.errorMessage(error);
+        });
+      }
     }
   }
 

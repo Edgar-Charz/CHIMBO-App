@@ -193,6 +193,57 @@ void main() {
   });
 
   test(
+    'addresses: updates, sets default, and deletes through their API routes',
+    () async {
+      const addressReply = {
+        'address_id': 2,
+        'address_recipient_name': 'Asha',
+        'address_phone': '+255719000556',
+        'region_id': 2,
+        'region_name': 'Dar es Salaam',
+        'district_id': 8,
+        'district_name': 'Ilala',
+        'address_street': 'Kariakoo',
+        'address_landmark': null,
+        'address_is_default': true,
+      };
+      final (client, adapter) = clientReplying((request) {
+        final path = request.uri.path;
+        if (path.endsWith('/default') || request.method == 'DELETE') {
+          return jsonReply({
+            'success': true,
+            'data': [addressReply],
+          });
+        }
+        return jsonReply({'success': true, 'data': addressReply});
+      });
+      final repository = ApiAddressRepository(client);
+      const input = AddressInput(
+        recipientName: 'Asha',
+        phone: '0719000556',
+        regionId: 2,
+        districtId: 8,
+        street: 'Kariakoo',
+      );
+
+      await repository.updateAddress(2, input);
+      expect(adapter.lastRequest!.method, 'PATCH');
+      expect(adapter.lastRequest!.uri.path, endsWith('/addresses/2'));
+      expect(adapter.lastRequest!.data, input.toJson());
+
+      final defaults = await repository.setDefaultAddress(2);
+      expect(adapter.lastRequest!.method, 'POST');
+      expect(adapter.lastRequest!.uri.path, endsWith('/addresses/2/default'));
+      expect(defaults.single.id, 2);
+
+      final remaining = await repository.deleteAddress(2);
+      expect(adapter.lastRequest!.method, 'DELETE');
+      expect(adapter.lastRequest!.uri.path, endsWith('/addresses/2'));
+      expect(remaining.single.isDefault, isTrue);
+    },
+  );
+
+  test(
     'checkout: options for the address; payment methods with their details',
     () async {
       final (client, adapter) = clientReplying(

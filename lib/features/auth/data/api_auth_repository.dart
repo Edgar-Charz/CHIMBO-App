@@ -119,7 +119,7 @@ class ApiAuthRepository implements AuthRepository {
 
   /// Both logins answer `{user, auth_token}`; the token is saved before anything else runs.
   Future<AuthSession> _logIn(String path, Map<String, String> body) async {
-    final deviceName = await _readDeviceName();
+    final deviceName = await _deviceNameOrNull();
     final response = await _apiClient.post(
       path,
       body: {
@@ -136,6 +136,15 @@ class ApiAuthRepository implements AuthRepository {
       token,
       data['user'] as Map<String, dynamic>,
     );
+  }
+
+  /// The device name is only a label on the server: if reading it fails, log in without it.
+  Future<String?> _deviceNameOrNull() async {
+    try {
+      return await _readDeviceName();
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<String> _requireToken() async {

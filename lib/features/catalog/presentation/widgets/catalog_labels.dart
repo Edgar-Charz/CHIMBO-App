@@ -13,6 +13,7 @@ extension ProductSortLabel on ProductSort {
 
 extension ProductCollectionLabel on ProductCollection {
   String label(AppLocalizations l10n) => switch (this) {
+    ProductCollection.offers => l10n.timedOffersTitle,
     ProductCollection.deals => l10n.quickDeals,
     ProductCollection.newArrivals => l10n.quickNewArrivals,
     ProductCollection.bestSellers => l10n.quickBestSellers,

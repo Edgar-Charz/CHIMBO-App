@@ -59,6 +59,7 @@ class OrderItem {
     required this.unitPrice,
     required this.lineTotal,
     this.imageUrl,
+    this.offerPercent = 0,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
@@ -69,6 +70,7 @@ class OrderItem {
       unitPrice: json['order_item_unit_price'] as int,
       lineTotal: json['order_item_line_total'] as int,
       imageUrl: json['product_image_url'] as String?,
+      offerPercent: json['order_item_offer_percent'] as int? ?? 0,
     );
   }
 
@@ -79,6 +81,9 @@ class OrderItem {
   final int lineTotal;
   final String? imageUrl;
 
+  /// The offer's discount when ordered ("Ofa −15%"); 0 when none.
+  final int offerPercent;
+
   Map<String, dynamic> toJson() => {
     'product_id': productId,
     'product_name': productName,
@@ -86,6 +91,7 @@ class OrderItem {
     'order_item_unit_price': unitPrice,
     'order_item_line_total': lineTotal,
     'product_image_url': imageUrl,
+    'order_item_offer_percent': offerPercent,
   };
 }
 

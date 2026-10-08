@@ -1,5 +1,7 @@
 /// Ready-made product lists behind Home's quick actions (`collection` param).
 enum ProductCollection {
+  /// "Ofa za muda": running time-limited offers, ending soonest first.
+  offers('offers'),
   deals('deals'),
   newArrivals('new'),
   bestSellers('best_sellers');

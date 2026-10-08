@@ -57,10 +57,6 @@ class _ProfileContent extends ConsumerWidget {
 
   final Profile profile;
 
-  void _showComingSoon(BuildContext context) {
-    AppToast.of(context).info(context.l10n.comingSoonMessage);
-  }
-
   // Phone photos are shrunk before upload: well under the server's 8 MB, still sharp at 300 px.
   static const double _photoMaxSide = 1080;
   static const int _photoQuality = 85;
@@ -140,14 +136,14 @@ class _ProfileContent extends ConsumerWidget {
         tone: MenuTone.orange,
         title: l10n.menuAddresses,
         subtitle: l10n.menuAddressesHint,
-        onTap: () => _showComingSoon(context),
+        onTap: () => context.push(AppRoutes.profileAddresses),
       ),
       ProfileMenuTile(
         icon: Icons.account_balance_wallet_outlined,
         tone: MenuTone.gold,
         title: l10n.menuPayments,
         subtitle: l10n.menuPaymentsHint,
-        onTap: () => _showComingSoon(context),
+        onTap: () => context.push(AppRoutes.myPayments),
       ),
       ProfileMenuTile(
         icon: Icons.receipt_long_outlined,
@@ -161,7 +157,7 @@ class _ProfileContent extends ConsumerWidget {
         tone: MenuTone.purple,
         title: l10n.menuNotifications,
         subtitle: l10n.menuNotificationsHint,
-        onTap: () => _showComingSoon(context),
+        onTap: () => context.push(AppRoutes.notifications),
       ),
       ProfileMenuTile(
         icon: Icons.headset_mic_outlined,

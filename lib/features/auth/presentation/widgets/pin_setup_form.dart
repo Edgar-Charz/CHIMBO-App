@@ -91,6 +91,11 @@ class _PinSetupFormState extends State<PinSetupForm> {
       if (mounted) {
         _showError(error);
       }
+    } catch (error) {
+      // Not an API answer: a general message instead of an uncaught error.
+      if (mounted) {
+        setState(() => _errorText = context.l10n.errorMessage(error));
+      }
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);

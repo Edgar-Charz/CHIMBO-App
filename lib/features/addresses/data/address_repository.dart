@@ -10,6 +10,15 @@ abstract interface class AddressRepository {
 
   /// `POST /addresses`. The first address becomes the default.
   Future<Address> createAddress(AddressInput input);
+
+  /// `PATCH /addresses/{id}`.
+  Future<Address> updateAddress(int addressId, AddressInput input);
+
+  /// `POST /addresses/{id}/default`.
+  Future<List<Address>> setDefaultAddress(int addressId);
+
+  /// `DELETE /addresses/{id}`.
+  Future<List<Address>> deleteAddress(int addressId);
 }
 
 final addressRepositoryProvider = Provider<AddressRepository>(

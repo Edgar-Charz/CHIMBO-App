@@ -185,12 +185,24 @@
   "menuBusinessInfoHint": "Jina la duka na mawasiliano",
   "menuAddresses": "Anwani za Usafirishaji",
   "menuAddressesHint": "Mahali pa kupokea oda",
-  "menuPayments": "Njia za Malipo",
-  "menuPaymentsHint": "Simamia malipo yako",
+  "menuPayments": "Malipo yangu",
+  "menuPaymentsHint": "Historia ya malipo na njia tunazokubali",
+  "myPaymentsTabHistory": "Historia",
+  "myPaymentsTabMethods": "Njia za malipo",
+  "myPaymentsEmpty": "Bado hujafanya malipo. Malipo ya oda zako yataonekana hapa.",
+  "acceptedMethodsTitle": "Njia za malipo tunazokubali",
+  "acceptedMethodsCash": "Lipa kwa pesa taslimu unapopokea mzigo.",
+  "paymentStatusSubmitted": "Inakaguliwa",
+  "paymentStatusConfirmed": "Imethibitishwa",
+  "paymentStatusRejected": "Imekataliwa",
+  "paymentOrderLine": "Oda #{number} · {date}",
+  "@paymentOrderLine": {"placeholders": {"number": {"type": "String"}, "date": {"type": "String"}}},
+  "paymentReferenceLine": "Namba ya muamala: {reference}",
+  "@paymentReferenceLine": {"placeholders": {"reference": {"type": "String"}}},
   "menuReceipts": "Risiti na Historia",
   "menuReceiptsHint": "Ona oda na risiti zako",
   "menuNotifications": "Arifa",
-  "menuNotificationsHint": "Chagua taarifa unazotaka",
+  "menuNotificationsHint": "Taarifa za oda na malipo",
   "notificationsTitle": "Arifa",
   "actionMarkAllRead": "Soma zote",
   "notificationsEmptyTitle": "Hakuna arifa bado",
@@ -268,6 +280,23 @@
   "actionShopNow": "Nunua Sasa",
   "actionViewAll": "Ona zote",
   "quickDeals": "Ofa",
+  "timedOffersTitle": "Ofa za muda",
+  "offerPercentLabel": "Ofa −{percent}%",
+  "@offerPercentLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "offerEndsIn": "Inaisha baada ya {time}",
+  "@offerEndsIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "quickNewArrivals": "Bidhaa Mpya",
   "quickBestSellers": "Zinazouzwa Sana",
   "trendingNow": "Zinazovuma Sasa",
@@ -559,6 +588,14 @@
   "actionTrackOrder": "Fuatilia Oda",
   "actionBackHome": "Rudi Nyumbani",
   "addressFormTitle": "Anwani Mpya",
+  "editAddressFormTitle": "Hariri Anwani",
+  "addressesEmpty": "Hakuna anwani bado",
+  "defaultAddressLabel": "Chaguo-msingi",
+  "addressActions": "Vitendo vya anwani",
+  "actionEditAddress": "Hariri",
+  "actionSetDefaultAddress": "Fanya chaguo-msingi",
+  "deleteAddressConfirmTitle": "Futa anwani?",
+  "deleteAddressConfirmMessage": "Anwani hii itaondolewa kwenye anwani zako za usafirishaji.",
   "recipientNameLabel": "Jina la mpokeaji",
   "streetLabel": "Mtaa / eneo",
   "streetHint": "Mfano: Kariakoo, Mtaa wa Lumumba",

@@ -18,6 +18,11 @@ abstract final class AppRoutes {
   static const String profileEdit = '/profile/edit';
   static const String settings = '/profile/settings';
   static const String wishlist = '/profile/wishlist';
+  static const String profileAddresses = '/profile/addresses';
+  static const String addProfileAddress = '/profile/addresses/add';
+  static const String editProfileAddressPattern =
+      '/profile/addresses/:addressId/edit';
+  static const String myPayments = '/profile/payments';
   static const String changePin = '/profile/pin';
   static const String help = '/profile/help';
   static const String legalPagePattern = '/pages/:name';
@@ -41,6 +46,9 @@ abstract final class AppRoutes {
       '${collection == null ? '' : '&collection=$collection'}';
 
   static String productDetails(int productId) => '/product/$productId';
+
+  static String editProfileAddress(int addressId) =>
+      '/profile/addresses/$addressId/edit';
 
   /// "Vigezo na Masharti" / "Sera ya Faragha" (full screen; open to everyone, even logged
   /// out).

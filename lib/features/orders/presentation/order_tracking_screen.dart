@@ -11,6 +11,7 @@ import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/core/widgets/totals_card.dart';
 import 'package:chimbo/features/addresses/presentation/address_details.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/offer_widgets.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
@@ -135,6 +136,10 @@ class _TrackingContent extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   dense: true,
                   title: Text(item.productName),
+                  // The offer's discount when ordered.
+                  leading: item.offerPercent > 0
+                      ? OfferLabel(percent: item.offerPercent)
+                      : null,
                   subtitle: Text(
                     l10n.orderItemLine(
                       item.quantity,
