@@ -3,6 +3,7 @@ import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/features/orders/application/orders_providers.dart';
+import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +31,18 @@ Future<void> reorderAndOpenCart(
   }
 }
 
-/// Receipts come from the server as PDFs (Phase 4 step 27).
-void showReceiptComingSoon(BuildContext context) {
-  AppToast.of(context).info(context.l10n.comingSoonMessage);
+/// "Pakua Risiti": opens the system picker so the customer can choose where to save the PDF.
+Future<void> downloadReceipt(
+  BuildContext context,
+  WidgetRef ref,
+  Order order,
+) async {
+  final toast = AppToast.of(context);
+  final l10n = context.l10n;
+  toast.info(l10n.receiptDownloading);
+  try {
+    await ref.read(orderActionsProvider).downloadReceipt(order);
+  } on ApiException catch (error) {
+    toast.error(l10n.errorMessage(error));
+  }
 }

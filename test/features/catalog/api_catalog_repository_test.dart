@@ -107,6 +107,42 @@ void main() {
     expect(home.recentlyOrdered, isEmpty);
   });
 
+  test('home: reads the admin category and banner image URLs', () async {
+    final (client, _) = clientReplying(
+      (_) => jsonReply({
+        'success': true,
+        'data': {
+          'banners': [
+            {
+              'banner_title': 'Bei za jumla',
+              'banner_image_url': 'https://images.test/banner-v2.webp',
+            },
+          ],
+          'top_categories': [
+            {
+              'category_id': 1,
+              'category_name': 'Cosmetics',
+              'category_image_url': 'https://images.test/cosmetics-v3.webp',
+              'children': <Object?>[],
+            },
+          ],
+          'best_sellers': <Object?>[],
+          'deals': <Object?>[],
+          'new_arrivals': <Object?>[],
+          'recently_ordered': <Object?>[],
+        },
+      }),
+    );
+
+    final home = await ApiCatalogRepository(client).getHome();
+
+    expect(
+      home.topCategories.single.imageUrl,
+      'https://images.test/cosmetics-v3.webp',
+    );
+    expect(home.banners.single.imageUrl, 'https://images.test/banner-v2.webp');
+  });
+
   test('categories: reads the tree', () async {
     final (client, adapter) = clientReplying(
       (_) => jsonReply({

@@ -1,4 +1,5 @@
 import 'package:chimbo/core/l10n/l10n.dart';
+import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
@@ -13,9 +14,12 @@ import 'package:chimbo/features/profile/data/models/business_profile.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
 import 'package:chimbo/features/profile/presentation/widgets/profile_card.dart';
 import 'package:chimbo/features/profile/presentation/widgets/profile_menu_tile.dart';
+import 'package:chimbo/features/profile/presentation/widgets/profile_photo_sheet.dart';
+import 'package:chimbo/features/support/data/models/legal_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 /// Wasifu tab (design PDF p.11): profile card, menu, logout.
@@ -55,6 +59,47 @@ class _ProfileContent extends ConsumerWidget {
 
   void _showComingSoon(BuildContext context) {
     AppToast.of(context).info(context.l10n.comingSoonMessage);
+  }
+
+  // Phone photos are shrunk before upload: well under the server's 8 MB, still sharp at 300 px.
+  static const double _photoMaxSide = 1080;
+  static const int _photoQuality = 85;
+
+  /// Pick / take / remove the profile photo; the server's reason is shown if it refuses one.
+  Future<void> _changePhoto(BuildContext context, WidgetRef ref) async {
+    final toast = AppToast.of(context);
+    final l10n = context.l10n;
+    final controller = ref.read(profileControllerProvider.notifier);
+    final action = await showProfilePhotoSheet(
+      context,
+      hasPhoto: profile.user.avatarUrl != null,
+    );
+    try {
+      switch (action) {
+        case null:
+          return;
+        case ProfilePhotoAction.remove:
+          await controller.removePhoto();
+          toast.success(l10n.profilePhotoRemoved);
+        case ProfilePhotoAction.gallery || ProfilePhotoAction.camera:
+          final photo = await ImagePicker().pickImage(
+            source: action == ProfilePhotoAction.camera
+                ? ImageSource.camera
+                : ImageSource.gallery,
+            maxWidth: _photoMaxSide,
+            maxHeight: _photoMaxSide,
+            imageQuality: _photoQuality,
+          );
+          if (photo == null) {
+            return;
+          }
+          toast.info(l10n.profilePhotoUploading);
+          await controller.changePhoto(photo.path);
+          toast.success(l10n.profilePhotoSaved);
+      }
+    } on ApiException catch (error) {
+      toast.error(l10n.errorMessage(error));
+    }
   }
 
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
@@ -123,7 +168,28 @@ class _ProfileContent extends ConsumerWidget {
         tone: MenuTone.green,
         title: l10n.menuHelp,
         subtitle: l10n.menuHelpHint,
-        onTap: () => _showComingSoon(context),
+        onTap: () => context.push(AppRoutes.help),
+      ),
+      ProfileMenuTile(
+        icon: Icons.description_outlined,
+        tone: MenuTone.grey,
+        title: l10n.menuTerms,
+        subtitle: l10n.menuTermsHint,
+        onTap: () => context.push(AppRoutes.legalPage(LegalPageType.terms)),
+      ),
+      ProfileMenuTile(
+        icon: Icons.privacy_tip_outlined,
+        tone: MenuTone.grey,
+        title: l10n.menuPrivacy,
+        subtitle: l10n.menuPrivacyHint,
+        onTap: () => context.push(AppRoutes.legalPage(LegalPageType.privacy)),
+      ),
+      ProfileMenuTile(
+        icon: Icons.lock_outline_rounded,
+        tone: MenuTone.gold,
+        title: l10n.menuChangePin,
+        subtitle: l10n.menuChangePinHint,
+        onTap: () => context.push(AppRoutes.changePin),
       ),
       ProfileMenuTile(
         icon: Icons.settings_outlined,
@@ -142,6 +208,7 @@ class _ProfileContent extends ConsumerWidget {
         ProfileCard(
           profile: profile,
           onEdit: () => context.push(AppRoutes.profileEdit),
+          onChangePhoto: () => _changePhoto(context, ref),
         ),
         const SizedBox(height: AppSpacing.lg),
         for (final tile in menu) ...[

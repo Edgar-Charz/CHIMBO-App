@@ -17,6 +17,7 @@ import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/presentation/order_feedback.dart';
 import 'package:chimbo/features/orders/presentation/widgets/agent_card.dart';
 import 'package:chimbo/features/orders/presentation/widgets/order_labels.dart';
+import 'package:chimbo/features/orders/presentation/widgets/order_payment_section.dart';
 import 'package:chimbo/features/orders/presentation/widgets/order_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -99,6 +100,9 @@ class _TrackingContent extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         _StatusBanner(status: order.status),
         const SizedBox(height: AppSpacing.lg),
+        OrderPaymentSection(order: order),
+        if (order.payment.canSubmit || order.payment.isUnderReview)
+          const SizedBox(height: AppSpacing.lg),
         OrderTimeline(order: order),
         SectionCard(
           title: deliveredAt == null
@@ -139,16 +143,14 @@ class _TrackingContent extends StatelessWidget {
                   ),
                   trailing: Text(Money.format(item.lineTotal)),
                 ),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                leading: Icon(
-                  order.paymentMethod.icon,
-                  color: AppColors.primary,
+              if (order.payment.method case final method?)
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  leading: Icon(method.icon, color: AppColors.primary),
+                  title: Text(method.name),
+                  subtitle: Text(order.deliveryMethod.name),
                 ),
-                title: Text(order.paymentMethod.label(l10n)),
-                subtitle: Text(order.deliveryMethod.name),
-              ),
             ],
           ),
         ),
@@ -171,7 +173,7 @@ class _TrackingContent extends StatelessWidget {
             variant: AppButtonVariant.danger,
             onPressed: onCancel,
           ),
-        if (order.status == OrderStatus.delivered)
+        if (order.status.canReorder)
           AppButton(
             label: l10n.quickReorder,
             variant: AppButtonVariant.accent,

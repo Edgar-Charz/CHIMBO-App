@@ -20,6 +20,8 @@ class FakeHttpAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     lastRequest = options;
+    // Read the upload like a real server, so a sent file is closed afterwards.
+    await requestStream?.drain<void>();
     return _reply(options);
   }
 

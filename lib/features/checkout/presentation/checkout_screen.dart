@@ -78,8 +78,8 @@ class _CheckoutForm extends ConsumerWidget {
         const SizedBox(height: AppSpacing.sm),
         for (final method in options.paymentMethods)
           ChoiceTile(
-            title: method.label(l10n),
-            isSelected: method == choices.paymentMethod,
+            title: method.name,
+            isSelected: method.code == choices.paymentMethod?.code,
             onTap: () => controller.selectPayment(method),
             leading: Icon(method.icon, color: AppColors.primary),
           ),

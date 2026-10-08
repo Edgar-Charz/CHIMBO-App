@@ -29,6 +29,11 @@ class CartController extends AsyncNotifier<Cart> {
     state = AsyncData(await _repository.removeItem(productId));
   }
 
+  /// Reloads the current cart without clearing its visible contents while the request runs.
+  Future<void> refresh() async {
+    state = AsyncData(await _repository.getCart());
+  }
+
   /// After an order or "Agiza Tena": the server changed the cart, so load it again.
   void reload() => ref.invalidateSelf();
 }

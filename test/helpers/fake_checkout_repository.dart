@@ -1,9 +1,10 @@
 import 'package:chimbo/features/cart/data/cart_repository.dart';
 import 'package:chimbo/features/checkout/data/checkout_repository.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
+import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 
-/// Checkout for tests, like the server: Standard and Haraka, only "Lipa ukipokea" switched on,
-/// totals from the (fake) cart.
+/// Checkout for tests, like the server: Standard and Haraka, "Lipa ukipokea" and M-Pesa
+/// switched on, totals from the (fake) cart.
 class FakeCheckoutRepository implements CheckoutRepository {
   const FakeCheckoutRepository(this._cartRepository);
 
@@ -24,15 +25,35 @@ class FakeCheckoutRepository implements CheckoutRepository {
     ),
   ];
 
+  static const PaymentMethod cashOnDelivery = PaymentMethod(
+    code: 'cod',
+    name: 'Lipa ukipokea',
+    type: PaymentMethodType.cash,
+  );
+
+  static const PaymentMethod mpesa = PaymentMethod(
+    code: 'mpesa',
+    name: 'M-Pesa',
+    type: PaymentMethodType.mobileMoney,
+    accountName: 'CHIMBO LTD',
+    accountNumber: '5544332',
+    instructions: 'Piga *150*00#, chagua Lipa kwa M-Pesa.',
+  );
+
+  static const List<PaymentMethod> paymentMethods = [cashOnDelivery, mpesa];
+
   final CartRepository _cartRepository;
 
   @override
   Future<CheckoutOptions> getOptions({int? addressId}) async {
     return const CheckoutOptions(
       deliveryMethods: deliveryMethods,
-      paymentMethods: [PaymentMethod.cashOnDelivery],
+      paymentMethods: paymentMethods,
     );
   }
+
+  @override
+  Future<List<PaymentMethod>> getPaymentMethods() async => paymentMethods;
 
   @override
   Future<CheckoutPreview> preview({

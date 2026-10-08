@@ -1,3 +1,5 @@
+import 'package:chimbo/features/checkout/data/models/payment_method.dart';
+
 /// A way to deliver (`delivery_methods` table): Standard or Haraka (D-9). The server's name
 /// already says how long it takes ("Standard (siku 2–3)").
 class DeliveryMethod {
@@ -39,34 +41,8 @@ class DeliveryMethod {
   };
 }
 
-/// Njia za malipo (blueprint §2.8). Mobile money is paid in Phase 5; COD needs no payment step.
-enum PaymentMethod {
-  mpesa('mpesa'),
-  airtelMoney('airtel_money'),
-  mixxByYas('mixx'),
-  bank('bank'),
-  cashOnDelivery('cod');
-
-  const PaymentMethod(this.apiValue);
-
-  final String apiValue;
-
-  static PaymentMethod fromApi(String value) =>
-      values.firstWhere((method) => method.apiValue == value);
-
-  /// Null for a method this version of the app doesn't know yet.
-  static PaymentMethod? tryFromApi(Object? value) {
-    for (final method in values) {
-      if (method.apiValue == value) {
-        return method;
-      }
-    }
-    return null;
-  }
-}
-
 /// `GET /checkout/options?address_id=…`: the delivery methods that reach the address and the
-/// payment methods switched on (only Lipa ukipokea until mobile money is connected).
+/// payment methods staff switched on, with their names and "pay to" details.
 class CheckoutOptions {
   const CheckoutOptions({
     required this.deliveryMethods,
@@ -80,9 +56,10 @@ class CheckoutOptions {
             (method) => DeliveryMethod.fromJson(method as Map<String, dynamic>),
           )
           .toList(),
-      paymentMethods: (json['payment_methods'] as List<dynamic>)
-          .map(PaymentMethod.tryFromApi)
-          .whereType<PaymentMethod>()
+      paymentMethods: (json['payment_method_details'] as List<dynamic>)
+          .map(
+            (method) => PaymentMethod.fromJson(method as Map<String, dynamic>),
+          )
           .toList(),
     );
   }

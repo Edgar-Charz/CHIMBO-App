@@ -18,6 +18,8 @@ class FakeAccountStore {
 
   static const String _accountsKey = 'dev_accounts';
   static const String _currentPhoneKey = 'dev_current_phone';
+  static const String _pinsKey = 'dev_pins';
+  static const String _failedPinTriesKey = 'dev_failed_pin_tries';
 
   final TokenStorage _tokenStorage;
   final SharedPreferences _preferences;
@@ -72,6 +74,44 @@ class FakeAccountStore {
     return updated;
   }
 
+  bool hasAccount(String phone) => _readAccounts().containsKey(phone);
+
+  /// The account's PIN, or null when it has none yet.
+  String? pinOf(String phone) => _readMap(_pinsKey)[phone] as String?;
+
+  /// Sets the logged-in account's PIN and unlocks it.
+  Future<Profile> saveCurrentPin(String pin) async {
+    final current = await requireCurrent();
+    final phone = current.user.phone;
+    await _writeMap(_pinsKey, {..._readMap(_pinsKey), phone: pin});
+    await setFailedPinTries(phone, 0);
+    return current;
+  }
+
+  int failedPinTries(String phone) =>
+      _readMap(_failedPinTriesKey)[phone] as int? ?? 0;
+
+  Future<void> setFailedPinTries(String phone, int tries) => _writeMap(
+    _failedPinTriesKey,
+    {..._readMap(_failedPinTriesKey), phone: tries},
+  );
+
+  /// A photo URL, or null to go back to initials.
+  Future<Profile> setCurrentAvatar(String? avatarUrl) async {
+    final current = await requireCurrent();
+    final user = current.user;
+    final updated = current.copyWith(
+      user: AppUser(
+        id: user.id,
+        phone: user.phone,
+        fullName: user.fullName,
+        avatarUrl: avatarUrl,
+      ),
+    );
+    await _writeAccounts({..._readAccounts(), user.phone: updated});
+    return updated;
+  }
+
   Future<void> signOut() async {
     await _tokenStorage.deleteToken();
     await _preferences.remove(_currentPhoneKey);
@@ -93,6 +133,7 @@ class FakeAccountStore {
     return AuthSession(
       token: token,
       user: account.user,
+      hasPin: pinOf(account.user.phone) != null,
       isProfileComplete: account.business != null,
     );
   }
@@ -132,6 +173,14 @@ class FakeAccountStore {
           MapEntry(phone, Profile.fromJson(json as Map<String, dynamic>)),
     );
   }
+
+  Map<String, dynamic> _readMap(String key) {
+    final stored = _preferences.getString(key);
+    return stored == null ? {} : jsonDecode(stored) as Map<String, dynamic>;
+  }
+
+  Future<void> _writeMap(String key, Map<String, dynamic> map) =>
+      _preferences.setString(key, jsonEncode(map));
 
   Future<void> _writeAccounts(Map<String, Profile> accounts) async {
     await _preferences.setString(

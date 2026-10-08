@@ -2,16 +2,23 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/phone.dart';
-import 'package:chimbo/core/widgets/initials_avatar.dart';
+import 'package:chimbo/core/widgets/person_avatar.dart';
+import 'package:chimbo/features/auth/data/models/app_user.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
 import 'package:flutter/material.dart';
 
-/// Top of Wasifu: initials avatar, name, phone, location, shop name and "Hariri Wasifu".
+/// Top of Wasifu: photo (tap to change), name, phone, location, shop name and "Hariri Wasifu".
 class ProfileCard extends StatelessWidget {
-  const ProfileCard({super.key, required this.profile, required this.onEdit});
+  const ProfileCard({
+    super.key,
+    required this.profile,
+    required this.onEdit,
+    required this.onChangePhoto,
+  });
 
   final Profile profile;
   final VoidCallback onEdit;
+  final VoidCallback onChangePhoto;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +50,7 @@ class ProfileCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                InitialsAvatar(name: profile.user.fullName ?? ''),
+                _EditablePhoto(user: profile.user, onTap: onChangePhoto),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(
                   child: Column(
@@ -96,6 +103,51 @@ class ProfileCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppRadius.medium),
                 ),
                 textStyle: textTheme.labelLarge,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The avatar with a small camera badge; the whole photo is the button.
+class _EditablePhoto extends StatelessWidget {
+  const _EditablePhoto({required this.user, required this.onTap});
+
+  final AppUser user;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: context.l10n.actionChangePhoto,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Stack(
+          children: [
+            PersonAvatar(name: user.fullName ?? '', photoUrl: user.avatarUrl),
+            const Positioned(
+              right: 0,
+              bottom: 0,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                  border: Border.fromBorderSide(
+                    BorderSide(color: AppColors.surface, width: 2),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(AppSpacing.xs),
+                  child: Icon(
+                    Icons.photo_camera_outlined,
+                    size: AppSizes.iconSmall,
+                    color: AppColors.onAccent,
+                  ),
+                ),
               ),
             ),
           ],

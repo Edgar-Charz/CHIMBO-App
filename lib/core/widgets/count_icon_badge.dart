@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// A cart icon with the number of cart lines on it; the number is hidden when the cart is empty.
-class CartIconBadge extends StatelessWidget {
-  const CartIconBadge({
+/// An icon with a count on it (cart lines, unread notifications); the number is hidden at 0.
+class CountIconBadge extends StatelessWidget {
+  const CountIconBadge({
     super.key,
     required this.count,
     this.icon = Icons.shopping_cart_outlined,

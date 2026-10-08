@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
+import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
 
 /// Orders and tracking from the CHIMBO API (docs/API_REFERENCE.md, "Orders").
@@ -16,7 +19,7 @@ class ApiOrdersRepository implements OrdersRepository {
       body: {
         'address_id': input.addressId,
         'delivery_method_id': input.deliveryMethodId,
-        'payment_method': input.paymentMethod.apiValue,
+        'payment_method': input.paymentMethodCode,
         'expected_total': input.expectedTotal,
       },
     );
@@ -54,5 +57,31 @@ class ApiOrdersRepository implements OrdersRepository {
       for (final item in skipped)
         (item as Map<String, dynamic>)['message'] as String,
     ];
+  }
+
+  @override
+  Future<Order> submitPayment(int orderId, PaymentSubmission submission) async {
+    final response = await _apiClient.post(
+      '/orders/$orderId/payment',
+      body: submission.toJson(),
+    );
+    return Order.fromJson(response.dataAsMap);
+  }
+
+  @override
+  Future<Order> changePaymentMethod(
+    int orderId,
+    String paymentMethodCode,
+  ) async {
+    final response = await _apiClient.post(
+      '/orders/$orderId/payment-method',
+      body: {'payment_method': paymentMethodCode},
+    );
+    return Order.fromJson(response.dataAsMap);
+  }
+
+  @override
+  Future<Uint8List> downloadReceipt(int orderId) {
+    return _apiClient.download('/orders/$orderId/receipt');
   }
 }

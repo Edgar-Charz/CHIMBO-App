@@ -10,6 +10,7 @@ import 'package:chimbo/core/utils/phone.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/core/widgets/otp_input.dart';
+import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/auth/data/auth_rules.dart';
 import 'package:chimbo/features/auth/presentation/widgets/auth_step_layout.dart';
@@ -23,6 +24,7 @@ class OtpScreenArgs {
     required this.phone,
     required this.resendAfter,
     this.debugCode,
+    this.isPinReset = false,
   });
 
   /// `+255XXXXXXXXX`.
@@ -31,11 +33,16 @@ class OtpScreenArgs {
 
   /// Sent only by a test server in "show code" mode; filled in for the tester.
   final String? debugCode;
+
+  /// Opened from "Umesahau PIN?": a new PIN is asked after the code.
+  final bool isPinReset;
 }
 
-/// Registration step 2 — "Thibitisha Namba": the 6-digit code.
+/// "Thibitisha Namba": the 6-digit SMS code — registration step 2, or the first step of
+/// "Umesahau PIN?".
 ///
-/// On success the router moves on by itself (step 3 for a new customer, Home for a returning one).
+/// On success the router moves on by itself (Tengeneza PIN / Weka PIN Mpya, business details,
+/// or Home).
 class OtpScreen extends ConsumerStatefulWidget {
   const OtpScreen({super.key, required this.args});
 
@@ -100,7 +107,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     try {
       await ref
           .read(authControllerProvider.notifier)
-          .verifyOtp(phone: widget.args.phone, code: _code);
+          .verifyOtp(
+            phone: widget.args.phone,
+            code: _code,
+            isPinReset: widget.args.isPinReset,
+          );
     } on ApiException catch (error) {
       if (mounted) {
         setState(() {
@@ -149,9 +160,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return AuthStepLayout(
-      step: 2,
+      step: widget.args.isPinReset ? null : 2,
       onBack: _changeNumber,
       illustration: AppImages.authVerify,
+      illustrationSlot: AppImageSlot.authVerify,
       illustrationIcons: const [Icons.shield_outlined, Icons.phonelink_lock],
       title: l10n.otpTitle,
       subtitle: _SentTo(phone: widget.args.phone),

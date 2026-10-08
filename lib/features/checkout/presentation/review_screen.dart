@@ -104,8 +104,16 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             ChosenOptionRow(
               title: l10n.paymentMethodTitle,
               icon: paymentMethod.icon,
-              label: paymentMethod.label(l10n),
+              label: paymentMethod.name,
             ),
+            // Mobile money / bank: where to pay is shown once the order exists.
+            if (!paymentMethod.isCashOnDelivery) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l10n.payAfterOrderingHint,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
           ],
           const SizedBox(height: AppSpacing.md),
           SectionCard(

@@ -1,27 +1,37 @@
+import 'package:chimbo/core/device/device_name.dart';
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/storage/token_storage.dart';
 import 'package:chimbo/features/auth/data/auth_repository.dart';
-import 'package:chimbo/features/auth/data/models/app_user.dart';
 import 'package:chimbo/features/auth/data/models/auth_session.dart';
 import 'package:chimbo/features/auth/data/models/business_profile_input.dart';
+import 'package:chimbo/features/auth/data/models/login_start.dart';
 import 'package:chimbo/features/auth/data/models/otp_request_result.dart';
-import 'package:flutter/foundation.dart';
+import 'package:chimbo/features/auth/data/models/pin_input.dart';
 
-/// Phone + OTP login against the CHIMBO API (docs/API_REFERENCE.md, "Customer login").
+/// Phone → PIN login against the CHIMBO API (docs/API_REFERENCE.md, "Customer login").
 /// The token is kept in secure storage; `ApiClient` sends it as `Authorization: Bearer`.
 class ApiAuthRepository implements AuthRepository {
   const ApiAuthRepository({
     required this._apiClient,
     required this._tokenStorage,
+    this._readDeviceName = DeviceName.read,
   });
-
-  /// Tells the server which kind of phone holds the token (shown in the admin).
-  static String get _platform =>
-      defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android';
 
   final ApiClient _apiClient;
   final TokenStorage _tokenStorage;
+
+  /// The phone's name for the server's device list (tests pass their own).
+  final Future<String?> Function() _readDeviceName;
+
+  @override
+  Future<LoginStart> startLogin(String phone) async {
+    final response = await _apiClient.post(
+      '/auth/start',
+      body: {'user_phone': phone},
+    );
+    return LoginStart.fromJson(response.dataAsMap);
+  }
 
   @override
   Future<OtpRequestResult> requestOtp(String phone) async {
@@ -33,23 +43,25 @@ class ApiAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<AuthSession> verifyOtp({
+  Future<AuthSession> verifyOtp({required String phone, required String code}) {
+    return _logIn('/auth/otp/verify', {'user_phone': phone, 'otp_code': code});
+  }
+
+  @override
+  Future<AuthSession> loginWithPin({
     required String phone,
-    required String code,
-  }) async {
-    final response = await _apiClient.post(
-      '/auth/otp/verify',
-      body: {
-        'user_phone': phone,
-        'otp_code': code,
-        'client': 'app',
-        'auth_token_platform': _platform,
-      },
+    required String pin,
+  }) {
+    return _logIn('/auth/pin/login', {'user_phone': phone, 'user_pin': pin});
+  }
+
+  @override
+  Future<AuthSession> savePin(PinInput input) async {
+    final response = await _apiClient.post('/auth/pin', body: input.toJson());
+    return AuthSession.fromProfileJson(
+      await _requireToken(),
+      response.dataAsMap,
     );
-    final data = response.dataAsMap;
-    final token = data['auth_token'] as String;
-    await _tokenStorage.saveToken(token);
-    return _session(token, data['user'] as Map<String, dynamic>);
   }
 
   @override
@@ -58,7 +70,10 @@ class ApiAuthRepository implements AuthRepository {
       '/auth/profile',
       body: input.toJson(),
     );
-    return _session(await _requireToken(), response.dataAsMap);
+    return AuthSession.fromProfileJson(
+      await _requireToken(),
+      response.dataAsMap,
+    );
   }
 
   /// `GET /auth/me` with the saved token. An expired or revoked token logs out quietly;
@@ -71,7 +86,7 @@ class ApiAuthRepository implements AuthRepository {
     }
     try {
       final response = await _apiClient.get('/auth/me');
-      return _session(token, response.dataAsMap);
+      return AuthSession.fromProfileJson(token, response.dataAsMap);
     } on ApiException catch (error) {
       if (error.code != ApiErrorCode.unauthenticated) {
         rethrow;
@@ -94,9 +109,33 @@ class ApiAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<void> forgetSession() => _tokenStorage.deleteToken();
+
+  @override
   Future<void> deleteAccount() async {
     await _apiClient.delete('/me', body: {'confirm': true});
     await _tokenStorage.deleteToken();
+  }
+
+  /// Both logins answer `{user, auth_token}`; the token is saved before anything else runs.
+  Future<AuthSession> _logIn(String path, Map<String, String> body) async {
+    final deviceName = await _readDeviceName();
+    final response = await _apiClient.post(
+      path,
+      body: {
+        ...body,
+        'client': 'app',
+        'auth_token_platform': DeviceName.platform,
+        'auth_token_device_name': ?deviceName,
+      },
+    );
+    final data = response.dataAsMap;
+    final token = data['auth_token'] as String;
+    await _tokenStorage.saveToken(token);
+    return AuthSession.fromProfileJson(
+      token,
+      data['user'] as Map<String, dynamic>,
+    );
   }
 
   Future<String> _requireToken() async {
@@ -105,14 +144,5 @@ class ApiAuthRepository implements AuthRepository {
       throw const ApiException(code: ApiErrorCode.unauthenticated);
     }
     return token;
-  }
-
-  /// A session from the API's profile object.
-  AuthSession _session(String token, Map<String, dynamic> profile) {
-    return AuthSession(
-      token: token,
-      user: AppUser.fromJson(profile),
-      isProfileComplete: profile['is_profile_complete'] as bool,
-    );
   }
 }

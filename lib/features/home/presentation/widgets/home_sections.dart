@@ -78,6 +78,7 @@ class CategoryCard extends StatelessWidget {
                         )
                       : AppNetworkImage(
                           url: imageUrl,
+                          fallbackAsset: image,
                           placeholderIcon: placeholderIcon,
                           fit: BoxFit.cover,
                         ),
@@ -264,6 +265,7 @@ class WholesaleBanner extends StatelessWidget {
                     )
                   : AppNetworkImage(
                       url: banner!.imageUrl,
+                      fallbackAsset: AppImages.homeWholesaleBanner,
                       placeholderIcon: Icons.inventory_2_outlined,
                       fit: BoxFit.cover,
                     ),

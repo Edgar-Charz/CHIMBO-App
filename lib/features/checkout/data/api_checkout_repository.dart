@@ -1,6 +1,7 @@
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/checkout/data/checkout_repository.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
+import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 
 /// Checkout from the CHIMBO API (docs/API_REFERENCE.md, "Checkout").
 class ApiCheckoutRepository implements CheckoutRepository {
@@ -28,5 +29,13 @@ class ApiCheckoutRepository implements CheckoutRepository {
       body: {'delivery_method_id': deliveryMethodId, 'address_id': addressId},
     );
     return CheckoutPreview.fromJson(response.dataAsMap);
+  }
+
+  @override
+  Future<List<PaymentMethod>> getPaymentMethods() async {
+    final response = await _apiClient.get('/payment-methods');
+    return response.dataAsList
+        .map((json) => PaymentMethod.fromJson(json! as Map<String, dynamic>))
+        .toList();
   }
 }

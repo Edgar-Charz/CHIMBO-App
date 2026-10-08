@@ -2,24 +2,15 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
+import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:flutter/material.dart';
 
-/// Names and icons for payment methods. Brand names stay as they are; the rest is Kiswahili.
-extension PaymentMethodLabel on PaymentMethod {
-  String label(AppLocalizations l10n) => switch (this) {
-    PaymentMethod.mpesa => 'M-Pesa',
-    PaymentMethod.airtelMoney => 'Airtel Money',
-    PaymentMethod.mixxByYas => 'Mixx by Yas',
-    PaymentMethod.bank => l10n.paymentBank,
-    PaymentMethod.cashOnDelivery => l10n.paymentCashOnDelivery,
-  };
-
-  IconData get icon => switch (this) {
-    PaymentMethod.mpesa ||
-    PaymentMethod.airtelMoney ||
-    PaymentMethod.mixxByYas => Icons.phone_android_rounded,
-    PaymentMethod.bank => Icons.account_balance_outlined,
-    PaymentMethod.cashOnDelivery => Icons.payments_outlined,
+/// The icon for a payment method; its name comes from the server, already in Kiswahili.
+extension PaymentMethodIcon on PaymentMethod {
+  IconData get icon => switch (type) {
+    PaymentMethodType.mobileMoney => Icons.phone_android_rounded,
+    PaymentMethodType.bank => Icons.account_balance_outlined,
+    PaymentMethodType.cash => Icons.payments_outlined,
   };
 }
 

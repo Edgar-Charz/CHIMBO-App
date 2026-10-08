@@ -10,6 +10,10 @@ analyzer:
     - lib/core/l10n/app_localizations*.dart
     - android/**
     - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   rules:

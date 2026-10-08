@@ -2,7 +2,7 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_text_field.dart';
-import 'package:chimbo/core/widgets/cart_icon_badge.dart';
+import 'package:chimbo/core/widgets/count_icon_badge.dart';
 import 'package:chimbo/core/widgets/price_text.dart';
 import 'package:chimbo/core/widgets/verified_badge.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +58,7 @@ class UiKitPreview extends StatelessWidget {
             PriceText(_samplePrice),
             PriceText(_sampleBestPrice, highlight: true),
             VerifiedBadge(),
-            CartIconBadge(count: _sampleCartCount),
+            CountIconBadge(count: _sampleCartCount),
           ],
         ),
       ],

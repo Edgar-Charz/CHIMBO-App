@@ -1,5 +1,6 @@
 import 'package:chimbo/features/addresses/data/models/address.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
+import 'package:chimbo/features/orders/data/models/order_payment.dart';
 
 /// The order status machine (blueprint §11.3).
 enum OrderStatus {
@@ -30,6 +31,9 @@ enum OrderStatus {
 
   /// Ended without delivery (payment status `cancelled`): shown the same way either way.
   bool get isStopped => this == cancelled || this == expired;
+
+  /// "Agiza Tena" is offered only for orders that are over: delivered or cancelled.
+  bool get canReorder => this == delivered || this == cancelled;
 
   /// "Zinazoendelea" tab.
   bool get isActive =>
@@ -104,11 +108,12 @@ class Order {
     required this.deliveryFee,
     required this.total,
     required this.deliveryMethod,
-    required this.paymentMethod,
+    required this.payment,
     required this.address,
     required this.events,
     required this.canCancel,
     this.agent,
+    this.expiresAt,
   });
 
   /// An order from `GET /orders`, `GET /orders/{id}` or `POST /orders`.
@@ -119,6 +124,7 @@ class Order {
     );
     final estimated = json['order_estimated_delivery_date'] as String?;
     final agent = json['delivery_agent'] as Map<String, dynamic>?;
+    final expiresAt = json['order_expires_at'] as String?;
     return Order(
       id: json['order_id'] as int,
       number: json['order_number'] as String,
@@ -135,15 +141,14 @@ class Order {
       deliveryFee: json['order_delivery_fee'] as int,
       total: json['order_total'] as int,
       deliveryMethod: deliveryMethod,
-      paymentMethod: PaymentMethod.fromApi(
-        json['order_payment_method'] as String,
-      ),
+      payment: OrderPayment.fromJson(json['payment'] as Map<String, dynamic>),
       address: Address.fromJson(json['address'] as Map<String, dynamic>),
       events: [
         for (final event in json['events'] as List<dynamic>? ?? const [])
           _eventFromJson(event as Map<String, dynamic>),
       ],
       canCancel: json['can_cancel'] as bool,
+      expiresAt: expiresAt == null ? null : DateTime.parse(expiresAt),
       agent: agent == null
           ? null
           : (
@@ -170,7 +175,7 @@ class Order {
   final int deliveryFee;
   final int total;
   final DeliveryMethod deliveryMethod;
-  final PaymentMethod paymentMethod;
+  final OrderPayment payment;
   final Address address;
 
   /// Steps reached so far, oldest first.
@@ -178,6 +183,9 @@ class Order {
 
   /// Decided by the server: only before packing (blueprint §11.3).
   final bool canCancel;
+
+  /// An unpaid mobile money / bank order is cancelled by itself after this time.
+  final DateTime? expiresAt;
 
   /// Known once the order is dispatched.
   final DeliveryAgent? agent;

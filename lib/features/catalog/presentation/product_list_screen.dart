@@ -4,7 +4,7 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
-import 'package:chimbo/core/widgets/cart_icon_badge.dart';
+import 'package:chimbo/core/widgets/count_icon_badge.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_header.dart';
@@ -68,7 +68,7 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
 
   bool _onScroll(ScrollNotification notification) {
     if (notification.metrics.axis == Axis.vertical &&
-        notification.metrics.extentAfter < AppSizes.gridLoadMoreThreshold) {
+        notification.metrics.extentAfter < AppSizes.loadMoreThreshold) {
       ref.read(productListControllerProvider(_scope).notifier).loadMore();
     }
     return false;
@@ -142,7 +142,7 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
           IconButton(
             onPressed: () => context.go(AppRoutes.cart),
             tooltip: l10n.navCart,
-            icon: CartIconBadge(count: ref.watch(cartCountProvider)),
+            icon: CountIconBadge(count: ref.watch(cartCountProvider)),
           ),
         ],
       ),

@@ -28,6 +28,16 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   CartController get _cart => ref.read(cartControllerProvider.notifier);
 
+  Future<void> _refreshCart() async {
+    try {
+      await _cart.refresh();
+    } on ApiException catch (error) {
+      if (mounted) {
+        AppToast.of(context).error(context.l10n.errorMessage(error));
+      }
+    }
+  }
+
   /// Runs a cart change and shows the server's reason if it is refused (MOQ, stock).
   Future<void> _change(Future<void> Function() action) async {
     try {
@@ -65,25 +75,42 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ),
       body: cart.when(
         data: (value) => value.isEmpty
-            ? Center(
-                child: EmptyState(
-                  icon: Icons.shopping_cart_outlined,
-                  title: l10n.cartEmptyTitle,
-                  message: l10n.cartEmptyMessage,
-                  actionLabel: l10n.actionStartShopping,
-                  onAction: () => context.go(AppRoutes.discover),
+            ? RefreshIndicator(
+                onRefresh: _refreshCart,
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
+                    EmptyState(
+                      icon: Icons.shopping_cart_outlined,
+                      title: l10n.cartEmptyTitle,
+                      message: l10n.cartEmptyMessage,
+                      actionLabel: l10n.actionStartShopping,
+                      onAction: () => context.go(AppRoutes.discover),
+                    ),
+                  ],
                 ),
               )
             : _CartContent(
                 cart: value,
                 isEditing: _isEditing,
+                onRefresh: _refreshCart,
                 onQuantityChanged: (productId, quantity) =>
                     _change(() => _cart.setQuantity(productId, quantity)),
                 onRemove: (productId) => _change(() => _cart.remove(productId)),
               ),
-        error: (error, _) => ErrorState(
-          error: error,
-          onRetry: () => ref.invalidate(cartControllerProvider),
+        error: (error, _) => RefreshIndicator(
+          onRefresh: _refreshCart,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              const SizedBox(height: AppSpacing.xl),
+              ErrorState(
+                error: error,
+                onRetry: () => ref.invalidate(cartControllerProvider),
+              ),
+            ],
+          ),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
@@ -95,12 +122,14 @@ class _CartContent extends StatelessWidget {
   const _CartContent({
     required this.cart,
     required this.isEditing,
+    required this.onRefresh,
     required this.onQuantityChanged,
     required this.onRemove,
   });
 
   final Cart cart;
   final bool isEditing;
+  final Future<void> Function() onRefresh;
   final void Function(int productId, int quantity) onQuantityChanged;
   final ValueChanged<int> onRemove;
 
@@ -111,42 +140,46 @@ class _CartContent extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              AppSpacing.sm,
-              AppSpacing.lg,
-              AppSpacing.md,
-            ),
-            children: [
-              if (nudge != null) ...[
-                _NudgeBanner(line: nudge),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              for (final group in cart.groups) ...[
-                _GroupHeader(name: group.categoryName),
-                for (final line in group.lines)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                    child: CartLineTile(
-                      line: line,
-                      isEditing: isEditing,
-                      onQuantityChanged: (quantity) =>
-                          onQuantityChanged(line.product.id, quantity),
-                      onRemove: () => onRemove(line.product.id),
-                    ),
-                  ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              _CartTotals(cart: cart),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                l10n.cartDeliveryNote,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall,
+          child: RefreshIndicator(
+            onRefresh: onRefresh,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.sm,
+                AppSpacing.lg,
+                AppSpacing.md,
               ),
-              const SizedBox(height: AppSpacing.sm),
-            ],
+              children: [
+                if (nudge != null) ...[
+                  _NudgeBanner(line: nudge),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                for (final group in cart.groups) ...[
+                  _GroupHeader(name: group.categoryName),
+                  for (final line in group.lines)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      child: CartLineTile(
+                        line: line,
+                        isEditing: isEditing,
+                        onQuantityChanged: (quantity) =>
+                            onQuantityChanged(line.product.id, quantity),
+                        onRemove: () => onRemove(line.product.id),
+                      ),
+                    ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                _CartTotals(cart: cart),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  l10n.cartDeliveryNote,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+            ),
           ),
         ),
         Padding(

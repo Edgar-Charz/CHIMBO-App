@@ -4,7 +4,7 @@ import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_logo.dart';
-import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/count_icon_badge.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/catalog/application/catalog_providers.dart';
@@ -16,6 +16,8 @@ import 'package:chimbo/features/home/presentation/widgets/greeting_card.dart';
 import 'package:chimbo/features/home/presentation/widgets/home_sections.dart';
 import 'package:chimbo/features/home/presentation/widgets/product_rail.dart';
 import 'package:chimbo/features/home/presentation/widgets/recently_ordered_rail.dart';
+import 'package:chimbo/features/notifications/application/notifications_controller.dart';
+import 'package:chimbo/features/profile/application/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -73,6 +75,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final fullName = ref.watch(
       authControllerProvider.select((state) => state.user?.fullName),
     );
+    // The photo comes from the profile, so a new one shows here at once.
+    final photoUrl = ref.watch(
+      profileControllerProvider.select(
+        (profile) => profile.value?.user.avatarUrl,
+      ),
+    );
     final home = ref.watch(homeDataProvider);
 
     return Scaffold(
@@ -93,7 +101,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Stack(
                 children: [
                   RefreshIndicator(
-                    onRefresh: () => ref.refresh(homeDataProvider.future),
+                    onRefresh: () {
+                      ref.invalidate(unreadNotificationsProvider);
+                      return ref.refresh(homeDataProvider.future);
+                    },
                     child: ListView(
                       key: _scrollViewportKey,
                       controller: _scrollController,
@@ -107,6 +118,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         GreetingCard(
                           key: _greetingCardKey,
                           fullName: fullName ?? '',
+                          photoUrl: photoUrl,
                           now: DateTime.now(),
                           onSearchTap: () => context.go(AppRoutes.discover),
                         ),
@@ -170,12 +182,13 @@ const HomeData _skeletonData = HomeData(
   recentlyOrdered: [],
 );
 
-/// Logo on the left, notification bell on the right.
-class _Header extends StatelessWidget {
+/// Logo on the left, notification bell (with the unread count) on the right.
+class _Header extends ConsumerWidget {
   const _Header();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unread = ref.watch(unreadNotificationsProvider).value ?? 0;
     return Row(
       children: [
         // Shrinks instead of overflowing on narrow screens or with large system text.
@@ -186,13 +199,11 @@ class _Header extends StatelessWidget {
           ),
         ),
         IconButton(
-          // Notifications come in Phase 4.
-          onPressed: () =>
-              AppToast.of(context).info(context.l10n.comingSoonMessage),
-          tooltip: context.l10n.menuNotifications,
-          icon: const Badge(
-            isLabelVisible: false,
-            child: Icon(Icons.notifications_none_rounded),
+          onPressed: () => context.push(AppRoutes.notifications),
+          tooltip: context.l10n.notificationsTitle,
+          icon: CountIconBadge(
+            count: unread,
+            icon: Icons.notifications_none_rounded,
           ),
         ),
       ],
@@ -250,8 +261,9 @@ class _HomeSections extends StatelessWidget {
                       background:
                           _categoryStyles[index % _categoryStyles.length]
                               .background,
-                      onBrowse: () =>
-                          context.go(AppRoutes.category(categories[index].id)),
+                      onBrowse: () => context.push(
+                        AppRoutes.category(categories[index].id),
+                      ),
                     ),
                   ),
                 if (categories.length.isOdd && start + 1 >= categories.length)
@@ -323,7 +335,7 @@ void _openBannerTarget(BuildContext context, HomeBanner banner) {
   switch (banner.targetType) {
     case 'category':
       final id = int.tryParse(value ?? '');
-      if (id != null) context.go(AppRoutes.category(id));
+      if (id != null) context.push(AppRoutes.category(id));
       break;
     case 'product':
       final id = int.tryParse(value ?? '');

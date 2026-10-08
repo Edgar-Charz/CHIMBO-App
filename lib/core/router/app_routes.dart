@@ -1,11 +1,16 @@
+import 'package:chimbo/features/support/data/models/legal_page.dart';
+
 /// Every route path in one place, so screens never hard-code URLs.
 abstract final class AppRoutes {
   static const String splash = '/splash';
   static const String onboarding = '/onboarding';
   static const String phone = '/auth/phone';
   static const String otp = '/auth/otp';
+  static const String pinLogin = '/auth/pin';
+  static const String createPin = '/auth/pin/new';
   static const String businessInfo = '/auth/business';
   static const String home = '/home';
+  static const String notifications = '/home/notifications';
   static const String discover = '/discover';
   static const String cart = '/cart';
   static const String orders = '/orders';
@@ -13,6 +18,9 @@ abstract final class AppRoutes {
   static const String profileEdit = '/profile/edit';
   static const String settings = '/profile/settings';
   static const String wishlist = '/profile/wishlist';
+  static const String changePin = '/profile/pin';
+  static const String help = '/profile/help';
+  static const String legalPagePattern = '/pages/:name';
   static const String checkout = '/cart/checkout';
   static const String checkoutReview = '/cart/checkout/review';
   static const String addressForm = '/cart/checkout/address';
@@ -33,6 +41,17 @@ abstract final class AppRoutes {
       '${collection == null ? '' : '&collection=$collection'}';
 
   static String productDetails(int productId) => '/product/$productId';
+
+  /// "Vigezo na Masharti" / "Sera ya Faragha" (full screen; open to everyone, even logged
+  /// out).
+  static String legalPage(LegalPageType type) =>
+      '$_legalPagePrefix${type.apiValue}';
+
+  static const String _legalPagePrefix = '/pages/';
+
+  /// Public pages the login rules never block.
+  static bool isPublicPage(String location) =>
+      location.startsWith(_legalPagePrefix);
 
   /// Fuatilia Oda (inside the Oda tab).
   static String orderDetails(int orderId) => '/orders/$orderId';

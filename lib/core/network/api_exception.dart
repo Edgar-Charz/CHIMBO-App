@@ -13,10 +13,16 @@ abstract final class ApiErrorCode {
   static const String validation = 'VALIDATION_ERROR';
   static const String unauthenticated = 'UNAUTHENTICATED';
   static const String otpInvalid = 'OTP_INVALID';
+  static const String pinInvalid = 'PIN_INVALID';
+  static const String pinLocked = 'PIN_LOCKED';
   static const String notFound = 'NOT_FOUND';
   static const String moqNotMet = 'MOQ_NOT_MET';
   static const String outOfStock = 'OUT_OF_STOCK';
   static const String priceChanged = 'PRICE_CHANGED';
+  static const String paymentUnderReview = 'PAYMENT_UNDER_REVIEW';
+  static const String paymentTimeOver = 'PAYMENT_TIME_OVER';
+  static const String paymentNotExpected = 'PAYMENT_NOT_EXPECTED';
+  static const String paymentMethodLocked = 'PAYMENT_METHOD_LOCKED';
 }
 
 /// The one error type the rest of the app sees for anything that goes wrong with an API call.

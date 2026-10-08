@@ -75,7 +75,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                           onReorder: () =>
                               reorderAndOpenCart(context, ref, list[index].id),
                           onDownloadReceipt: () =>
-                              showReceiptComingSoon(context),
+                              downloadReceipt(context, ref, list[index]),
                         ),
                       ),
                 error: (error, _) => ErrorState(

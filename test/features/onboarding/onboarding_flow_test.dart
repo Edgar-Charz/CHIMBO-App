@@ -2,13 +2,16 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/features/onboarding/presentation/splash_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/fake_app_images_repository.dart';
 import '../../helpers/pump_app.dart';
 
 void main() {
   testWidgets('splash shows the tagline and the new slogan, then leaves', (
     tester,
   ) async {
-    await pumpApp(tester);
+    final appImages = FakeAppImagesRepository();
+    await pumpApp(tester, appImagesRepository: appImages);
+    expect(appImages.fetchCount, 1);
     await tester.pump(AppDurations.slow);
 
     expect(find.byType(SplashScreen), findsOneWidget);

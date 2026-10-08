@@ -4,7 +4,7 @@ import 'package:chimbo/features/profile/data/profile_repository.dart';
 
 import 'fake_account_store.dart';
 
-/// Reads and edits the dev account until the backend's `/me` endpoints exist.
+/// Offline stand-in for `/me`: reads and edits the fake account.
 class FakeProfileRepository implements ProfileRepository {
   const FakeProfileRepository(this._store);
 
@@ -17,4 +17,13 @@ class FakeProfileRepository implements ProfileRepository {
   Future<Profile> updateProfile(BusinessProfileInput input) {
     return _store.updateCurrentProfile(input);
   }
+
+  /// Like the server: the photo gets its own address.
+  @override
+  Future<Profile> uploadAvatar(String filePath) {
+    return _store.setCurrentAvatar('http://api.test/avatars/me.webp');
+  }
+
+  @override
+  Future<Profile> deleteAvatar() => _store.setCurrentAvatar(null);
 }

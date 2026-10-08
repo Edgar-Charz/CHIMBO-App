@@ -11,6 +11,12 @@ abstract interface class ProfileRepository {
 
   /// "Hariri Wasifu": name, shop, region and district.
   Future<Profile> updateProfile(BusinessProfileInput input);
+
+  /// `POST /me/avatar`: a JPG, PNG or WEBP photo (up to 8 MB) replaces the current one.
+  Future<Profile> uploadAvatar(String filePath);
+
+  /// `DELETE /me/avatar`: back to initials.
+  Future<Profile> deleteAvatar();
 }
 
 final profileRepositoryProvider = Provider<ProfileRepository>(

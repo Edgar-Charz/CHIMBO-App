@@ -34,6 +34,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get comingSoonMessage => 'Sehemu hii itakuwa tayari hivi punde.';
 
   @override
+  String get pressBackAgainToExit => 'Bonyeza nyuma tena ili kutoka.';
+
+  @override
   String get actionContinue => 'Endelea';
 
   @override
@@ -246,6 +249,75 @@ class AppLocalizationsSw extends AppLocalizations {
   String get otpInvalid => 'Namba ya uthibitisho si sahihi. Jaribu tena.';
 
   @override
+  String get pinLoginTitle => 'Ingia kwa PIN';
+
+  @override
+  String get pinLoginSubtitle => 'Weka PIN ya akaunti ya';
+
+  @override
+  String get actionLogin => 'Ingia';
+
+  @override
+  String get pinForgot => 'Umesahau PIN?';
+
+  @override
+  String get pinLockedMessage =>
+      'PIN imefungwa baada ya majaribio 5 yasiyo sahihi. Tutakutumia namba kwa SMS ili uweke PIN mpya.';
+
+  @override
+  String get createPinTitle => 'Tengeneza PIN';
+
+  @override
+  String get resetPinTitle => 'Weka PIN Mpya';
+
+  @override
+  String get createPinSubtitle =>
+      'Utaitumia kuingia CHIMBO kila mara. Usimwambie mtu yeyote.';
+
+  @override
+  String get pinStepCurrent => 'Weka PIN yako ya sasa';
+
+  @override
+  String get pinStepNew => 'Chagua PIN ya tarakimu 4 hadi 6';
+
+  @override
+  String get pinStepConfirm => 'Rudia PIN ili kuthibitisha';
+
+  @override
+  String get pinWrongLength => 'PIN iwe tarakimu 4 hadi 6.';
+
+  @override
+  String get pinMismatch => 'PIN hazilingani. Rudia tena.';
+
+  @override
+  String get pinStartOver => 'Anza upya';
+
+  @override
+  String get actionSavePin => 'Hifadhi PIN';
+
+  @override
+  String get menuChangePin => 'Badilisha PIN';
+
+  @override
+  String get menuChangePinHint => 'Linda akaunti yako';
+
+  @override
+  String get changePinNotice =>
+      'Ukibadilisha PIN, simu nyingine zote zilizoingia kwenye akaunti yako zitatolewa.';
+
+  @override
+  String get pinChanged => 'PIN imebadilishwa.';
+
+  @override
+  String get signedOutNotice =>
+      'Umetolewa kwenye akaunti. Tafadhali ingia tena.';
+
+  @override
+  String pinDotsLabel(int count) {
+    return 'PIN: tarakimu $count zimewekwa';
+  }
+
+  @override
   String get businessTitle => 'Tuambie Kuhusu Biashara Yako';
 
   @override
@@ -341,10 +413,85 @@ class AppLocalizationsSw extends AppLocalizations {
   String get menuNotificationsHint => 'Chagua taarifa unazotaka';
 
   @override
+  String get notificationsTitle => 'Arifa';
+
+  @override
+  String get actionMarkAllRead => 'Soma zote';
+
+  @override
+  String get notificationsEmptyTitle => 'Hakuna arifa bado';
+
+  @override
+  String get notificationsEmptyMessage =>
+      'Tutakujulisha hapa hali ya oda yako ikibadilika.';
+
+  @override
+  String get profilePhotoTitle => 'Picha ya wasifu';
+
+  @override
+  String get actionChangePhoto => 'Badilisha picha';
+
+  @override
+  String get actionChoosePhoto => 'Chagua picha';
+
+  @override
+  String get actionTakePhoto => 'Piga picha';
+
+  @override
+  String get actionRemovePhoto => 'Ondoa picha';
+
+  @override
+  String get profilePhotoUploading => 'Inapakia picha…';
+
+  @override
+  String get profilePhotoSaved => 'Picha imehifadhiwa.';
+
+  @override
+  String get profilePhotoRemoved => 'Picha imeondolewa.';
+
+  @override
+  String get receiptDownloading => 'Inapakua risiti…';
+
+  @override
   String get menuHelp => 'Msaada';
 
   @override
   String get menuHelpHint => 'Piga simu au pata maelekezo';
+
+  @override
+  String get menuTerms => 'Vigezo na Masharti';
+
+  @override
+  String get menuTermsHint => 'Masharti ya kutumia CHIMBO';
+
+  @override
+  String get menuPrivacy => 'Sera ya Faragha';
+
+  @override
+  String get menuPrivacyHint => 'Jinsi tunavyolinda taarifa zako';
+
+  @override
+  String get helpIntro =>
+      'Una swali kuhusu oda, malipo au akaunti yako? Tuko tayari kukusaidia.';
+
+  @override
+  String get helpHoursTitle => 'Saa za huduma';
+
+  @override
+  String helpCall(String phone) {
+    return 'Piga simu $phone';
+  }
+
+  @override
+  String get helpWhatsapp => 'Tuma ujumbe WhatsApp';
+
+  @override
+  String get helpCannotOpen => 'Simu hii haina programu ya kufungua hiki.';
+
+  @override
+  String legalUpdatedOn(String date) {
+    return 'Imesasishwa $date';
+  }
 
   @override
   String get menuSettings => 'Mipangilio';
@@ -746,10 +893,104 @@ class AppLocalizationsSw extends AppLocalizations {
   String get paymentMethodTitle => 'Njia ya Malipo';
 
   @override
-  String get paymentBank => 'Benki';
+  String get payAfterOrderingHint =>
+      'Utaona namba ya kulipia baada ya kuthibitisha oda.';
 
   @override
-  String get paymentCashOnDelivery => 'Lipa ukipokea';
+  String payToTitle(String amount, String method) {
+    return 'Lipa $amount kwa $method';
+  }
+
+  @override
+  String get payToNumber => 'Lipa Namba / simu';
+
+  @override
+  String get payToBankAccount => 'Namba ya akaunti';
+
+  @override
+  String get payToAccountName => 'Jina la akaunti';
+
+  @override
+  String get payToBank => 'Benki';
+
+  @override
+  String get payToNoteHint => 'Andika hii kama maelezo / kumbukumbu ya malipo';
+
+  @override
+  String payBefore(String time) {
+    return 'Lipa kabla ya $time, la sivyo oda itaghairiwa.';
+  }
+
+  @override
+  String get actionCopy => 'Nakili';
+
+  @override
+  String get copiedMessage => 'Imenakiliwa.';
+
+  @override
+  String get actionIPaid => 'Nimelipa';
+
+  @override
+  String get actionChangePaymentMethod => 'Badilisha njia ya malipo';
+
+  @override
+  String get changePaymentMethodTitle => 'Badilisha njia ya malipo';
+
+  @override
+  String get changePaymentMethodMessage =>
+      'Chagua njia nyingine. Muda wa kulipa hauanzi upya.';
+
+  @override
+  String paymentMethodChanged(String method) {
+    return 'Sasa utalipa kwa $method.';
+  }
+
+  @override
+  String get paymentMethodChangedToCash =>
+      'Oda imethibitishwa. Utalipa ukipokea.';
+
+  @override
+  String get paymentUnderReviewTitle => 'Tunakagua malipo yako';
+
+  @override
+  String paymentUnderReviewMessage(String reference) {
+    return 'Tutakujulisha tukishathibitisha. Namba ya muamala: $reference';
+  }
+
+  @override
+  String get paymentRejectedTitle => 'Malipo hayakuthibitishwa';
+
+  @override
+  String get paymentRejectedMessage =>
+      'Hatukuweza kuthibitisha malipo. Angalia taarifa na utume tena.';
+
+  @override
+  String get paymentSheetTitle => 'Thibitisha malipo';
+
+  @override
+  String get paymentSheetMessage =>
+      'Weka taarifa zilizo kwenye SMS ya malipo. Tutazikagua kisha tuthibitishe oda.';
+
+  @override
+  String get payerPhoneLabel => 'Namba uliyolipia';
+
+  @override
+  String get payerBankLabel => 'Akaunti au jina ulilolipia';
+
+  @override
+  String get paymentReferenceLabel => 'Namba ya muamala (kwenye SMS)';
+
+  @override
+  String get paymentReferenceHint => 'mfano QJK3X7ABC1';
+
+  @override
+  String get actionSendPayment => 'Tuma';
+
+  @override
+  String get paymentSent => 'Tumepokea. Tunakagua malipo yako.';
+
+  @override
+  String get fieldRequired => 'Jaza sehemu hii.';
 
   @override
   String get actionContinueToReview => 'Endelea Kuhakiki';

@@ -89,17 +89,19 @@ class OrderCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.md),
               if (status.isActive)
                 AppButton(label: l10n.actionTrackOrder, onPressed: open)
-              else if (status == OrderStatus.delivered) ...[
-                AppButton(
-                  label: l10n.quickReorder,
-                  variant: AppButtonVariant.accent,
-                  onPressed: onReorder,
-                ),
-                TextButton.icon(
-                  onPressed: onDownloadReceipt,
-                  icon: const Icon(Icons.receipt_long_outlined),
-                  label: Text(l10n.actionDownloadReceipt),
-                ),
+              else ...[
+                if (status.canReorder)
+                  AppButton(
+                    label: l10n.quickReorder,
+                    variant: AppButtonVariant.accent,
+                    onPressed: onReorder,
+                  ),
+                if (status == OrderStatus.delivered)
+                  TextButton.icon(
+                    onPressed: onDownloadReceipt,
+                    icon: const Icon(Icons.receipt_long_outlined),
+                    label: Text(l10n.actionDownloadReceipt),
+                  ),
               ],
             ],
           ),

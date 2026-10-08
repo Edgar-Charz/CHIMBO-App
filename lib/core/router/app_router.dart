@@ -3,8 +3,10 @@ import 'package:chimbo/core/router/auth_redirect.dart';
 import 'package:chimbo/features/addresses/presentation/address_form_screen.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/auth/presentation/business_info_screen.dart';
+import 'package:chimbo/features/auth/presentation/create_pin_screen.dart';
 import 'package:chimbo/features/auth/presentation/otp_screen.dart';
 import 'package:chimbo/features/auth/presentation/phone_screen.dart';
+import 'package:chimbo/features/auth/presentation/pin_login_screen.dart';
 import 'package:chimbo/features/cart/presentation/cart_screen.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
 import 'package:chimbo/features/catalog/presentation/product_details_screen.dart';
@@ -13,15 +15,20 @@ import 'package:chimbo/features/checkout/presentation/checkout_screen.dart';
 import 'package:chimbo/features/checkout/presentation/review_screen.dart';
 import 'package:chimbo/features/debug/presentation/debug_screen.dart';
 import 'package:chimbo/features/home/presentation/home_screen.dart';
+import 'package:chimbo/features/notifications/presentation/notifications_screen.dart';
 import 'package:chimbo/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:chimbo/features/onboarding/presentation/splash_screen.dart';
 import 'package:chimbo/features/orders/presentation/order_success_screen.dart';
 import 'package:chimbo/features/orders/presentation/order_tracking_screen.dart';
 import 'package:chimbo/features/orders/presentation/orders_screen.dart';
+import 'package:chimbo/features/profile/presentation/change_pin_screen.dart';
 import 'package:chimbo/features/profile/presentation/edit_profile_screen.dart';
 import 'package:chimbo/features/profile/presentation/profile_screen.dart';
 import 'package:chimbo/features/profile/presentation/settings_screen.dart';
 import 'package:chimbo/features/shell/presentation/main_shell.dart';
+import 'package:chimbo/features/support/data/models/legal_page.dart';
+import 'package:chimbo/features/support/presentation/help_screen.dart';
+import 'package:chimbo/features/support/presentation/legal_page_screen.dart';
 import 'package:chimbo/features/wishlist/presentation/wishlist_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,6 +68,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             OtpScreen(args: state.extra! as OtpScreenArgs),
       ),
       GoRoute(
+        path: AppRoutes.pinLogin,
+        // The number comes from the phone screen; without it (e.g. app restored) start over.
+        redirect: (context, state) =>
+            state.extra is PinLoginArgs ? null : AppRoutes.phone,
+        builder: (context, state) =>
+            PinLoginScreen(args: state.extra! as PinLoginArgs),
+      ),
+      GoRoute(
+        path: AppRoutes.createPin,
+        builder: (context, state) => const CreatePinScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.businessInfo,
         builder: (context, state) => const BusinessInfoScreen(),
       ),
@@ -73,6 +92,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.home,
                 builder: (context, state) => const HomeScreen(),
+                // From the bell, inside the Nyumbani tab.
+                routes: [
+                  GoRoute(
+                    path: _childPath(AppRoutes.notifications),
+                    builder: (context, state) => const NotificationsScreen(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -165,6 +191,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: _childPath(AppRoutes.wishlist),
                     builder: (context, state) => const WishlistScreen(),
                   ),
+                  GoRoute(
+                    path: _childPath(AppRoutes.changePin),
+                    builder: (context, state) => const ChangePinScreen(),
+                  ),
+                  GoRoute(
+                    path: _childPath(AppRoutes.help),
+                    builder: (context, state) => const HelpScreen(),
+                  ),
                 ],
               ),
             ],
@@ -176,6 +210,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.orderSuccessPattern,
         builder: (context, state) => OrderSuccessScreen(
           orderId: int.parse(state.pathParameters['orderId']!),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.legalPagePattern,
+        // Only the pages the server has; anything else goes to the start.
+        redirect: (context, state) =>
+            LegalPageType.fromApi(state.pathParameters['name']!) == null
+            ? AppRoutes.home
+            : null,
+        builder: (context, state) => LegalPageScreen(
+          type: LegalPageType.fromApi(state.pathParameters['name']!)!,
         ),
       ),
       GoRoute(

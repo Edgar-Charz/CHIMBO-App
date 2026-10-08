@@ -5,6 +5,7 @@ import 'package:chimbo/features/cart/application/cart_controller.dart';
 import 'package:chimbo/features/catalog/application/catalog_providers.dart';
 import 'package:chimbo/features/checkout/data/checkout_repository.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
+import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
@@ -17,25 +18,25 @@ class CheckoutSelection {
     required this.orderKey,
     this.addressId,
     this.deliveryMethodId,
-    this.paymentMethod,
+    this.paymentMethodCode,
   });
 
   /// The `Idempotency-Key` for this checkout: kept while retrying, new after an order is placed.
   final String orderKey;
   final int? addressId;
   final int? deliveryMethodId;
-  final PaymentMethod? paymentMethod;
+  final String? paymentMethodCode;
 
   CheckoutSelection copyWith({
     int? addressId,
     int? deliveryMethodId,
-    PaymentMethod? paymentMethod,
+    String? paymentMethodCode,
   }) {
     return CheckoutSelection(
       orderKey: orderKey,
       addressId: addressId ?? this.addressId,
       deliveryMethodId: deliveryMethodId ?? this.deliveryMethodId,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
+      paymentMethodCode: paymentMethodCode ?? this.paymentMethodCode,
     );
   }
 }
@@ -52,7 +53,7 @@ class CheckoutController extends Notifier<CheckoutSelection> {
       state = state.copyWith(deliveryMethodId: deliveryMethodId);
 
   void selectPayment(PaymentMethod method) =>
-      state = state.copyWith(paymentMethod: method);
+      state = state.copyWith(paymentMethodCode: method.code);
 
   /// "Thibitisha Oda": places the order, then refreshes the cart, the order lists and Home.
   /// A failed attempt keeps the key, so retrying after a timeout can't order twice.
@@ -68,7 +69,7 @@ class CheckoutController extends Notifier<CheckoutSelection> {
           PlaceOrderInput(
             addressId: address.id,
             deliveryMethodId: deliveryMethod.id,
-            paymentMethod: paymentMethod,
+            paymentMethodCode: paymentMethod.code,
             expectedTotal: expectedTotal,
             idempotencyKey: state.orderKey,
           ),
@@ -129,7 +130,7 @@ final checkoutChoicesProvider = Provider<CheckoutChoices>((ref) {
     ),
     paymentMethod: _chosenOrFirst(
       options?.paymentMethods,
-      (method) => method == selection.paymentMethod,
+      (method) => method.code == selection.paymentMethodCode,
     ),
   );
 });
@@ -157,3 +158,8 @@ final checkoutPreviewProvider = FutureProvider.autoDispose<CheckoutPreview?>((
       .read(checkoutRepositoryProvider)
       .preview(deliveryMethodId: deliveryMethod.id, addressId: address.id);
 });
+
+/// Every payment method switched on ("Badilisha njia ya malipo").
+final paymentMethodsProvider = FutureProvider.autoDispose<List<PaymentMethod>>(
+  (ref) => ref.watch(checkoutRepositoryProvider).getPaymentMethods(),
+);

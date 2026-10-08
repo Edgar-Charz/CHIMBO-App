@@ -75,5 +75,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>CHIMBO inatumia kamera kupiga picha ya wasifu wako.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CHIMBO inahitaji picha zako ili uchague picha ya wasifu.</string>
 </dict>
 </plist>

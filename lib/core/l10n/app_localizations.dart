@@ -146,6 +146,12 @@ abstract class AppLocalizations {
   /// **'Sehemu hii itakuwa tayari hivi punde.'**
   String get comingSoonMessage;
 
+  /// No description provided for @pressBackAgainToExit.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bonyeza nyuma tena ili kutoka.'**
+  String get pressBackAgainToExit;
+
   /// No description provided for @actionContinue.
   ///
   /// In sw, this message translates to:
@@ -536,6 +542,132 @@ abstract class AppLocalizations {
   /// **'Namba ya uthibitisho si sahihi. Jaribu tena.'**
   String get otpInvalid;
 
+  /// No description provided for @pinLoginTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ingia kwa PIN'**
+  String get pinLoginTitle;
+
+  /// No description provided for @pinLoginSubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka PIN ya akaunti ya'**
+  String get pinLoginSubtitle;
+
+  /// No description provided for @actionLogin.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ingia'**
+  String get actionLogin;
+
+  /// No description provided for @pinForgot.
+  ///
+  /// In sw, this message translates to:
+  /// **'Umesahau PIN?'**
+  String get pinForgot;
+
+  /// No description provided for @pinLockedMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'PIN imefungwa baada ya majaribio 5 yasiyo sahihi. Tutakutumia namba kwa SMS ili uweke PIN mpya.'**
+  String get pinLockedMessage;
+
+  /// No description provided for @createPinTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tengeneza PIN'**
+  String get createPinTitle;
+
+  /// No description provided for @resetPinTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka PIN Mpya'**
+  String get resetPinTitle;
+
+  /// No description provided for @createPinSubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Utaitumia kuingia CHIMBO kila mara. Usimwambie mtu yeyote.'**
+  String get createPinSubtitle;
+
+  /// No description provided for @pinStepCurrent.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka PIN yako ya sasa'**
+  String get pinStepCurrent;
+
+  /// No description provided for @pinStepNew.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chagua PIN ya tarakimu 4 hadi 6'**
+  String get pinStepNew;
+
+  /// No description provided for @pinStepConfirm.
+  ///
+  /// In sw, this message translates to:
+  /// **'Rudia PIN ili kuthibitisha'**
+  String get pinStepConfirm;
+
+  /// No description provided for @pinWrongLength.
+  ///
+  /// In sw, this message translates to:
+  /// **'PIN iwe tarakimu 4 hadi 6.'**
+  String get pinWrongLength;
+
+  /// No description provided for @pinMismatch.
+  ///
+  /// In sw, this message translates to:
+  /// **'PIN hazilingani. Rudia tena.'**
+  String get pinMismatch;
+
+  /// No description provided for @pinStartOver.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anza upya'**
+  String get pinStartOver;
+
+  /// No description provided for @actionSavePin.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hifadhi PIN'**
+  String get actionSavePin;
+
+  /// No description provided for @menuChangePin.
+  ///
+  /// In sw, this message translates to:
+  /// **'Badilisha PIN'**
+  String get menuChangePin;
+
+  /// No description provided for @menuChangePinHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Linda akaunti yako'**
+  String get menuChangePinHint;
+
+  /// No description provided for @changePinNotice.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ukibadilisha PIN, simu nyingine zote zilizoingia kwenye akaunti yako zitatolewa.'**
+  String get changePinNotice;
+
+  /// No description provided for @pinChanged.
+  ///
+  /// In sw, this message translates to:
+  /// **'PIN imebadilishwa.'**
+  String get pinChanged;
+
+  /// No description provided for @signedOutNotice.
+  ///
+  /// In sw, this message translates to:
+  /// **'Umetolewa kwenye akaunti. Tafadhali ingia tena.'**
+  String get signedOutNotice;
+
+  /// Screen-reader label for the PIN dots.
+  ///
+  /// In sw, this message translates to:
+  /// **'PIN: tarakimu {count} zimewekwa'**
+  String pinDotsLabel(int count);
+
   /// No description provided for @businessTitle.
   ///
   /// In sw, this message translates to:
@@ -722,6 +854,84 @@ abstract class AppLocalizations {
   /// **'Chagua taarifa unazotaka'**
   String get menuNotificationsHint;
 
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Arifa'**
+  String get notificationsTitle;
+
+  /// No description provided for @actionMarkAllRead.
+  ///
+  /// In sw, this message translates to:
+  /// **'Soma zote'**
+  String get actionMarkAllRead;
+
+  /// No description provided for @notificationsEmptyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna arifa bado'**
+  String get notificationsEmptyTitle;
+
+  /// No description provided for @notificationsEmptyMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tutakujulisha hapa hali ya oda yako ikibadilika.'**
+  String get notificationsEmptyMessage;
+
+  /// No description provided for @profilePhotoTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Picha ya wasifu'**
+  String get profilePhotoTitle;
+
+  /// No description provided for @actionChangePhoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Badilisha picha'**
+  String get actionChangePhoto;
+
+  /// No description provided for @actionChoosePhoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chagua picha'**
+  String get actionChoosePhoto;
+
+  /// No description provided for @actionTakePhoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Piga picha'**
+  String get actionTakePhoto;
+
+  /// No description provided for @actionRemovePhoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ondoa picha'**
+  String get actionRemovePhoto;
+
+  /// No description provided for @profilePhotoUploading.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapakia picha…'**
+  String get profilePhotoUploading;
+
+  /// No description provided for @profilePhotoSaved.
+  ///
+  /// In sw, this message translates to:
+  /// **'Picha imehifadhiwa.'**
+  String get profilePhotoSaved;
+
+  /// No description provided for @profilePhotoRemoved.
+  ///
+  /// In sw, this message translates to:
+  /// **'Picha imeondolewa.'**
+  String get profilePhotoRemoved;
+
+  /// No description provided for @receiptDownloading.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapakua risiti…'**
+  String get receiptDownloading;
+
   /// No description provided for @menuHelp.
   ///
   /// In sw, this message translates to:
@@ -733,6 +943,66 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Piga simu au pata maelekezo'**
   String get menuHelpHint;
+
+  /// No description provided for @menuTerms.
+  ///
+  /// In sw, this message translates to:
+  /// **'Vigezo na Masharti'**
+  String get menuTerms;
+
+  /// No description provided for @menuTermsHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Masharti ya kutumia CHIMBO'**
+  String get menuTermsHint;
+
+  /// No description provided for @menuPrivacy.
+  ///
+  /// In sw, this message translates to:
+  /// **'Sera ya Faragha'**
+  String get menuPrivacy;
+
+  /// No description provided for @menuPrivacyHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Jinsi tunavyolinda taarifa zako'**
+  String get menuPrivacyHint;
+
+  /// No description provided for @helpIntro.
+  ///
+  /// In sw, this message translates to:
+  /// **'Una swali kuhusu oda, malipo au akaunti yako? Tuko tayari kukusaidia.'**
+  String get helpIntro;
+
+  /// No description provided for @helpHoursTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Saa za huduma'**
+  String get helpHoursTitle;
+
+  /// No description provided for @helpCall.
+  ///
+  /// In sw, this message translates to:
+  /// **'Piga simu {phone}'**
+  String helpCall(String phone);
+
+  /// No description provided for @helpWhatsapp.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tuma ujumbe WhatsApp'**
+  String get helpWhatsapp;
+
+  /// No description provided for @helpCannotOpen.
+  ///
+  /// In sw, this message translates to:
+  /// **'Simu hii haina programu ya kufungua hiki.'**
+  String get helpCannotOpen;
+
+  /// No description provided for @legalUpdatedOn.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imesasishwa {date}'**
+  String legalUpdatedOn(String date);
 
   /// No description provided for @menuSettings.
   ///
@@ -1436,17 +1706,179 @@ abstract class AppLocalizations {
   /// **'Njia ya Malipo'**
   String get paymentMethodTitle;
 
-  /// No description provided for @paymentBank.
+  /// No description provided for @payAfterOrderingHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Utaona namba ya kulipia baada ya kuthibitisha oda.'**
+  String get payAfterOrderingHint;
+
+  /// No description provided for @payToTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa {amount} kwa {method}'**
+  String payToTitle(String amount, String method);
+
+  /// No description provided for @payToNumber.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa Namba / simu'**
+  String get payToNumber;
+
+  /// No description provided for @payToBankAccount.
+  ///
+  /// In sw, this message translates to:
+  /// **'Namba ya akaunti'**
+  String get payToBankAccount;
+
+  /// No description provided for @payToAccountName.
+  ///
+  /// In sw, this message translates to:
+  /// **'Jina la akaunti'**
+  String get payToAccountName;
+
+  /// No description provided for @payToBank.
   ///
   /// In sw, this message translates to:
   /// **'Benki'**
-  String get paymentBank;
+  String get payToBank;
 
-  /// No description provided for @paymentCashOnDelivery.
+  /// No description provided for @payToNoteHint.
   ///
   /// In sw, this message translates to:
-  /// **'Lipa ukipokea'**
-  String get paymentCashOnDelivery;
+  /// **'Andika hii kama maelezo / kumbukumbu ya malipo'**
+  String get payToNoteHint;
+
+  /// No description provided for @payBefore.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa kabla ya {time}, la sivyo oda itaghairiwa.'**
+  String payBefore(String time);
+
+  /// No description provided for @actionCopy.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nakili'**
+  String get actionCopy;
+
+  /// No description provided for @copiedMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imenakiliwa.'**
+  String get copiedMessage;
+
+  /// No description provided for @actionIPaid.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nimelipa'**
+  String get actionIPaid;
+
+  /// No description provided for @actionChangePaymentMethod.
+  ///
+  /// In sw, this message translates to:
+  /// **'Badilisha njia ya malipo'**
+  String get actionChangePaymentMethod;
+
+  /// No description provided for @changePaymentMethodTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Badilisha njia ya malipo'**
+  String get changePaymentMethodTitle;
+
+  /// No description provided for @changePaymentMethodMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chagua njia nyingine. Muda wa kulipa hauanzi upya.'**
+  String get changePaymentMethodMessage;
+
+  /// No description provided for @paymentMethodChanged.
+  ///
+  /// In sw, this message translates to:
+  /// **'Sasa utalipa kwa {method}.'**
+  String paymentMethodChanged(String method);
+
+  /// No description provided for @paymentMethodChangedToCash.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda imethibitishwa. Utalipa ukipokea.'**
+  String get paymentMethodChangedToCash;
+
+  /// No description provided for @paymentUnderReviewTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tunakagua malipo yako'**
+  String get paymentUnderReviewTitle;
+
+  /// No description provided for @paymentUnderReviewMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tutakujulisha tukishathibitisha. Namba ya muamala: {reference}'**
+  String paymentUnderReviewMessage(String reference);
+
+  /// No description provided for @paymentRejectedTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Malipo hayakuthibitishwa'**
+  String get paymentRejectedTitle;
+
+  /// No description provided for @paymentRejectedMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hatukuweza kuthibitisha malipo. Angalia taarifa na utume tena.'**
+  String get paymentRejectedMessage;
+
+  /// No description provided for @paymentSheetTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Thibitisha malipo'**
+  String get paymentSheetTitle;
+
+  /// No description provided for @paymentSheetMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka taarifa zilizo kwenye SMS ya malipo. Tutazikagua kisha tuthibitishe oda.'**
+  String get paymentSheetMessage;
+
+  /// No description provided for @payerPhoneLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Namba uliyolipia'**
+  String get payerPhoneLabel;
+
+  /// No description provided for @payerBankLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Akaunti au jina ulilolipia'**
+  String get payerBankLabel;
+
+  /// No description provided for @paymentReferenceLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Namba ya muamala (kwenye SMS)'**
+  String get paymentReferenceLabel;
+
+  /// No description provided for @paymentReferenceHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'mfano QJK3X7ABC1'**
+  String get paymentReferenceHint;
+
+  /// No description provided for @actionSendPayment.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tuma'**
+  String get actionSendPayment;
+
+  /// No description provided for @paymentSent.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tumepokea. Tunakagua malipo yako.'**
+  String get paymentSent;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In sw, this message translates to:
+  /// **'Jaza sehemu hii.'**
+  String get fieldRequired;
 
   /// No description provided for @actionContinueToReview.
   ///

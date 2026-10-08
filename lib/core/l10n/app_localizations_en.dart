@@ -34,6 +34,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get comingSoonMessage => 'This section will be ready soon.';
 
   @override
+  String get pressBackAgainToExit => 'Press back again to exit.';
+
+  @override
   String get actionContinue => 'Continue';
 
   @override
@@ -245,6 +248,74 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otpInvalid => 'The verification code is wrong. Please try again.';
 
   @override
+  String get pinLoginTitle => 'Log in with PIN';
+
+  @override
+  String get pinLoginSubtitle => 'Enter the PIN for';
+
+  @override
+  String get actionLogin => 'Log in';
+
+  @override
+  String get pinForgot => 'Forgot PIN?';
+
+  @override
+  String get pinLockedMessage =>
+      'Your PIN is locked after 5 wrong tries. We will send you an SMS code so you can set a new PIN.';
+
+  @override
+  String get createPinTitle => 'Create a PIN';
+
+  @override
+  String get resetPinTitle => 'Set a New PIN';
+
+  @override
+  String get createPinSubtitle =>
+      'You will use it to log in to CHIMBO. Never share it.';
+
+  @override
+  String get pinStepCurrent => 'Enter your current PIN';
+
+  @override
+  String get pinStepNew => 'Choose a PIN of 4 to 6 digits';
+
+  @override
+  String get pinStepConfirm => 'Enter the PIN again to confirm';
+
+  @override
+  String get pinWrongLength => 'The PIN must be 4 to 6 digits.';
+
+  @override
+  String get pinMismatch => 'The PINs do not match. Try again.';
+
+  @override
+  String get pinStartOver => 'Start over';
+
+  @override
+  String get actionSavePin => 'Save PIN';
+
+  @override
+  String get menuChangePin => 'Change PIN';
+
+  @override
+  String get menuChangePinHint => 'Keep your account safe';
+
+  @override
+  String get changePinNotice =>
+      'Changing your PIN logs out every other phone signed in to your account.';
+
+  @override
+  String get pinChanged => 'PIN changed.';
+
+  @override
+  String get signedOutNotice => 'You were logged out. Please log in again.';
+
+  @override
+  String pinDotsLabel(int count) {
+    return 'PIN: $count digits entered';
+  }
+
+  @override
   String get businessTitle => 'Tell Us About Your Business';
 
   @override
@@ -339,10 +410,85 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuNotificationsHint => 'Choose what you hear about';
 
   @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get actionMarkAllRead => 'Mark all read';
+
+  @override
+  String get notificationsEmptyTitle => 'No notifications yet';
+
+  @override
+  String get notificationsEmptyMessage =>
+      'We will let you know here when your order changes.';
+
+  @override
+  String get profilePhotoTitle => 'Profile photo';
+
+  @override
+  String get actionChangePhoto => 'Change photo';
+
+  @override
+  String get actionChoosePhoto => 'Choose a photo';
+
+  @override
+  String get actionTakePhoto => 'Take a photo';
+
+  @override
+  String get actionRemovePhoto => 'Remove photo';
+
+  @override
+  String get profilePhotoUploading => 'Uploading photo…';
+
+  @override
+  String get profilePhotoSaved => 'Photo saved.';
+
+  @override
+  String get profilePhotoRemoved => 'Photo removed.';
+
+  @override
+  String get receiptDownloading => 'Downloading receipt…';
+
+  @override
   String get menuHelp => 'Help';
 
   @override
   String get menuHelpHint => 'Call us or get guidance';
+
+  @override
+  String get menuTerms => 'Terms and Conditions';
+
+  @override
+  String get menuTermsHint => 'The rules for using CHIMBO';
+
+  @override
+  String get menuPrivacy => 'Privacy Policy';
+
+  @override
+  String get menuPrivacyHint => 'How we protect your information';
+
+  @override
+  String get helpIntro =>
+      'A question about an order, payment or your account? We are ready to help.';
+
+  @override
+  String get helpHoursTitle => 'Support hours';
+
+  @override
+  String helpCall(String phone) {
+    return 'Call $phone';
+  }
+
+  @override
+  String get helpWhatsapp => 'Message us on WhatsApp';
+
+  @override
+  String get helpCannotOpen => 'This phone has no app to open this.';
+
+  @override
+  String legalUpdatedOn(String date) {
+    return 'Updated $date';
+  }
 
   @override
   String get menuSettings => 'Settings';
@@ -743,10 +889,105 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentMethodTitle => 'Payment method';
 
   @override
-  String get paymentBank => 'Bank';
+  String get payAfterOrderingHint =>
+      'You will see where to pay after confirming the order.';
 
   @override
-  String get paymentCashOnDelivery => 'Pay on delivery';
+  String payToTitle(String amount, String method) {
+    return 'Pay $amount with $method';
+  }
+
+  @override
+  String get payToNumber => 'Lipa Namba / phone';
+
+  @override
+  String get payToBankAccount => 'Account number';
+
+  @override
+  String get payToAccountName => 'Account name';
+
+  @override
+  String get payToBank => 'Bank';
+
+  @override
+  String get payToNoteHint =>
+      'Write this as the payment description / reference';
+
+  @override
+  String payBefore(String time) {
+    return 'Pay before $time, otherwise the order is cancelled.';
+  }
+
+  @override
+  String get actionCopy => 'Copy';
+
+  @override
+  String get copiedMessage => 'Copied.';
+
+  @override
+  String get actionIPaid => 'I have paid';
+
+  @override
+  String get actionChangePaymentMethod => 'Change payment method';
+
+  @override
+  String get changePaymentMethodTitle => 'Change payment method';
+
+  @override
+  String get changePaymentMethodMessage =>
+      'Choose another way to pay. The time to pay does not restart.';
+
+  @override
+  String paymentMethodChanged(String method) {
+    return 'You will now pay with $method.';
+  }
+
+  @override
+  String get paymentMethodChangedToCash =>
+      'Order confirmed. You will pay on delivery.';
+
+  @override
+  String get paymentUnderReviewTitle => 'We are checking your payment';
+
+  @override
+  String paymentUnderReviewMessage(String reference) {
+    return 'We will let you know once it is confirmed. Transaction code: $reference';
+  }
+
+  @override
+  String get paymentRejectedTitle => 'Payment not confirmed';
+
+  @override
+  String get paymentRejectedMessage =>
+      'We could not confirm the payment. Check the details and send them again.';
+
+  @override
+  String get paymentSheetTitle => 'Confirm your payment';
+
+  @override
+  String get paymentSheetMessage =>
+      'Enter the details from the payment SMS. We will check them and confirm the order.';
+
+  @override
+  String get payerPhoneLabel => 'Number you paid from';
+
+  @override
+  String get payerBankLabel => 'Account or name you paid from';
+
+  @override
+  String get paymentReferenceLabel => 'Transaction code (in the SMS)';
+
+  @override
+  String get paymentReferenceHint => 'e.g. QJK3X7ABC1';
+
+  @override
+  String get actionSendPayment => 'Send';
+
+  @override
+  String get paymentSent => 'Received. We are checking your payment.';
+
+  @override
+  String get fieldRequired => 'Fill in this field.';
 
   @override
   String get actionContinueToReview => 'Continue to review';

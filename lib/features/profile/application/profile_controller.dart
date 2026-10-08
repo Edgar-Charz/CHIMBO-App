@@ -20,6 +20,17 @@ class ProfileController extends AsyncNotifier<Profile> {
         .updateProfile(input);
     state = AsyncData(profile);
   }
+
+  /// New profile photo; errors (e.g. `INVALID_IMAGE`) reach the caller to show.
+  Future<void> changePhoto(String filePath) async {
+    state = AsyncData(
+      await ref.read(profileRepositoryProvider).uploadAvatar(filePath),
+    );
+  }
+
+  Future<void> removePhoto() async {
+    state = AsyncData(await ref.read(profileRepositoryProvider).deleteAvatar());
+  }
 }
 
 final profileControllerProvider =

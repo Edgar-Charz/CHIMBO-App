@@ -1,7 +1,7 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/utils/phone.dart';
-import 'package:chimbo/core/widgets/initials_avatar.dart';
+import 'package:chimbo/core/widgets/person_avatar.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class AgentCard extends StatelessWidget {
     return SectionCard(
       child: Row(
         children: [
-          InitialsAvatar(name: agent.name),
+          PersonAvatar(name: agent.name),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

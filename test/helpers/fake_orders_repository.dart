@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/features/addresses/data/address_repository.dart';
 import 'package:chimbo/features/addresses/data/models/address.dart';
@@ -7,10 +9,13 @@ import 'package:chimbo/features/catalog/data/models/product_query.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/checkout/data/checkout_repository.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
+import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
+import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
 import 'package:chimbo/features/profile/data/profile_repository.dart';
 
+import 'fake_checkout_repository.dart';
 import 'fake_customer_store.dart';
 
 /// Offline stand-in for the orders API.
@@ -53,6 +58,9 @@ class FakeOrdersRepository implements OrdersRepository {
   /// Sample orders buy each product at twice its MOQ.
   static const int _sampleMoqMultiple = 2;
 
+  /// The server's rule for an SMS confirmation code.
+  static final RegExp _referencePattern = RegExp(r'^[A-Za-z0-9]{6,30}$');
+
   final FakeCustomerStore _store;
   final CartRepository _cartRepository;
   final AddressRepository _addressRepository;
@@ -83,7 +91,7 @@ class FakeOrdersRepository implements OrdersRepository {
       id: records.length + 1,
       placedAt: DateTime.now(),
       deliveryMethod: deliveryMethod,
-      paymentMethod: input.paymentMethod,
+      paymentMethodCode: input.paymentMethodCode,
       address: address.first,
       items: [
         for (final line in cart.lines)
@@ -143,6 +151,69 @@ class FakeOrdersRepository implements OrdersRepository {
       }
     }
     return skipped;
+  }
+
+  /// Like the server: only an unpaid mobile money / bank order, once, with a 6–30 character
+  /// code.
+  @override
+  Future<Order> submitPayment(int orderId, PaymentSubmission submission) async {
+    final records = await _readRecords();
+    final record = _find(records, orderId);
+    final order = _toOrder(record);
+    if (order.payment.isUnderReview) {
+      throw const ApiException(
+        code: ApiErrorCode.paymentUnderReview,
+        message: 'Tayari tunakagua malipo ya oda hii.',
+      );
+    }
+    if (!order.payment.canSubmit) {
+      throw const ApiException(code: ApiErrorCode.paymentNotExpected);
+    }
+    if (!_referencePattern.hasMatch(submission.reference)) {
+      throw const ApiException(
+        code: ApiErrorCode.validation,
+        fields: {
+          'payment_reference': 'Weka namba ya muamala iliyo kwenye SMS.',
+        },
+      );
+    }
+    final paid = {
+      ...record,
+      'payment_payer_account': submission.payerAccount,
+      'payment_reference': submission.reference,
+    };
+    await _writeRecords([
+      for (final saved in records) saved == record ? paid : saved,
+    ]);
+    return _toOrder(paid);
+  }
+
+  /// Like the server: only while waiting for payment; cash on delivery confirms at once.
+  @override
+  Future<Order> changePaymentMethod(
+    int orderId,
+    String paymentMethodCode,
+  ) async {
+    final records = await _readRecords();
+    final record = _find(records, orderId);
+    final payment = _toOrder(record).payment;
+    if (payment.isUnderReview) {
+      throw const ApiException(code: ApiErrorCode.paymentUnderReview);
+    }
+    if (!payment.canChangeMethod) {
+      throw const ApiException(code: ApiErrorCode.paymentMethodLocked);
+    }
+    final changed = {...record, 'payment_method': paymentMethodCode};
+    await _writeRecords([
+      for (final saved in records) saved == record ? changed : saved,
+    ]);
+    return _toOrder(changed);
+  }
+
+  @override
+  Future<Uint8List> downloadReceipt(int orderId) async {
+    _find(await _readRecords(), orderId);
+    return Uint8List.fromList('%PDF-1.4'.codeUnits);
   }
 
   static bool _isInGroup(OrderStatus status, OrderGroup group) =>
@@ -208,7 +279,7 @@ class FakeOrdersRepository implements OrdersRepository {
           id: index + 1,
           placedAt: DateTime.now().subtract(Duration(days: sample.daysAgo)),
           deliveryMethod: standardDelivery,
-          paymentMethod: PaymentMethod.cashOnDelivery,
+          paymentMethodCode: FakeCheckoutRepository.cashOnDelivery.code,
           address: address,
           items: items,
         ),
@@ -233,7 +304,7 @@ class FakeOrdersRepository implements OrdersRepository {
     required int id,
     required DateTime placedAt,
     required DeliveryMethod deliveryMethod,
-    required PaymentMethod paymentMethod,
+    required String paymentMethodCode,
     required Address address,
     required List<OrderItem> items,
   }) {
@@ -246,7 +317,9 @@ class FakeOrdersRepository implements OrdersRepository {
           'CHB${(placedAt.millisecondsSinceEpoch % 1000000).toString().padLeft(6, '0')}',
       'placed_at': placedAt.toIso8601String(),
       'delivery_method': deliveryMethod.toJson(),
-      'payment_method': paymentMethod.apiValue,
+      'payment_method': paymentMethodCode,
+      // Filled in by "Nimelipa".
+      'payment_reference': null,
       'address': address.toJson(),
       'items': [for (final item in items) item.toJson()],
       'order_subtotal': subtotal,
@@ -257,19 +330,28 @@ class FakeOrdersRepository implements OrdersRepository {
   }
 
   /// Works out the status from the time passed, like the back office would have moved it.
+  /// Mobile money waits for payment: no back office confirms it here.
   Order _toOrder(Map<String, dynamic> record) {
     final placedAt = DateTime.parse(record['placed_at'] as String);
     final cancelledAt = record['cancelled_at'] == null
         ? null
         : DateTime.parse(record['cancelled_at'] as String);
     final now = cancelledAt ?? DateTime.now();
+    final method = _methodOf(record);
     final events = <OrderEvent>[
-      for (final MapEntry(key: status, value: delay) in _stepDelays.entries)
-        if (!placedAt.add(delay).isAfter(now))
-          (status: status, at: placedAt.add(delay)),
+      if (method.isCashOnDelivery)
+        ..._stepsReached(placedAt, now)
+      else
+        (status: OrderStatus.pendingPayment, at: placedAt),
       if (cancelledAt != null) (status: OrderStatus.cancelled, at: cancelledAt),
     ];
     final status = events.last.status;
+    final reference = record['payment_reference'] as String?;
+    final total = record['order_total'] as int;
+    final waitsForPayment =
+        status == OrderStatus.pendingPayment &&
+        !method.isCashOnDelivery &&
+        reference == null;
     final deliveryMethod = DeliveryMethod.fromJson(
       record['delivery_method'] as Map<String, dynamic>,
     );
@@ -286,12 +368,25 @@ class FakeOrdersRepository implements OrdersRepository {
       deliveryFee: record['order_delivery_fee'] as int,
       total: record['order_total'] as int,
       deliveryMethod: deliveryMethod,
-      paymentMethod: PaymentMethod.fromApi(record['payment_method'] as String),
+      payment: OrderPayment(
+        method: method,
+        amount: total,
+        noteHint: record['order_number'] as String,
+        canSubmit: waitsForPayment,
+        canChangeMethod: waitsForPayment,
+        latest: reference == null
+            ? null
+            : PaymentAttempt(
+                payerAccount: record['payment_payer_account'] as String,
+                reference: reference,
+                status: PaymentAttemptStatus.submitted,
+              ),
+      ),
       address: Address.fromJson(record['address'] as Map<String, dynamic>),
       events: events,
-      // Like the server: only before packing.
+      // Like the server: only before packing, and not while staff check a payment.
       canCancel:
-          status == OrderStatus.pendingPayment ||
+          (status == OrderStatus.pendingPayment && reference == null) ||
           status == OrderStatus.confirmed,
       agent:
           status.index >= OrderStatus.dispatched.index &&
@@ -300,4 +395,15 @@ class FakeOrdersRepository implements OrdersRepository {
           : null,
     );
   }
+
+  PaymentMethod _methodOf(Map<String, dynamic> record) => FakeCheckoutRepository
+      .paymentMethods
+      .firstWhere((method) => method.code == record['payment_method']);
+
+  /// Cash on delivery: the timeline steps whose time has come by [now].
+  static List<OrderEvent> _stepsReached(DateTime placedAt, DateTime now) => [
+    for (final MapEntry(key: status, value: delay) in _stepDelays.entries)
+      if (!placedAt.add(delay).isAfter(now))
+        (status: status, at: placedAt.add(delay)),
+  ];
 }

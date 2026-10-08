@@ -7,12 +7,14 @@ import 'package:chimbo/core/theme/app_theme.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
-import 'package:chimbo/core/widgets/image_slot.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
+import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
+import 'package:chimbo/features/app_images/presentation/widgets/replaceable_image_slot.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
+import 'package:chimbo/features/orders/presentation/widgets/order_payment_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,15 +32,25 @@ class OrderSuccessScreen extends ConsumerWidget {
     final order = ref.watch(orderProvider(orderId));
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppTheme.fullScreenSystemBars,
-      child: Scaffold(
-        body: SafeArea(
-          child: order.when(
-            data: (value) => _SuccessContent(order: value),
-            error: (error, _) => ErrorState(
-              error: error,
-              onRetry: () => ref.invalidate(orderProvider(orderId)),
+      // Nothing is under this screen (the checkout is finished), so back = "Rudi Nyumbani"
+      // instead of closing the app.
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) {
+            context.go(AppRoutes.home);
+          }
+        },
+        child: Scaffold(
+          body: SafeArea(
+            child: order.when(
+              data: (value) => _SuccessContent(order: value),
+              error: (error, _) => ErrorState(
+                error: error,
+                onRetry: () => ref.invalidate(orderProvider(orderId)),
+              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
             ),
-            loading: () => const Center(child: CircularProgressIndicator()),
           ),
         ),
       ),
@@ -92,6 +104,11 @@ class _SuccessContent extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.lg),
+        // Mobile money / bank: pay now, then "Nimelipa".
+        if (order.payment.canSubmit) ...[
+          OrderPaymentSection(order: order),
+          const SizedBox(height: AppSpacing.lg),
+        ],
         SectionCard(
           color: AppColors.goldLight,
           child: Column(
@@ -117,7 +134,8 @@ class _SuccessContent extends ConsumerWidget {
         const SizedBox(height: AppSpacing.lg),
         const AspectRatio(
           aspectRatio: 16 / 10,
-          child: ImageSlot(
+          child: ReplaceableImageSlot(
+            slot: AppImageSlot.orderSuccess,
             asset: AppImages.orderSuccess,
             placeholderIcons: [Icons.inventory_2_outlined],
           ),

@@ -2,8 +2,9 @@ import 'package:chimbo/core/assets/app_images.dart';
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
-import 'package:chimbo/core/widgets/image_slot.dart';
 import 'package:chimbo/core/widgets/separated_text.dart';
+import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
+import 'package:chimbo/features/app_images/presentation/widgets/replaceable_image_slot.dart';
 import 'package:chimbo/features/onboarding/presentation/widgets/category_pill.dart';
 import 'package:chimbo/features/onboarding/presentation/widgets/onboarding_slide.dart';
 import 'package:chimbo/features/onboarding/presentation/widgets/savings_seal.dart';
@@ -32,7 +33,8 @@ class ProductsSlide extends StatelessWidget {
           CategoryPill(label: l10n.categoryCosmetics),
         ],
       ),
-      illustration: const ImageSlot(
+      illustration: const ReplaceableImageSlot(
+        slot: AppImageSlot.onboardingProducts,
         asset: AppImages.onboardingProducts,
         placeholderIcons: [Icons.diamond_outlined, Icons.spa_outlined],
         borderRadius: _pictureRadius,
@@ -61,7 +63,8 @@ class WholesaleSlide extends StatelessWidget {
       illustration: const Stack(
         children: [
           // The card covers the lower part, so the picture keeps its top in view.
-          ImageSlot(
+          ReplaceableImageSlot(
+            slot: AppImageSlot.onboardingWholesale,
             asset: AppImages.onboardingWholesale,
             placeholderIcons: [Icons.inventory_2_outlined],
             borderRadius: _pictureRadius,
@@ -100,7 +103,8 @@ class DeliverySlide extends StatelessWidget {
           l10n.onboardingStepReceive,
         ],
       ),
-      illustration: const ImageSlot(
+      illustration: const ReplaceableImageSlot(
+        slot: AppImageSlot.onboardingDelivery,
         asset: AppImages.onboardingDelivery,
         placeholderIcons: [
           Icons.storefront_outlined,

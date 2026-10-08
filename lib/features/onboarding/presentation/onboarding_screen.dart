@@ -2,6 +2,7 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/theme/app_theme.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
+import 'package:chimbo/core/widgets/exit_guard.dart';
 import 'package:chimbo/features/onboarding/application/onboarding_controller.dart';
 import 'package:chimbo/features/onboarding/presentation/widgets/onboarding_slides.dart';
 import 'package:chimbo/features/onboarding/presentation/widgets/page_dots.dart';
@@ -54,14 +55,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
-  // Android back goes to the previous slide instead of closing the app.
-  void _onBackPressed(bool didPop, Object? result) {
-    if (!didPop) {
-      _pageController.previousPage(
-        duration: AppDurations.medium,
-        curve: Curves.easeInOut,
-      );
+  /// Android back goes to the previous slide; on the first one, [ExitGuard] takes over.
+  bool _onBackPressed() {
+    if (_currentIndex == 0) {
+      return false;
     }
+    _pageController.previousPage(
+      duration: AppDurations.medium,
+      curve: Curves.easeInOut,
+    );
+    return true;
   }
 
   @override
@@ -69,9 +72,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final l10n = context.l10n;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppTheme.fullScreenSystemBars,
-      child: PopScope(
-        canPop: _currentIndex == 0,
-        onPopInvokedWithResult: _onBackPressed,
+      child: ExitGuard(
+        onBack: _onBackPressed,
         child: Scaffold(
           body: SafeArea(
             child: Column(

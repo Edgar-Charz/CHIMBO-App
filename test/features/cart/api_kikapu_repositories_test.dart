@@ -6,7 +6,6 @@ import 'package:chimbo/features/addresses/data/models/address.dart';
 import 'package:chimbo/features/cart/data/api_cart_repository.dart';
 import 'package:chimbo/features/cart/data/models/cart.dart';
 import 'package:chimbo/features/checkout/data/api_checkout_repository.dart';
-import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/fake_http.dart';
@@ -194,7 +193,7 @@ void main() {
   });
 
   test(
-    'checkout: options for the address; unknown payment methods skipped',
+    'checkout: options for the address; payment methods with their details',
     () async {
       final (client, adapter) = clientReplying(
         (_) => jsonReply({
@@ -211,7 +210,27 @@ void main() {
                 'region_id': null,
               },
             ],
-            'payment_methods': ['cod', 'crypto'],
+            'payment_methods': ['mpesa', 'cod'],
+            'payment_method_details': [
+              {
+                'payment_method_code': 'mpesa',
+                'payment_method_name': 'M-Pesa',
+                'payment_method_type': 'mobile_money',
+                'payment_method_account_name': 'CHIMBO LTD',
+                'payment_method_account_number': '5544332',
+                'payment_method_bank_name': null,
+                'payment_method_instructions': 'Piga *150*00#.',
+              },
+              {
+                'payment_method_code': 'cod',
+                'payment_method_name': 'Lipa ukipokea',
+                'payment_method_type': 'cash',
+                'payment_method_account_name': null,
+                'payment_method_account_number': null,
+                'payment_method_bank_name': null,
+                'payment_method_instructions': null,
+              },
+            ],
           },
         }),
       );
@@ -221,7 +240,12 @@ void main() {
 
       expect(adapter.lastRequest!.uri.queryParameters, {'address_id': '3'});
       expect(options.deliveryMethods.single.name, 'Standard (siku 2–3)');
-      expect(options.paymentMethods, [PaymentMethod.cashOnDelivery]);
+      final [mpesa, cash] = options.paymentMethods;
+      expect(mpesa.name, 'M-Pesa');
+      expect(mpesa.accountNumber, '5544332');
+      expect(mpesa.isCashOnDelivery, isFalse);
+      expect(cash.code, 'cod');
+      expect(cash.isCashOnDelivery, isTrue);
     },
   );
 
@@ -252,5 +276,29 @@ void main() {
       'address_id': 3,
     });
     expect(preview.total, 45000);
+  });
+
+  test('payment methods: the public list with pay-to details', () async {
+    final (client, adapter) = clientReplying(
+      (_) => jsonReply({
+        'success': true,
+        'data': [
+          {
+            'payment_method_code': 'crdb',
+            'payment_method_name': 'CRDB Benki',
+            'payment_method_type': 'bank',
+            'payment_method_account_name': 'CHIMBO LTD',
+            'payment_method_account_number': '0150000000',
+            'payment_method_bank_name': 'CRDB',
+            'payment_method_instructions': null,
+          },
+        ],
+      }),
+    );
+
+    final methods = await ApiCheckoutRepository(client).getPaymentMethods();
+
+    expect(adapter.lastRequest!.uri.path, endsWith('/payment-methods'));
+    expect(methods.single.bankName, 'CRDB');
   });
 }

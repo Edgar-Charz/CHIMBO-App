@@ -2,6 +2,7 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/features/addresses/data/models/address.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
+import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/presentation/widgets/order_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,7 +26,12 @@ Order _orderEndedAs(OrderStatus status) {
       'delivery_days_min': 2,
       'delivery_days_max': 3,
     }),
-    paymentMethod: PaymentMethod.cashOnDelivery,
+    payment: const OrderPayment(
+      method: null,
+      amount: 0,
+      noteHint: 'CHB765068',
+      canSubmit: false,
+    ),
     address: const Address(
       id: 0,
       recipientName: 'Joyce Joseph',

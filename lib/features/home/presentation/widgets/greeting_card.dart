@@ -2,7 +2,7 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/brand_slogan.dart';
-import 'package:chimbo/core/widgets/initials_avatar.dart';
+import 'package:chimbo/core/widgets/person_avatar.dart';
 import 'package:flutter/material.dart';
 
 /// "Habari za asubuhi, Joyce! 👋", the slogan and the search box (design PDF p.3).
@@ -10,6 +10,7 @@ class GreetingCard extends StatelessWidget {
   const GreetingCard({
     super.key,
     required this.fullName,
+    required this.photoUrl,
     required this.now,
     required this.onSearchTap,
   });
@@ -18,6 +19,9 @@ class GreetingCard extends StatelessWidget {
   static const int _eveningStartHour = 16;
 
   final String fullName;
+
+  /// The customer's profile photo; null → initials.
+  final String? photoUrl;
 
   /// Passed in (not read inside), so the greeting is easy to test.
   final DateTime now;
@@ -67,7 +71,7 @@ class GreetingCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                InitialsAvatar(name: fullName),
+                PersonAvatar(name: fullName, photoUrl: photoUrl),
               ],
             ),
             const SizedBox(height: AppSpacing.xs),

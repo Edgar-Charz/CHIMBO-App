@@ -45,7 +45,7 @@ abstract final class AppSizes {
   static const double categoryCardImage = 110;
   static const double bannerImageWidth = 112;
   static const double galleryThumbnail = 64;
-  static const double gridLoadMoreThreshold = 400;
+  static const double loadMoreThreshold = 400;
   static const double cartLineImage = 88;
   static const double compactStepperHeight = 34;
   static const double orderThumbnail = 56;
@@ -56,6 +56,8 @@ abstract final class AppSizes {
   static const double toastElevation = 6;
   static const double recentOrderTile = 104;
   static const double cardElevation = 2;
+  static const double pinKey = 56;
+  static const double pinDot = 14;
 
   /// Height of chips and filter pills in listings (still comfortable to tap).
   static const double compactControl = 36;
@@ -66,4 +68,7 @@ abstract final class AppDurations {
   static const Duration fast = Duration(milliseconds: 200);
   static const Duration medium = Duration(milliseconds: 350);
   static const Duration slow = Duration(milliseconds: 700);
+
+  /// A second back within this time closes the app (as long as the toast shows).
+  static const Duration exitConfirmWindow = Duration(seconds: 3);
 }

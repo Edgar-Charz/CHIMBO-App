@@ -25,4 +25,20 @@ class ApiProfileRepository implements ProfileRepository {
     );
     return Profile.fromJson(response.dataAsMap);
   }
+
+  @override
+  Future<Profile> uploadAvatar(String filePath) async {
+    final response = await _apiClient.upload(
+      '/me/avatar',
+      field: 'avatar',
+      filePath: filePath,
+    );
+    return Profile.fromJson(response.dataAsMap);
+  }
+
+  @override
+  Future<Profile> deleteAvatar() async {
+    final response = await _apiClient.delete('/me/avatar');
+    return Profile.fromJson(response.dataAsMap);
+  }
 }

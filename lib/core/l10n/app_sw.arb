@@ -11,6 +11,7 @@
   "navProfile": "Wasifu",
   "comingSoonTitle": "Inakuja hivi karibuni",
   "comingSoonMessage": "Sehemu hii itakuwa tayari hivi punde.",
+  "pressBackAgainToExit": "Bonyeza nyuma tena ili kutoka.",
   "actionContinue": "Endelea",
   "actionAddToCart": "Ongeza Kikapuni",
   "actionRetry": "Jaribu tena",
@@ -130,6 +131,35 @@
     }
   },
   "otpInvalid": "Namba ya uthibitisho si sahihi. Jaribu tena.",
+  "pinLoginTitle": "Ingia kwa PIN",
+  "pinLoginSubtitle": "Weka PIN ya akaunti ya",
+  "actionLogin": "Ingia",
+  "pinForgot": "Umesahau PIN?",
+  "pinLockedMessage": "PIN imefungwa baada ya majaribio 5 yasiyo sahihi. Tutakutumia namba kwa SMS ili uweke PIN mpya.",
+  "createPinTitle": "Tengeneza PIN",
+  "resetPinTitle": "Weka PIN Mpya",
+  "createPinSubtitle": "Utaitumia kuingia CHIMBO kila mara. Usimwambie mtu yeyote.",
+  "pinStepCurrent": "Weka PIN yako ya sasa",
+  "pinStepNew": "Chagua PIN ya tarakimu 4 hadi 6",
+  "pinStepConfirm": "Rudia PIN ili kuthibitisha",
+  "pinWrongLength": "PIN iwe tarakimu 4 hadi 6.",
+  "pinMismatch": "PIN hazilingani. Rudia tena.",
+  "pinStartOver": "Anza upya",
+  "actionSavePin": "Hifadhi PIN",
+  "menuChangePin": "Badilisha PIN",
+  "menuChangePinHint": "Linda akaunti yako",
+  "changePinNotice": "Ukibadilisha PIN, simu nyingine zote zilizoingia kwenye akaunti yako zitatolewa.",
+  "pinChanged": "PIN imebadilishwa.",
+  "signedOutNotice": "Umetolewa kwenye akaunti. Tafadhali ingia tena.",
+  "pinDotsLabel": "PIN: tarakimu {count} zimewekwa",
+  "@pinDotsLabel": {
+    "description": "Screen-reader label for the PIN dots.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "businessTitle": "Tuambie Kuhusu Biashara Yako",
   "businessSubtitle": "Taarifa chache tu, kisha unaanza.",
   "fullNameLabel": "Jina kamili",
@@ -161,8 +191,45 @@
   "menuReceiptsHint": "Ona oda na risiti zako",
   "menuNotifications": "Arifa",
   "menuNotificationsHint": "Chagua taarifa unazotaka",
+  "notificationsTitle": "Arifa",
+  "actionMarkAllRead": "Soma zote",
+  "notificationsEmptyTitle": "Hakuna arifa bado",
+  "notificationsEmptyMessage": "Tutakujulisha hapa hali ya oda yako ikibadilika.",
+  "profilePhotoTitle": "Picha ya wasifu",
+  "actionChangePhoto": "Badilisha picha",
+  "actionChoosePhoto": "Chagua picha",
+  "actionTakePhoto": "Piga picha",
+  "actionRemovePhoto": "Ondoa picha",
+  "profilePhotoUploading": "Inapakia picha…",
+  "profilePhotoSaved": "Picha imehifadhiwa.",
+  "profilePhotoRemoved": "Picha imeondolewa.",
+  "receiptDownloading": "Inapakua risiti…",
   "menuHelp": "Msaada",
   "menuHelpHint": "Piga simu au pata maelekezo",
+  "menuTerms": "Vigezo na Masharti",
+  "menuTermsHint": "Masharti ya kutumia CHIMBO",
+  "menuPrivacy": "Sera ya Faragha",
+  "menuPrivacyHint": "Jinsi tunavyolinda taarifa zako",
+  "helpIntro": "Una swali kuhusu oda, malipo au akaunti yako? Tuko tayari kukusaidia.",
+  "helpHoursTitle": "Saa za huduma",
+  "helpCall": "Piga simu {phone}",
+  "@helpCall": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "helpWhatsapp": "Tuma ujumbe WhatsApp",
+  "helpCannotOpen": "Simu hii haina programu ya kufungua hiki.",
+  "legalUpdatedOn": "Imesasishwa {date}",
+  "@legalUpdatedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "menuSettings": "Mipangilio",
   "menuSettingsHint": "Lugha na usalama",
   "logoutAccount": "Toka kwenye Akaunti",
@@ -406,8 +473,66 @@
     }
   },
   "paymentMethodTitle": "Njia ya Malipo",
-  "paymentBank": "Benki",
-  "paymentCashOnDelivery": "Lipa ukipokea",
+  "payAfterOrderingHint": "Utaona namba ya kulipia baada ya kuthibitisha oda.",
+  "payToTitle": "Lipa {amount} kwa {method}",
+  "@payToTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "payToNumber": "Lipa Namba / simu",
+  "payToBankAccount": "Namba ya akaunti",
+  "payToAccountName": "Jina la akaunti",
+  "payToBank": "Benki",
+  "payToNoteHint": "Andika hii kama maelezo / kumbukumbu ya malipo",
+  "payBefore": "Lipa kabla ya {time}, la sivyo oda itaghairiwa.",
+  "@payBefore": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "actionCopy": "Nakili",
+  "copiedMessage": "Imenakiliwa.",
+  "actionIPaid": "Nimelipa",
+  "actionChangePaymentMethod": "Badilisha njia ya malipo",
+  "changePaymentMethodTitle": "Badilisha njia ya malipo",
+  "changePaymentMethodMessage": "Chagua njia nyingine. Muda wa kulipa hauanzi upya.",
+  "paymentMethodChanged": "Sasa utalipa kwa {method}.",
+  "@paymentMethodChanged": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentMethodChangedToCash": "Oda imethibitishwa. Utalipa ukipokea.",
+  "paymentUnderReviewTitle": "Tunakagua malipo yako",
+  "paymentUnderReviewMessage": "Tutakujulisha tukishathibitisha. Namba ya muamala: {reference}",
+  "@paymentUnderReviewMessage": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentRejectedTitle": "Malipo hayakuthibitishwa",
+  "paymentRejectedMessage": "Hatukuweza kuthibitisha malipo. Angalia taarifa na utume tena.",
+  "paymentSheetTitle": "Thibitisha malipo",
+  "paymentSheetMessage": "Weka taarifa zilizo kwenye SMS ya malipo. Tutazikagua kisha tuthibitishe oda.",
+  "payerPhoneLabel": "Namba uliyolipia",
+  "payerBankLabel": "Akaunti au jina ulilolipia",
+  "paymentReferenceLabel": "Namba ya muamala (kwenye SMS)",
+  "paymentReferenceHint": "mfano QJK3X7ABC1",
+  "actionSendPayment": "Tuma",
+  "paymentSent": "Tumepokea. Tunakagua malipo yako.",
+  "fieldRequired": "Jaza sehemu hii.",
   "actionContinueToReview": "Endelea Kuhakiki",
   "reviewTitle": "Hakiki Oda",
   "deliveryMethodTitle": "Njia ya Usafirishaji",

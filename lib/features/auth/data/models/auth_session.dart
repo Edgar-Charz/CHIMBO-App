@@ -1,38 +1,34 @@
 import 'package:chimbo/features/auth/data/models/app_user.dart';
 
-/// Result of a successful OTP check (`POST /auth/otp/verify`, client "app").
+/// A logged-in customer (`POST /auth/otp/verify`, `/auth/pin/login`, `GET /auth/me`, client
+/// "app"). The two flags pick the next screen: Tengeneza PIN, business details, or Home.
 class AuthSession {
   const AuthSession({
     required this.token,
     required this.user,
+    required this.hasPin,
     required this.isProfileComplete,
   });
 
-  factory AuthSession.fromJson(Map<String, dynamic> json) {
+  /// From the API's profile object (`user_*` keys + `user_has_pin`, `is_profile_complete`).
+  factory AuthSession.fromProfileJson(
+    String token,
+    Map<String, dynamic> profile,
+  ) {
     return AuthSession(
-      token: json['token'] as String,
-      user: AppUser.fromJson(json['user'] as Map<String, dynamic>),
-      isProfileComplete: json['profile_complete'] as bool,
+      token: token,
+      user: AppUser.fromJson(profile),
+      hasPin: profile['user_has_pin'] as bool,
+      isProfileComplete: profile['is_profile_complete'] as bool,
     );
   }
 
   final String token;
   final AppUser user;
 
-  /// False for a new customer who still has to fill in registration step 3.
+  /// False for a new customer, and for accounts made before PIN login: "Tengeneza PIN" first.
+  final bool hasPin;
+
+  /// False for a new customer who still has to fill in the business details.
   final bool isProfileComplete;
-
-  Map<String, dynamic> toJson() => {
-    'token': token,
-    'user': user.toJson(),
-    'profile_complete': isProfileComplete,
-  };
-
-  AuthSession copyWith({AppUser? user, bool? isProfileComplete}) {
-    return AuthSession(
-      token: token,
-      user: user ?? this.user,
-      isProfileComplete: isProfileComplete ?? this.isProfileComplete,
-    );
-  }
 }
