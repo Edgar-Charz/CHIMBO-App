@@ -18,6 +18,7 @@ class AppTextField extends StatelessWidget {
     this.enabled = true,
     this.textCapitalization = TextCapitalization.none,
     this.autofillHints,
+    this.minHeight,
   });
 
   final String label;
@@ -35,6 +36,7 @@ class AppTextField extends StatelessWidget {
   final bool enabled;
   final TextCapitalization textCapitalization;
   final Iterable<String>? autofillHints;
+  final double? minHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,9 @@ class AppTextField extends StatelessWidget {
         hintText: hint,
         errorText: errorText,
         prefixIcon: prefix,
+        constraints: minHeight == null
+            ? null
+            : BoxConstraints(minHeight: minHeight!),
       ),
     );
   }

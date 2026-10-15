@@ -1,5 +1,7 @@
-/// The fixed screens whose illustrations can be replaced from the admin app.
+/// The fixed screens whose illustrations can be replaced from the admin app, and the logo.
 enum AppImageSlot {
+  /// The logo mark on the splash, login and Home header (Settings → Logo & pictures).
+  logo('logo'),
   onboardingProducts('onboarding_products'),
   onboardingWholesale('onboarding_wholesale'),
   onboardingDelivery('onboarding_delivery'),
@@ -13,6 +15,7 @@ enum AppImageSlot {
   /// Shown before Home (onboarding and login): loaded during the splash so they appear at
   /// once.
   static const List<AppImageSlot> beforeHome = [
+    logo,
     onboardingProducts,
     onboardingWholesale,
     onboardingDelivery,

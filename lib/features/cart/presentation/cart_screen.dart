@@ -152,7 +152,13 @@ class _CartContent extends StatelessWidget {
               ),
               children: [
                 if (nudge != null) ...[
-                  _NudgeBanner(line: nudge),
+                  _NudgeBanner(
+                    line: nudge,
+                    onAddQuantity: () => onQuantityChanged(
+                      nudge.product.id,
+                      nudge.quantity + nudge.nextTierExtraQuantity!,
+                    ),
+                  ),
                   const SizedBox(height: AppSpacing.md),
                 ],
                 for (final group in cart.groups) ...[
@@ -170,8 +176,6 @@ class _CartContent extends StatelessWidget {
                     ),
                   const SizedBox(height: AppSpacing.md),
                 ],
-                _CartTotals(cart: cart),
-                const SizedBox(height: AppSpacing.sm),
                 Text(
                   l10n.cartDeliveryNote,
                   textAlign: TextAlign.center,
@@ -182,34 +186,42 @@ class _CartContent extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            AppSpacing.sm,
-            AppSpacing.lg,
-            AppSpacing.md,
+        Container(
+          decoration: const BoxDecoration(
+            color: AppColors.surface,
+            border: Border(top: BorderSide(color: AppColors.border)),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (!cart.canCheckout) ...[
-                Text(
-                  l10n.cartCannotCheckout,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall
-                      ?.copyWith(color: AppColors.danger),
-                ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.sm,
+              AppSpacing.lg,
+              AppSpacing.md,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _CartTotals(cart: cart),
                 const SizedBox(height: AppSpacing.sm),
+                if (!cart.canCheckout) ...[
+                  Text(
+                    l10n.cartCannotCheckout,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: AppColors.danger),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                ],
+                AppButton(
+                  label: l10n.actionContinueToCheckout,
+                  variant: AppButtonVariant.accent,
+                  // Blocked by the server while a line has a problem (stock / MOQ).
+                  onPressed: cart.canCheckout
+                      ? () => context.push(AppRoutes.checkout)
+                      : null,
+                ),
               ],
-              AppButton(
-                label: l10n.actionContinueToCheckout,
-                variant: AppButtonVariant.accent,
-                // Blocked by the server while a line has a problem (stock / MOQ).
-                onPressed: cart.canCheckout
-                    ? () => context.push(AppRoutes.checkout)
-                    : null,
-              ),
-            ],
+            ),
           ),
         ),
       ],
@@ -237,7 +249,7 @@ class _CartTotals extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  l10n.summaryItems(cart.lineCount),
+                  l10n.summaryItemsWithPieces(cart.lineCount, cart.pieceCount),
                   style: textTheme.bodySmall,
                 ),
               ),
@@ -291,9 +303,10 @@ class _CartTotals extends StatelessWidget {
 }
 
 class _NudgeBanner extends StatelessWidget {
-  const _NudgeBanner({required this.line});
+  const _NudgeBanner({required this.line, required this.onAddQuantity});
 
   final CartLine line;
+  final VoidCallback onAddQuantity;
 
   @override
   Widget build(BuildContext context) {
@@ -307,24 +320,49 @@ class _NudgeBanner extends StatelessWidget {
           horizontal: AppSpacing.sm,
           vertical: AppSpacing.xs,
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(
-              Icons.info_outline_rounded,
-              color: AppColors.accent,
-              size: AppSizes.iconSmall,
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                context.l10n.cartNudge(
-                  line.nextTierExtraQuantity!,
-                  line.product.name,
-                  Money.format(line.nextTierUnitPrice!),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.info_outline_rounded,
+                  color: AppColors.accent,
+                  size: AppSizes.iconSmall,
                 ),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    context.l10n.cartNudge(
+                      line.nextTierExtraQuantity!,
+                      line.product.name,
+                      Money.format(line.nextTierUnitPrice!),
+                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+              ],
             ),
+            if (line.availableQuantity == null ||
+                line.quantity + line.nextTierExtraQuantity! <=
+                    line.availableQuantity!) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: onAddQuantity,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    foregroundColor: AppColors.primary,
+                  ),
+                  icon: const Icon(Icons.add_rounded),
+                  label: Text(
+                    context.l10n.cartNudgeAction(line.nextTierExtraQuantity!),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

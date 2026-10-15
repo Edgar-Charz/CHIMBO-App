@@ -100,7 +100,12 @@ class _PayToCard extends StatelessWidget {
     final deadline = expiresAt;
     return SectionCard(
       color: AppColors.goldLight,
-      title: l10n.payToTitle(Money.format(payment.amount), method?.name ?? ''),
+      title: payment.isBalance
+          ? l10n.payBalanceTitle(
+              Money.format(payment.amount),
+              method?.name ?? '',
+            )
+          : l10n.payToTitle(Money.format(payment.amount), method?.name ?? ''),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -146,11 +146,45 @@ void main() {
 
       expect(adapter.lastRequest!.uri.queryParameters, {'group': 'active'});
       expect(
-        orders.single.estimatedDelivery,
+        orders.orders.single.estimatedDelivery,
         DateTime.parse('2026-10-02T13:10:00+00:00'),
       );
     },
   );
+
+  test('a discount staff gave comes with its reason (R-29)', () {
+    final order = Order.fromJson({
+      ..._order(),
+      'order_discount_total': 2000,
+      'order_discount_note': 'Mteja wa kudumu',
+      'order_total': 94000,
+    });
+
+    expect(order.discountTotal, 2000);
+    expect(order.discountNote, 'Mteja wa kudumu');
+    expect(
+      Order.fromJson(_order()).discountTotal,
+      0,
+    ); // older answers have none
+  });
+
+  test('a paid order staff added to asks only for the balance (R-29)', () {
+    final payment = OrderPayment.fromJson({
+      'payment_method': null,
+      'payment_amount': 20000,
+      'payment_note_hint': 'CHB765068',
+      'can_submit_payment': true,
+      'can_change_payment_method': false,
+      'is_balance_payment': true,
+      'amount_paid': 40000,
+      'refund_due': 0,
+    });
+
+    expect(
+      [payment.isBalance, payment.amount, payment.amountPaid],
+      [true, 20000, 40000],
+    );
+  });
 
   test('Agiza Tena returns why items were skipped', () async {
     final (client, adapter) = clientReplying(
@@ -338,6 +372,9 @@ void main() {
     expect(OrderStatus.cancelled.canReorder, isTrue);
     expect(OrderStatus.pendingPayment.canReorder, isFalse);
     expect(OrderStatus.inTransit.canReorder, isFalse);
-    expect(OrderStatus.expired.canReorder, isFalse);
+    expect(
+      OrderStatus.expired.canReorder,
+      isTrue,
+    ); // the time to pay ran out: order again (R-28)
   });
 }

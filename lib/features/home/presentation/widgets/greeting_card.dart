@@ -110,10 +110,14 @@ class HomeSearchBar extends StatelessWidget {
             children: [
               const Icon(Icons.search_rounded, color: AppColors.textSecondary),
               const SizedBox(width: AppSpacing.sm),
-              Text(
-                context.l10n.searchProductsHint,
-                style: Theme.of(context).textTheme.bodyMedium
-                    ?.copyWith(color: AppColors.textSecondary),
+              Expanded(
+                child: Text(
+                  context.l10n.searchProductsHint,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: AppColors.textSecondary),
+                ),
               ),
             ],
           ),

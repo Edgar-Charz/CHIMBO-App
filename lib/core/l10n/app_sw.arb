@@ -9,6 +9,21 @@
   "navCart": "Kikapu",
   "navOrders": "Oda",
   "navProfile": "Wasifu",
+  "homeOrderNeedsPayment": "Malizia malipo ya oda yako",
+  "homeOrderInProgress": "Oda yako inaendelea",
+  "homeOrderLine": "Oda #{number} · {status}",
+  "@homeOrderLine": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "homeOrderActionPay": "Lipa sasa",
+  "homeOrderActionTrack": "Fuatilia",
   "comingSoonTitle": "Inakuja hivi karibuni",
   "comingSoonMessage": "Sehemu hii itakuwa tayari hivi punde.",
   "pressBackAgainToExit": "Bonyeza nyuma tena ili kutoka.",
@@ -142,6 +157,18 @@
   "pinStepCurrent": "Weka PIN yako ya sasa",
   "pinStepNew": "Chagua PIN ya tarakimu 4 hadi 6",
   "pinStepConfirm": "Rudia PIN ili kuthibitisha",
+  "pinStepProgress": "Hatua {step} kati ya {total}",
+  "@pinStepProgress": {
+    "description": "Current step in the change PIN flow.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pinWrongLength": "PIN iwe tarakimu 4 hadi 6.",
   "pinMismatch": "PIN hazilingani. Rudia tena.",
   "pinStartOver": "Anza upya",
@@ -177,12 +204,15 @@
   "actionCancel": "Ghairi",
   "actionSave": "Hifadhi",
   "actionDelete": "Futa",
-  "comingSoonShort": "Inakuja",
   "profileEdit": "Hariri Wasifu",
   "profileBusinessOwner": "Mmiliki wa Biashara",
   "profileEditPhoto": "Badilisha picha",
   "menuBusinessInfo": "Taarifa za Biashara",
   "menuBusinessInfoHint": "Jina la duka na mawasiliano",
+  "profileSectionBusiness": "Biashara",
+  "profileSectionShopping": "Ununuzi",
+  "profileSectionHelp": "Msaada na taarifa",
+  "profileSectionAccount": "Usalama wa akaunti",
   "menuAddresses": "Anwani za Usafirishaji",
   "menuAddressesHint": "Mahali pa kupokea oda",
   "menuPayments": "Malipo yangu",
@@ -323,7 +353,48 @@
   "recentlyOrdered": "Uliagiza Hivi Karibuni",
   "chipAll": "Zote",
   "filterAction": "Chuja",
+  "activePriceRange": "Bei: {minimum} – {maximum}",
+  "@activePriceRange": {
+    "placeholders": {
+      "minimum": {
+        "type": "String"
+      },
+      "maximum": {
+        "type": "String"
+      }
+    }
+  },
+  "activePriceFrom": "Bei kuanzia {amount}",
+  "@activePriceFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activePriceTo": "Bei hadi {amount}",
+  "@activePriceTo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activeMoqLimit": "MOQ hadi {count}",
+  "@activeMoqLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterSheetTitle": "Chuja bidhaa",
+  "filterSheetSubtitle": "Chagua bei na kiwango cha juu cha MOQ.",
+  "priceFilterDescription": "Weka kiwango cha chini na cha juu cha bei ya bidhaa.",
+  "moqFilterDescription": "Onyesha bidhaa zenye MOQ isiyozidi kiasi unachoweka.",
   "sortAction": "Panga",
+  "sortSheetTitle": "Panga bidhaa",
+  "sortSheetSubtitle": "Chagua jinsi bidhaa zitakavyoonyeshwa.",
   "priceFilter": "Bei",
   "moqFilter": "MOQ",
   "minPriceHint": "Bei ya chini",
@@ -441,6 +512,14 @@
   "cartEmptyMessage": "Ongeza bidhaa uanze kuagiza kwa bei za jumla.",
   "actionStartShopping": "Anza kununua",
   "cartNudge": "Ongeza pcs {count} za {product} upate {price} kila moja.",
+  "cartNudgeAction": "Ongeza {count} pcs",
+  "@cartNudgeAction": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "@cartNudge": {
     "placeholders": {
       "count": {
@@ -469,6 +548,17 @@
   "moqMet": "MOQ imetimia",
   "actionRemove": "Ondoa",
   "summaryItems": "Bidhaa ({count})",
+  "summaryItemsWithPieces": "Bidhaa ({products}) · Vipande ({pieces})",
+  "@summaryItemsWithPieces": {
+    "placeholders": {
+      "products": {
+        "type": "int"
+      },
+      "pieces": {
+        "type": "int"
+      }
+    }
+  },
   "@summaryItems": {
     "placeholders": {
       "count": {
@@ -477,6 +567,7 @@
     }
   },
   "summaryDelivery": "Usafirishaji",
+  "summaryDiscount": "Punguzo",
   "summaryTotal": "Jumla",
   "summaryItemsTotal": "Jumla ya Bidhaa",
   "summaryAmountToPay": "Jumla ya Kulipa",
@@ -581,6 +672,36 @@
       }
     }
   },
+  "payBalanceTitle": "Lipa salio la {amount} kwa {method}",
+  "@payBalanceTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentBalanceLine": "Umelipa {paid} · Salio la kulipa {balance}",
+  "@paymentBalanceLine": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "balance": {
+        "type": "String"
+      }
+    }
+  },
+  "refundDueLine": "Tutakurudishia {amount}",
+  "@refundDueLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "payToNumber": "Lipa Namba / simu",
   "payToBankAccount": "Namba ya akaunti",
   "payToAccountName": "Jina la akaunti",
@@ -653,6 +774,7 @@
     }
   },
   "actionTrackOrder": "Fuatilia Oda",
+  "actionPayNow": "Lipa sasa",
   "actionBackHome": "Rudi Nyumbani",
   "addressFormTitle": "Anwani Mpya",
   "editAddressFormTitle": "Hariri Anwani",
@@ -673,8 +795,23 @@
   "ordersTitle": "Oda Zangu",
   "tabActiveOrders": "Zinazoendelea",
   "tabDeliveredOrders": "Zimefika",
-  "ordersEmptyTitle": "Hakuna oda hapa",
-  "ordersEmptyMessage": "Oda zako zitaonekana hapa.",
+  "orderTabCount": "{label} ({count})",
+  "@orderTabCount": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ordersEmptyTitle": "Bado hujaweka oda",
+  "ordersEmptyMessage": "Oda zako zote zitaonekana hapa ukishaweka oda.",
+  "ordersActiveEmptyTitle": "Hakuna oda inayoendelea",
+  "ordersActiveEmptyMessage": "Oda unazosubiri au zinazoandaliwa zitaonekana hapa.",
+  "ordersDeliveredEmptyTitle": "Bado hakuna oda iliyofika",
+  "ordersDeliveredEmptyMessage": "Oda zako zitahamia hapa baada ya kufikishwa.",
   "statusPendingPayment": "Inasubiri malipo",
   "statusConfirmed": "Imethibitishwa",
   "statusPacked": "Imepakiwa",
@@ -683,6 +820,9 @@
   "statusDelivered": "Imewasili",
   "statusCancelled": "Imeghairiwa",
   "statusExpired": "Muda umeisha",
+  "statusCheckingPayment": "Malipo yanakaguliwa",
+  "statusMeasuringLoad": "Tunapima mzigo",
+  "statusBalanceDue": "Salio la kulipa",
   "trackingPendingPayment": "Kamilisha malipo ili tuanze kuandaa oda yako.",
   "trackingConfirmed": "Tunaandaa oda yako.",
   "trackingPacked": "Oda yako iko tayari kutumwa.",
@@ -691,7 +831,7 @@
   "trackingInTransit": "Oda yako inakuja.",
   "trackingDelivered": "Asante kwa kununua CHIMBO!",
   "trackingCancelled": "Oda hii imeghairiwa.",
-  "trackingExpired": "Muda wa malipo umeisha.",
+  "trackingExpired": "Muda wa malipo umeisha. Bonyeza \"Agiza Tena\" kuagiza bidhaa hizi kwa bei za leo, au wasiliana nasi.",
   "estimatedDeliveryTitle": "Makadirio ya Uwasilishaji",
   "deliveredOnTitle": "Imefika tarehe",
   "actionDownloadReceipt": "Pakua Risiti",

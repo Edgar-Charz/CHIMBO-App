@@ -28,7 +28,9 @@ void main() {
   testWidgets('Hariri Wasifu saves a new name and shop', (tester) async {
     await openWasifu(tester);
 
-    await tapText(tester, 'Hariri Wasifu');
+    // The pencil on the profile card
+    await tester.tap(find.byTooltip('Hariri Wasifu'));
+    await tester.pumpAndSettle();
     await tester.enterText(
       find.widgetWithText(AppTextField, 'Jina kamili'),
       'Asha Mussa',
@@ -53,14 +55,18 @@ void main() {
   testWidgets('logout asks first, then returns to step 1', (tester) async {
     await openWasifu(tester);
 
-    await tapText(tester, 'Toka kwenye Akaunti');
+    // The logout icon at the top of Wasifu
+    final logout = find.byTooltip('Toka kwenye Akaunti');
+    await tester.tap(logout);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Ghairi'));
     await tester.pumpAndSettle();
     // Cancelled: still logged in on Wasifu.
-    expect(find.text('Toka kwenye Akaunti'), findsOneWidget);
+    expect(logout, findsOneWidget);
     expect(find.text('Karibu CHIMBO'), findsNothing);
 
-    await tapText(tester, 'Toka kwenye Akaunti');
+    await tester.tap(logout);
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'Toka'));
     await tester.pumpAndSettle();
     expect(find.text('Karibu CHIMBO'), findsOneWidget);

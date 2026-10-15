@@ -1,6 +1,7 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
+import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:flutter/material.dart';
 
@@ -67,58 +68,120 @@ class CategoryChips extends StatelessWidget {
   }
 }
 
-/// Chuja · Panga · Bei ▾ · MOQ ▾ as small pills; a pill looks active while its filter is on.
+/// The two primary listing controls: filters and sort.
 class FilterBar extends StatelessWidget {
   const FilterBar({
     super.key,
-    required this.hasFilters,
-    required this.hasPriceFilter,
-    required this.hasMoqFilter,
+    required this.activeFilterCount,
     required this.onFilter,
     required this.onSort,
-    required this.onPrice,
-    required this.onMoq,
   });
 
-  final bool hasFilters;
-  final bool hasPriceFilter;
-  final bool hasMoqFilter;
+  final int activeFilterCount;
   final VoidCallback onFilter;
   final VoidCallback onSort;
-  final VoidCallback onPrice;
-  final VoidCallback onMoq;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final filters = [
-      _FilterPill(
-        label: l10n.filterAction,
-        icon: Icons.tune_rounded,
-        isActive: hasFilters,
-        onPressed: onFilter,
-      ),
-      _FilterPill(
-        label: l10n.sortAction,
-        icon: Icons.swap_vert_rounded,
-        onPressed: onSort,
-      ),
-      _FilterPill(
-        label: l10n.priceFilter,
-        trailingIcon: Icons.expand_more_rounded,
-        isActive: hasPriceFilter,
-        onPressed: onPrice,
-      ),
-      _FilterPill(
-        label: l10n.moqFilter,
-        trailingIcon: Icons.expand_more_rounded,
-        isActive: hasMoqFilter,
-        onPressed: onMoq,
-      ),
-    ];
     return Row(
       spacing: AppSpacing.sm,
-      children: [for (final filter in filters) Expanded(child: filter)],
+      children: [
+        Expanded(
+          child: _ListingActionButton(
+            label: l10n.filterAction,
+            icon: Icons.tune_rounded,
+            isActive: activeFilterCount > 0,
+            trailing: activeFilterCount > 0
+                ? _ActiveFilterCount(count: activeFilterCount)
+                : null,
+            onPressed: onFilter,
+          ),
+        ),
+        Expanded(
+          child: _ListingActionButton(
+            label: l10n.sortAction,
+            icon: Icons.swap_vert_rounded,
+            onPressed: onSort,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Shows the exact filters currently narrowing the listing; each chip removes one filter.
+class ActiveFilterChips extends StatelessWidget {
+  const ActiveFilterChips({
+    super.key,
+    required this.minPrice,
+    required this.maxPrice,
+    required this.maxMoq,
+    required this.onRemovePrice,
+    required this.onRemoveMoq,
+  });
+
+  final int? minPrice;
+  final int? maxPrice;
+  final int? maxMoq;
+  final VoidCallback onRemovePrice;
+  final VoidCallback onRemoveMoq;
+
+  @override
+  Widget build(BuildContext context) {
+    if (minPrice == null && maxPrice == null && maxMoq == null) {
+      return const SizedBox.shrink();
+    }
+
+    final l10n = context.l10n;
+    final maxChipWidth = MediaQuery.sizeOf(context).width - AppSpacing.xxl;
+    final labels = <({String text, VoidCallback onRemove})>[];
+    if (minPrice != null || maxPrice != null) {
+      final priceLabel = switch ((minPrice, maxPrice)) {
+        (final int minimum, final int maximum) => l10n.activePriceRange(
+          Money.format(minimum),
+          Money.format(maximum),
+        ),
+        (final int minimum, null) => l10n.activePriceFrom(
+          Money.format(minimum),
+        ),
+        (null, final int maximum) => l10n.activePriceTo(Money.format(maximum)),
+        _ => '',
+      };
+      labels.add((text: priceLabel, onRemove: onRemovePrice));
+    }
+    if (maxMoq != null) {
+      labels.add((text: l10n.activeMoqLimit(maxMoq!), onRemove: onRemoveMoq));
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      child: Wrap(
+        spacing: AppSpacing.sm,
+        runSpacing: AppSpacing.xs,
+        children: [
+          for (final filter in labels)
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxChipWidth),
+              child: InputChip(
+                label: Text(
+                  filter.text,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onDeleted: filter.onRemove,
+                deleteIcon: const Icon(Icons.close_rounded),
+                visualDensity: VisualDensity.compact,
+                backgroundColor: AppColors.primaryLight,
+                side: const BorderSide(color: AppColors.primaryLight),
+                labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -165,25 +228,23 @@ class _CompactChip extends StatelessWidget {
   }
 }
 
-class _FilterPill extends StatelessWidget {
-  const _FilterPill({
+class _ListingActionButton extends StatelessWidget {
+  const _ListingActionButton({
     required this.label,
+    required this.icon,
     required this.onPressed,
-    this.icon,
-    this.trailingIcon,
+    this.trailing,
     this.isActive = false,
   });
 
   final String label;
+  final IconData icon;
   final VoidCallback onPressed;
-  final IconData? icon;
-  final IconData? trailingIcon;
+  final Widget? trailing;
   final bool isActive;
 
   @override
   Widget build(BuildContext context) {
-    final leading = icon;
-    final trailing = trailingIcon;
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
@@ -192,27 +253,56 @@ class _FilterPill extends StatelessWidget {
         side: BorderSide(
           color: isActive ? AppColors.primary : AppColors.border,
         ),
-        shape: const StadiumBorder(),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.xs,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
         ),
-        minimumSize: const Size(0, 32),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        textStyle: Theme.of(context).textTheme.labelMedium,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        minimumSize: const Size(0, AppSizes.buttonHeight),
+        textStyle: Theme.of(context).textTheme.labelMedium
+            ?.copyWith(fontWeight: FontWeight.w600),
       ),
-      // Pills share the row equally; on narrow phones or with large text the label shortens
-      // with "…" instead of overflowing.
       child: Row(
         mainAxisSize: MainAxisSize.min,
         spacing: AppSpacing.xs,
         children: [
-          if (leading != null) Icon(leading, size: AppSizes.iconSmall),
+          Icon(
+            icon,
+            size: AppSizes.iconMedium,
+            color: isActive ? AppColors.primary : AppColors.textSecondary,
+          ),
           Flexible(
             child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
-          if (trailing != null) Icon(trailing, size: AppSizes.iconSmall),
+          ?trailing,
         ],
+      ),
+    );
+  }
+}
+
+class _ActiveFilterCount extends StatelessWidget {
+  const _ActiveFilterCount({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: AppColors.primary,
+        shape: BoxShape.circle,
+      ),
+      child: SizedBox.square(
+        dimension: AppSizes.iconMedium,
+        child: Center(
+          child: Text(
+            '$count',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: AppColors.onPrimary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
       ),
     );
   }

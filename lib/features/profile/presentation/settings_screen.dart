@@ -1,4 +1,5 @@
 import 'package:chimbo/core/l10n/l10n.dart';
+import 'package:chimbo/core/l10n/locale_provider.dart';
 import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
@@ -11,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Mipangilio: language (Kiswahili only for now) and account deletion.
+/// Mipangilio: app language and account deletion.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -40,13 +41,17 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final locale = ref.watch(appLocaleProvider);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.menuSettings)),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
           SectionHeader(title: l10n.settingsLanguage),
-          const _LanguageCard(),
+          _LanguageCard(
+            selectedLocale: locale,
+            onSelected: ref.read(appLocaleProvider.notifier).setLocale,
+          ),
           const SizedBox(height: AppSpacing.xl),
           SectionHeader(title: l10n.settingsAccount),
           Card(
@@ -73,9 +78,11 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-/// Kiswahili is the only language for now; English is shown as coming (agreed placeholder).
 class _LanguageCard extends StatelessWidget {
-  const _LanguageCard();
+  const _LanguageCard({required this.selectedLocale, required this.onSelected});
+
+  final Locale selectedLocale;
+  final ValueChanged<Locale> onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -84,17 +91,27 @@ class _LanguageCard extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
+            selected: selectedLocale == AppLocales.swahili,
+            onTap: () => onSelected(AppLocales.swahili),
             title: Text(l10n.languageSwahili),
-            trailing: const Icon(
-              Icons.check_circle_rounded,
-              color: AppColors.primary,
-            ),
+            trailing: selectedLocale == AppLocales.swahili
+                ? const Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.primary,
+                  )
+                : null,
           ),
           const Divider(height: AppSizes.borderWidth),
           ListTile(
-            enabled: false,
+            selected: selectedLocale == AppLocales.english,
+            onTap: () => onSelected(AppLocales.english),
             title: Text(l10n.languageEnglish),
-            trailing: Text(l10n.comingSoonShort),
+            trailing: selectedLocale == AppLocales.english
+                ? const Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.primary,
+                  )
+                : null,
           ),
         ],
       ),

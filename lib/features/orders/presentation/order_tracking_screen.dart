@@ -191,6 +191,14 @@ class _TrackingContent extends StatelessWidget {
                   ? null
                   : order.deliveryFee,
             ),
+            if (order.discountTotal > 0)
+              (
+                label: switch (order.discountNote) {
+                  final note? => '${l10n.summaryDiscount} ($note)',
+                  null => l10n.summaryDiscount,
+                },
+                amount: -order.discountTotal,
+              ),
           ],
           totalLabel: order.isAwaitingTransportPrice
               ? l10n.summaryTotalEstimate
@@ -198,6 +206,23 @@ class _TrackingContent extends StatelessWidget {
           total: order.total,
           unknownAmountLabel: feeWords ?? l10n.summaryWeWillTellYou,
         ),
+        // After staff changed a paid order: the balance still to pay, or the money coming back
+        if (order.payment.isBalance) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l10n.paymentBalanceLine(
+              Money.format(order.payment.amountPaid),
+              Money.format(order.payment.amount),
+            ),
+            style: textTheme.bodySmall,
+          ),
+        ] else if (order.payment.refundDue > 0) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l10n.refundDueLine(Money.format(order.payment.refundDue)),
+            style: textTheme.bodySmall,
+          ),
+        ],
         // Why staff changed the upcountry transport price ("Mzigo mkubwa, katoni 6").
         if (order.deliveryMethod.feeNote case final note?) ...[
           const SizedBox(height: AppSpacing.xs),

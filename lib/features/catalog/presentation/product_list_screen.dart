@@ -81,7 +81,7 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     }
   }
 
-  Future<void> _openFilters(ProductQuery query, FilterSection section) async {
+  Future<void> _openFilters(ProductQuery query) async {
     final filters = await showFilterSheet(
       context,
       current: (
@@ -89,7 +89,6 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
         maxPrice: query.maxPrice,
         maxMoq: query.maxMoq,
       ),
-      section: section,
     );
     if (filters != null) {
       _queryController.filter(
@@ -222,17 +221,29 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                             const SizedBox(height: AppSpacing.md),
                           ],
                           FilterBar(
-                            hasFilters: query.hasFilters,
-                            hasPriceFilter:
-                                query.minPrice != null ||
-                                query.maxPrice != null,
-                            hasMoqFilter: query.maxMoq != null,
-                            onFilter: () =>
-                                _openFilters(query, FilterSection.all),
+                            activeFilterCount:
+                                (query.minPrice != null ||
+                                        query.maxPrice != null
+                                    ? 1
+                                    : 0) +
+                                (query.maxMoq != null ? 1 : 0),
+                            onFilter: () => _openFilters(query),
                             onSort: () => _openSort(query),
-                            onPrice: () =>
-                                _openFilters(query, FilterSection.price),
-                            onMoq: () => _openFilters(query, FilterSection.moq),
+                          ),
+                          ActiveFilterChips(
+                            minPrice: query.minPrice,
+                            maxPrice: query.maxPrice,
+                            maxMoq: query.maxMoq,
+                            onRemovePrice: () => _queryController.filter(
+                              minPrice: null,
+                              maxPrice: null,
+                              maxMoq: query.maxMoq,
+                            ),
+                            onRemoveMoq: () => _queryController.filter(
+                              minPrice: query.minPrice,
+                              maxPrice: query.maxPrice,
+                              maxMoq: null,
+                            ),
                           ),
                         ],
                       ),

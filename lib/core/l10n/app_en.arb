@@ -6,6 +6,21 @@
   "navCart": "Cart",
   "navOrders": "Orders",
   "navProfile": "Profile",
+  "homeOrderNeedsPayment": "Complete your order payment",
+  "homeOrderInProgress": "Your order is in progress",
+  "homeOrderLine": "Order #{number} · {status}",
+  "@homeOrderLine": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "homeOrderActionPay": "Pay now",
+  "homeOrderActionTrack": "Track order",
   "comingSoonTitle": "Coming soon",
   "comingSoonMessage": "This section will be ready soon.",
   "pressBackAgainToExit": "Press back again to exit.",
@@ -85,6 +100,18 @@
   "pinStepCurrent": "Enter your current PIN",
   "pinStepNew": "Choose a PIN of 4 to 6 digits",
   "pinStepConfirm": "Enter the PIN again to confirm",
+  "pinStepProgress": "Step {step} of {total}",
+  "@pinStepProgress": {
+    "description": "Current step in the change PIN flow.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pinWrongLength": "The PIN must be 4 to 6 digits.",
   "pinMismatch": "The PINs do not match. Try again.",
   "pinStartOver": "Start over",
@@ -112,12 +139,15 @@
   "actionCancel": "Cancel",
   "actionSave": "Save",
   "actionDelete": "Delete",
-  "comingSoonShort": "Coming soon",
   "profileEdit": "Edit Profile",
   "profileBusinessOwner": "Business owner",
   "profileEditPhoto": "Change photo",
   "menuBusinessInfo": "Business details",
   "menuBusinessInfoHint": "Shop name and contacts",
+  "profileSectionBusiness": "Business",
+  "profileSectionShopping": "Shopping",
+  "profileSectionHelp": "Help and information",
+  "profileSectionAccount": "Account security",
   "menuAddresses": "Delivery addresses",
   "menuAddressesHint": "Where you receive orders",
   "menuPayments": "My payments",
@@ -199,7 +229,48 @@
   "recentlyOrdered": "Recently Ordered",
   "chipAll": "All",
   "filterAction": "Filter",
+  "activePriceRange": "Price: {minimum} – {maximum}",
+  "@activePriceRange": {
+    "placeholders": {
+      "minimum": {
+        "type": "String"
+      },
+      "maximum": {
+        "type": "String"
+      }
+    }
+  },
+  "activePriceFrom": "Price from {amount}",
+  "@activePriceFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activePriceTo": "Price up to {amount}",
+  "@activePriceTo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activeMoqLimit": "MOQ up to {count}",
+  "@activeMoqLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterSheetTitle": "Filter products",
+  "filterSheetSubtitle": "Choose a price range and maximum MOQ.",
+  "priceFilterDescription": "Set the minimum and maximum price for a product.",
+  "moqFilterDescription": "Show products with an MOQ no higher than your limit.",
   "sortAction": "Sort",
+  "sortSheetTitle": "Sort products",
+  "sortSheetSubtitle": "Choose how products are ordered.",
   "priceFilter": "Price",
   "moqFilter": "MOQ",
   "minPriceHint": "Min price",
@@ -252,12 +323,32 @@
   "cartEmptyMessage": "Add products to start ordering at wholesale prices.",
   "actionStartShopping": "Start shopping",
   "cartNudge": "Add {count} pcs of {product} to pay {price} each.",
+  "cartNudgeAction": "Add {count} pcs",
+  "@cartNudgeAction": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "wholesalePriceTag": "Wholesale price",
   "cartTierLabel": "{min}+ pcs @ {price}",
   "moqMet": "MOQ met",
   "actionRemove": "Remove",
   "summaryItems": "Items ({count})",
+  "summaryItemsWithPieces": "Products ({products}) · Pieces ({pieces})",
+  "@summaryItemsWithPieces": {
+    "placeholders": {
+      "products": {
+        "type": "int"
+      },
+      "pieces": {
+        "type": "int"
+      }
+    }
+  },
   "summaryDelivery": "Delivery",
+  "summaryDiscount": "Discount",
   "summaryTotal": "Total",
   "summaryItemsTotal": "Items total",
   "summaryAmountToPay": "Amount to pay",
@@ -304,6 +395,9 @@
   "trackingReadyForPickup": "Your order is ready — come and collect it at the shop.",
   "trackingPickedUp": "You collected your order. Thank you for shopping with CHIMBO!",
   "payToTitle": "Pay {amount} with {method}",
+  "payBalanceTitle": "Pay the balance of {amount} with {method}",
+  "paymentBalanceLine": "Paid {paid} · Balance to pay {balance}",
+  "refundDueLine": "We'll send back {amount}",
   "payToNumber": "Lipa Namba / phone",
   "payToBankAccount": "Account number",
   "payToAccountName": "Account name",
@@ -341,6 +435,7 @@
   "orderReceivedMessage": "Thank you, {name}. We've started preparing your order.",
   "orderNumber": "#{number}",
   "actionTrackOrder": "Track order",
+  "actionPayNow": "Pay now",
   "actionBackHome": "Back to Home",
   "addressFormTitle": "New address",
   "editAddressFormTitle": "Edit address",
@@ -361,8 +456,23 @@
   "ordersTitle": "My Orders",
   "tabActiveOrders": "Active",
   "tabDeliveredOrders": "Delivered",
-  "ordersEmptyTitle": "No orders here",
-  "ordersEmptyMessage": "Your orders will show here.",
+  "orderTabCount": "{label} ({count})",
+  "@orderTabCount": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ordersEmptyTitle": "No orders yet",
+  "ordersEmptyMessage": "Your orders will appear here after you place one.",
+  "ordersActiveEmptyTitle": "No active orders",
+  "ordersActiveEmptyMessage": "Orders awaiting payment or being prepared will appear here.",
+  "ordersDeliveredEmptyTitle": "No delivered orders yet",
+  "ordersDeliveredEmptyMessage": "Your orders will appear here once they have been delivered.",
   "statusPendingPayment": "Awaiting payment",
   "statusConfirmed": "Confirmed",
   "statusPacked": "Packed",
@@ -371,6 +481,9 @@
   "statusDelivered": "Delivered",
   "statusCancelled": "Cancelled",
   "statusExpired": "Expired",
+  "statusCheckingPayment": "Checking payment",
+  "statusMeasuringLoad": "Measuring the load",
+  "statusBalanceDue": "Balance to pay",
   "trackingPendingPayment": "Complete payment so we can start preparing your order.",
   "trackingConfirmed": "We're preparing your order.",
   "trackingPacked": "Your order is ready to go.",
@@ -379,7 +492,7 @@
   "trackingInTransit": "Your order is coming.",
   "trackingDelivered": "Thanks for buying with CHIMBO!",
   "trackingCancelled": "This order was cancelled.",
-  "trackingExpired": "The payment time ran out.",
+  "trackingExpired": "The time to pay ran out. Tap \"Reorder\" to order these products at today's prices, or contact us.",
   "estimatedDeliveryTitle": "Estimated delivery",
   "deliveredOnTitle": "Delivered on",
   "actionDownloadReceipt": "Download receipt",

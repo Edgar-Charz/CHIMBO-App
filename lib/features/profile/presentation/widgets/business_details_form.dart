@@ -108,6 +108,7 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
           AppTextField(
             label: l10n.fullNameLabel,
             controller: _fullNameController,
+            minHeight: AppSizes.buttonHeight,
             enabled: !_isSubmitting,
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.words,
@@ -120,6 +121,7 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
             label: l10n.businessNameLabel,
             hint: l10n.optionalField,
             controller: _businessNameController,
+            minHeight: AppSizes.buttonHeight,
             enabled: !_isSubmitting,
             textInputAction: TextInputAction.done,
             textCapitalization: TextCapitalization.words,
@@ -135,6 +137,7 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
             }),
             onDistrictChanged: (district) =>
                 setState(() => _district = district),
+            fieldMinHeight: AppSizes.buttonHeight,
           ),
           const SizedBox(height: AppSpacing.xl),
           AppButton(

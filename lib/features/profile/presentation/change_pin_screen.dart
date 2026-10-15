@@ -28,24 +28,32 @@ class ChangePinScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.menuChangePin)),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                l10n.changePinNotice,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            const padding = AppSpacing.lg * 2;
+            final contentHeight = constraints.maxHeight > padding
+                ? constraints.maxHeight - padding
+                : 0.0;
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: contentHeight),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    PinSetupForm(
+                      askCurrentPin: true,
+                      showProgress: true,
+                      introText: l10n.changePinNotice,
+                      submitLabel: l10n.menuChangePin,
+                      onSubmit: changePin,
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: AppSpacing.xl),
-              PinSetupForm(
-                askCurrentPin: true,
-                submitLabel: l10n.menuChangePin,
-                onSubmit: changePin,
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

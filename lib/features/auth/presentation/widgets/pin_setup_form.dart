@@ -21,11 +21,15 @@ class PinSetupForm extends StatefulWidget {
     required this.submitLabel,
     required this.onSubmit,
     this.askCurrentPin = false,
+    this.showProgress = false,
+    this.introText,
   });
 
   final String submitLabel;
   final Future<void> Function(PinInput input) onSubmit;
   final bool askCurrentPin;
+  final bool showProgress;
+  final String? introText;
 
   @override
   State<PinSetupForm> createState() => _PinSetupFormState();
@@ -130,15 +134,58 @@ class _PinSetupFormState extends State<PinSetupForm> {
       _PinStep.create => l10n.pinStepNew,
       _PinStep.confirm => l10n.pinStepConfirm,
     };
+    final stepNumber = _step.index + (widget.askCurrentPin ? 1 : 0);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        if (widget.showProgress) ...[
+          Text(
+            l10n.pinStepProgress(stepNumber, 3),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppSpacing.xs),
+            child: LinearProgressIndicator(
+              value: stepNumber / 3,
+              minHeight: AppSpacing.xs,
+              backgroundColor: AppColors.border,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
+        if (widget.introText case final introText?) ...[
+          Text(
+            introText,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.xl),
+        ],
         Text(
           prompt,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.md),
+        Center(
+          child: Container(
+            width: 40,
+            height: 40,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: AppColors.primaryLight,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.lock_outline_rounded,
+              color: AppColors.primary,
+              size: 20,
+            ),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
         PinPad(
           pin: _value,
           errorText: _errorText,

@@ -10,63 +10,40 @@ import 'package:intl/intl.dart';
 /// Numeric filters returned by a filter sheet.
 typedef ListingFilters = ({int? minPrice, int? maxPrice, int? maxMoq});
 
-/// Which parts the filter sheet shows: both for "Chuja", one for "Bei" / "MOQ".
-enum FilterSection { all, price, moq }
-
 /// "Panga": returns the picked order, or null when dismissed.
 Future<ProductSort?> showSortSheet(BuildContext context, ProductSort current) {
   return showModalBottomSheet<ProductSort>(
     context: context,
     showDragHandle: true,
-    builder: (context) {
-      final l10n = context.l10n;
-      return SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            0,
-            AppSpacing.lg,
-            AppSpacing.lg,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                child: Text(
-                  l10n.sortAction,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
-              for (final sort in ProductSort.values)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                  child: _SortOption(
-                    sort: sort,
-                    selected: sort == current,
-                    onTap: () => Navigator.of(context).pop(sort),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      );
-    },
+    isScrollControlled: true,
+    useSafeArea: true,
+    backgroundColor: AppColors.background,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(AppRadius.large),
+      ),
+    ),
+    builder: (context) => _SortSheet(current: current),
   );
 }
 
-/// "Chuja" / "Bei" / "MOQ": returns the new filters, or null when dismissed.
+/// "Chuja": returns the new price and MOQ filters, or null when dismissed.
 Future<ListingFilters?> showFilterSheet(
   BuildContext context, {
   required ListingFilters current,
-  FilterSection section = FilterSection.all,
 }) {
   return showModalBottomSheet<ListingFilters>(
     context: context,
     showDragHandle: true,
     isScrollControlled: true,
-    builder: (context) => _FilterSheet(current: current, section: section),
+    useSafeArea: true,
+    backgroundColor: AppColors.background,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(AppRadius.large),
+      ),
+    ),
+    builder: (context) => _FilterSheet(current: current),
   );
 }
 
@@ -90,37 +67,155 @@ class _SortOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = selected ? AppColors.primary : AppColors.textSecondary;
     return Material(
       color: selected ? AppColors.primaryLight : AppColors.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.medium),
+        borderRadius: BorderRadius.circular(AppRadius.large),
         side: BorderSide(
           color: selected ? AppColors.primary : AppColors.border,
+          width: selected ? 1.5 : 1,
         ),
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.medium),
+        borderRadius: BorderRadius.circular(AppRadius.large),
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
           ),
           child: Row(
             children: [
-              Icon(
-                _icon,
-                size: AppSizes.iconMedium,
-                color: selected ? AppColors.primary : AppColors.textSecondary,
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: selected ? AppColors.surface : AppColors.neutralLight,
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
+                ),
+                child: Icon(_icon, color: iconColor),
               ),
               const SizedBox(width: AppSpacing.md),
-              Expanded(child: Text(sort.label(context.l10n))),
-              Icon(
-                selected
-                    ? Icons.radio_button_checked_rounded
-                    : Icons.radio_button_off_rounded,
-                size: AppSizes.iconMedium,
-                color: selected ? AppColors.primary : AppColors.border,
+              Expanded(
+                child: Text(
+                  sort.label(context.l10n),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: selected ? AppColors.primary : AppColors.textPrimary,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
+              ),
+              Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  color: selected ? AppColors.primary : Colors.transparent,
+                  shape: BoxShape.circle,
+                  border: selected
+                      ? null
+                      : const Border.fromBorderSide(
+                          BorderSide(color: AppColors.border, width: 1.5),
+                        ),
+                ),
+                child: selected
+                    ? const Icon(
+                        Icons.check_rounded,
+                        size: AppSizes.iconSmall,
+                        color: AppColors.onPrimary,
+                      )
+                    : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SortSheet extends StatelessWidget {
+  const _SortSheet({required this.current});
+
+  final ProductSort current;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final textTheme = Theme.of(context).textTheme;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.sm,
+                  AppSpacing.sm,
+                  AppSpacing.md,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryLight,
+                        borderRadius: BorderRadius.circular(AppRadius.medium),
+                      ),
+                      child: const Icon(
+                        Icons.swap_vert_rounded,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.sortSheetTitle,
+                            style: textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            l10n.sortSheetSubtitle,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      tooltip: l10n.actionCancel,
+                      icon: const Icon(Icons.close_rounded),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final sort in ProductSort.values)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: _SortOption(
+                          sort: sort,
+                          selected: sort == current,
+                          onTap: () => Navigator.of(context).pop(sort),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -131,10 +226,9 @@ class _SortOption extends StatelessWidget {
 }
 
 class _FilterSheet extends StatefulWidget {
-  const _FilterSheet({required this.current, required this.section});
+  const _FilterSheet({required this.current});
 
   final ListingFilters current;
-  final FilterSection section;
 
   @override
   State<_FilterSheet> createState() => _FilterSheetState();
@@ -156,9 +250,6 @@ class _FilterSheetState extends State<_FilterSheet> {
 
   static String _formatAmount(int? value) =>
       value == null ? '' : _amountFormat.format(value);
-
-  bool get _showsPrice => widget.section != FilterSection.moq;
-  bool get _showsMoq => widget.section != FilterSection.price;
 
   @override
   void dispose() {
@@ -196,18 +287,14 @@ class _FilterSheetState extends State<_FilterSheet> {
   void _apply() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     Navigator.of(context).pop((
-      minPrice: _showsPrice ? _parse(_minPrice) : widget.current.minPrice,
-      maxPrice: _showsPrice ? _parse(_maxPrice) : widget.current.maxPrice,
-      maxMoq: _showsMoq ? _parse(_maxMoq) : widget.current.maxMoq,
+      minPrice: _parse(_minPrice),
+      maxPrice: _parse(_maxPrice),
+      maxMoq: _parse(_maxMoq),
     ));
   }
 
   void _clear() {
-    Navigator.of(context).pop((
-      minPrice: _showsPrice ? null : widget.current.minPrice,
-      maxPrice: _showsPrice ? null : widget.current.maxPrice,
-      maxMoq: _showsMoq ? null : widget.current.maxMoq,
-    ));
+    Navigator.of(context).pop((minPrice: null, maxPrice: null, maxMoq: null));
   }
 
   @override
@@ -215,122 +302,244 @@ class _FilterSheetState extends State<_FilterSheet> {
     final l10n = context.l10n;
     final screenHeight = MediaQuery.sizeOf(context).height;
     final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
-    return SafeArea(
-      child: AnimatedPadding(
-        duration: const Duration(milliseconds: 180),
-        padding: EdgeInsets.only(bottom: keyboardInset),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: screenHeight * 0.84),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              0,
-              AppSpacing.lg,
-              AppSpacing.md,
-            ),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 180),
+      padding: EdgeInsets.only(bottom: keyboardInset),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: screenHeight * 0.88),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.sm,
+                AppSpacing.sm,
+                AppSpacing.md,
+              ),
+              child: Row(
                 children: [
-                  if (_showsPrice) ...[
-                    _SectionTitle(title: l10n.priceFilter),
-                    Row(
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryLight,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
+                    ),
+                    child: const Icon(
+                      Icons.tune_rounded,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: _AmountField(
-                            controller: _minPrice,
-                            hint: l10n.minPriceHint,
-                            prefix: 'TZS ',
-                            validator: (_) => _validateRange(
-                              controller: _minPrice,
-                              other: _maxPrice,
-                              isMinimum: true,
-                              isMoq: false,
-                            ),
-                          ),
+                        Text(
+                          l10n.filterSheetTitle,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm,
-                            vertical: AppSpacing.md,
-                          ),
-                          child: Text('–'),
-                        ),
-                        Expanded(
-                          child: _AmountField(
-                            controller: _maxPrice,
-                            hint: l10n.maxPriceHint,
-                            prefix: 'TZS ',
-                            validator: (_) => _validateRange(
-                              controller: _maxPrice,
-                              other: _minPrice,
-                              isMinimum: false,
-                              isMoq: false,
-                            ),
-                          ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          l10n.filterSheetSubtitle,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: AppColors.textSecondary),
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.md),
-                  ],
-                  if (_showsMoq) ...[
-                    _SectionTitle(title: l10n.moqFilter),
-                    _AmountField(
-                      controller: _maxMoq,
-                      hint: l10n.maxMoqHint,
-                      validator: (_) => _validateRange(
-                        controller: _maxMoq,
-                        isMinimum: false,
-                        isMoq: true,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: AppSpacing.lg),
-                  FilledButton(
-                    onPressed: _apply,
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(46),
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.medium),
-                      ),
-                    ),
-                    child: Text(l10n.actionShowResults),
                   ),
-                  Align(
-                    child: TextButton(
-                      onPressed: _clear,
-                      style: TextButton.styleFrom(
-                        minimumSize: const Size(0, 36),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(l10n.actionClearFilters),
-                    ),
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    tooltip: l10n.actionCancel,
+                    icon: const Icon(Icons.close_rounded),
                   ),
                 ],
               ),
             ),
-          ),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  0,
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _FilterSectionCard(
+                        icon: Icons.payments_outlined,
+                        title: l10n.priceFilter,
+                        description: l10n.priceFilterDescription,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: _AmountField(
+                                controller: _minPrice,
+                                hint: l10n.minPriceHint,
+                                prefix: 'TZS ',
+                                validator: (_) => _validateRange(
+                                  controller: _minPrice,
+                                  other: _maxPrice,
+                                  isMinimum: true,
+                                  isMoq: false,
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm,
+                                vertical: AppSpacing.md,
+                              ),
+                              child: Text('–'),
+                            ),
+                            Expanded(
+                              child: _AmountField(
+                                controller: _maxPrice,
+                                hint: l10n.maxPriceHint,
+                                prefix: 'TZS ',
+                                validator: (_) => _validateRange(
+                                  controller: _maxPrice,
+                                  other: _minPrice,
+                                  isMinimum: false,
+                                  isMoq: false,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      _FilterSectionCard(
+                        icon: Icons.inventory_2_outlined,
+                        title: l10n.moqFilter,
+                        description: l10n.moqFilterDescription,
+                        child: _AmountField(
+                          controller: _maxMoq,
+                          hint: l10n.maxMoqHint,
+                          validator: (_) => _validateRange(
+                            controller: _maxMoq,
+                            isMinimum: false,
+                            isMoq: true,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                color: AppColors.surface,
+                border: Border(top: BorderSide(color: AppColors.border)),
+              ),
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg,
+                    AppSpacing.md,
+                    AppSpacing.lg,
+                    AppSpacing.sm,
+                  ),
+                  child: Row(
+                    children: [
+                      TextButton.icon(
+                        onPressed: _clear,
+                        icon: const Icon(Icons.restart_alt_rounded),
+                        label: Text(l10n.actionClearFilters),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: _apply,
+                          icon: const Icon(Icons.check_rounded),
+                          label: Text(l10n.actionShowResults),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({required this.title});
+class _FilterSectionCard extends StatelessWidget {
+  const _FilterSectionCard({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.child,
+  });
 
+  final IconData icon;
   final String title;
+  final String description;
+  final Widget child;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-    child: Text(title, style: Theme.of(context).textTheme.titleSmall),
-  );
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        side: const BorderSide(color: AppColors.border),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(AppRadius.medium),
+                  ),
+                  child: Icon(icon, color: AppColors.primary),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: textTheme.titleSmall),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        description,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _AmountField extends StatelessWidget {

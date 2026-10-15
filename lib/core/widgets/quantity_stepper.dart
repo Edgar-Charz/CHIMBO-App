@@ -155,7 +155,8 @@ class _CompactButton extends StatelessWidget {
         width: AppSizes.compactStepperHeight,
         height: AppSizes.compactStepperHeight,
       ),
-      color: AppColors.accent,
+      color: AppColors.primary,
+      disabledColor: AppColors.textSecondary,
       iconSize: AppSizes.iconMedium,
       icon: Icon(icon),
     );

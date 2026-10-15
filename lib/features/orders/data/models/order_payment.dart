@@ -52,6 +52,9 @@ class OrderPayment {
     required this.canSubmit,
     this.canChangeMethod = false,
     this.latest,
+    this.isBalance = false,
+    this.amountPaid = 0,
+    this.refundDue = 0,
   });
 
   factory OrderPayment.fromJson(Map<String, dynamic> json) {
@@ -64,14 +67,24 @@ class OrderPayment {
       canSubmit: json['can_submit_payment'] as bool,
       canChangeMethod: json['can_change_payment_method'] as bool,
       latest: latest == null ? null : PaymentAttempt.fromJson(latest),
+      isBalance: json['is_balance_payment'] as bool? ?? false,
+      amountPaid: json['amount_paid'] as int? ?? 0,
+      refundDue: json['refund_due'] as int? ?? 0,
     );
   }
 
   /// Null when staff removed the method after the order was placed.
   final PaymentMethod? method;
 
-  /// Whole TZS to pay.
+  /// Whole TZS to pay now (after staff added to a paid order: only the balance).
   final int amount;
+
+  /// Staff added to the paid order: [amount] is the rest ("Salio la kulipa"), [amountPaid] is already in.
+  final bool isBalance;
+  final int amountPaid;
+
+  /// Money CHIMBO will give back after staff lowered the total (0 when none).
+  final int refundDue;
 
   /// What to write as the payment's description (the order number).
   final String noteHint;

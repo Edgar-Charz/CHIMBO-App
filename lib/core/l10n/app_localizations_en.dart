@@ -28,6 +28,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navProfile => 'Profile';
 
   @override
+  String get homeOrderNeedsPayment => 'Complete your order payment';
+
+  @override
+  String get homeOrderInProgress => 'Your order is in progress';
+
+  @override
+  String homeOrderLine(String number, String status) {
+    return 'Order #$number · $status';
+  }
+
+  @override
+  String get homeOrderActionPay => 'Pay now';
+
+  @override
+  String get homeOrderActionTrack => 'Track order';
+
+  @override
   String get comingSoonTitle => 'Coming soon';
 
   @override
@@ -283,6 +300,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pinStepConfirm => 'Enter the PIN again to confirm';
 
   @override
+  String pinStepProgress(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
   String get pinWrongLength => 'The PIN must be 4 to 6 digits.';
 
   @override
@@ -368,9 +390,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionDelete => 'Delete';
 
   @override
-  String get comingSoonShort => 'Coming soon';
-
-  @override
   String get profileEdit => 'Edit Profile';
 
   @override
@@ -384,6 +403,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuBusinessInfoHint => 'Shop name and contacts';
+
+  @override
+  String get profileSectionBusiness => 'Business';
+
+  @override
+  String get profileSectionShopping => 'Shopping';
+
+  @override
+  String get profileSectionHelp => 'Help and information';
+
+  @override
+  String get profileSectionAccount => 'Account security';
 
   @override
   String get menuAddresses => 'Delivery addresses';
@@ -650,7 +681,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterAction => 'Filter';
 
   @override
+  String activePriceRange(String minimum, String maximum) {
+    return 'Price: $minimum – $maximum';
+  }
+
+  @override
+  String activePriceFrom(String amount) {
+    return 'Price from $amount';
+  }
+
+  @override
+  String activePriceTo(String amount) {
+    return 'Price up to $amount';
+  }
+
+  @override
+  String activeMoqLimit(int count) {
+    return 'MOQ up to $count';
+  }
+
+  @override
+  String get filterSheetTitle => 'Filter products';
+
+  @override
+  String get filterSheetSubtitle => 'Choose a price range and maximum MOQ.';
+
+  @override
+  String get priceFilterDescription =>
+      'Set the minimum and maximum price for a product.';
+
+  @override
+  String get moqFilterDescription =>
+      'Show products with an MOQ no higher than your limit.';
+
+  @override
   String get sortAction => 'Sort';
+
+  @override
+  String get sortSheetTitle => 'Sort products';
+
+  @override
+  String get sortSheetSubtitle => 'Choose how products are ordered.';
 
   @override
   String get priceFilter => 'Price';
@@ -840,6 +911,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String cartNudgeAction(int count) {
+    return 'Add $count pcs';
+  }
+
+  @override
   String get wholesalePriceTag => 'Wholesale price';
 
   @override
@@ -859,7 +935,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String summaryItemsWithPieces(int products, int pieces) {
+    return 'Products ($products) · Pieces ($pieces)';
+  }
+
+  @override
   String get summaryDelivery => 'Delivery';
+
+  @override
+  String get summaryDiscount => 'Discount';
 
   @override
   String get summaryTotal => 'Total';
@@ -1022,6 +1106,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String payBalanceTitle(String amount, String method) {
+    return 'Pay the balance of $amount with $method';
+  }
+
+  @override
+  String paymentBalanceLine(String paid, String balance) {
+    return 'Paid $paid · Balance to pay $balance';
+  }
+
+  @override
+  String refundDueLine(String amount) {
+    return 'We\'ll send back $amount';
+  }
+
+  @override
   String get payToNumber => 'Lipa Namba / phone';
 
   @override
@@ -1148,6 +1247,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionTrackOrder => 'Track order';
 
   @override
+  String get actionPayNow => 'Pay now';
+
+  @override
   String get actionBackHome => 'Back to Home';
 
   @override
@@ -1209,10 +1311,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabDeliveredOrders => 'Delivered';
 
   @override
-  String get ordersEmptyTitle => 'No orders here';
+  String orderTabCount(String label, int count) {
+    return '$label ($count)';
+  }
 
   @override
-  String get ordersEmptyMessage => 'Your orders will show here.';
+  String get ordersEmptyTitle => 'No orders yet';
+
+  @override
+  String get ordersEmptyMessage =>
+      'Your orders will appear here after you place one.';
+
+  @override
+  String get ordersActiveEmptyTitle => 'No active orders';
+
+  @override
+  String get ordersActiveEmptyMessage =>
+      'Orders awaiting payment or being prepared will appear here.';
+
+  @override
+  String get ordersDeliveredEmptyTitle => 'No delivered orders yet';
+
+  @override
+  String get ordersDeliveredEmptyMessage =>
+      'Your orders will appear here once they have been delivered.';
 
   @override
   String get statusPendingPayment => 'Awaiting payment';
@@ -1237,6 +1359,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusExpired => 'Expired';
+
+  @override
+  String get statusCheckingPayment => 'Checking payment';
+
+  @override
+  String get statusMeasuringLoad => 'Measuring the load';
+
+  @override
+  String get statusBalanceDue => 'Balance to pay';
 
   @override
   String get trackingPendingPayment =>
@@ -1264,7 +1395,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trackingCancelled => 'This order was cancelled.';
 
   @override
-  String get trackingExpired => 'The payment time ran out.';
+  String get trackingExpired =>
+      'The time to pay ran out. Tap \"Reorder\" to order these products at today\'s prices, or contact us.';
 
   @override
   String get estimatedDeliveryTitle => 'Estimated delivery';

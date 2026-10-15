@@ -52,16 +52,35 @@ extension OrderStatusLabel on OrderStatus {
 /// A pickup order ("Nitachukua mwenyewe dukani") uses the same statuses with its own words:
 /// packed = "Tayari kuchukuliwa", delivered = "Imechukuliwa".
 extension OrderStatusWords on Order {
-  /// The word for [step] (default: the current status) on this order.
-  String statusLabel(AppLocalizations l10n, [OrderStatus? step]) =>
-      switch ((isPickup, step ?? status)) {
-        (true, OrderStatus.packed) => l10n.statusReadyForPickup,
-        (true, OrderStatus.delivered) => l10n.statusPickedUp,
-        (_, final other) => other.label(l10n),
-      };
+  /// The word for [step] (default: the current status) on this order. The current status also says
+  /// its stage: a payment being checked, the load being measured, a balance to pay.
+  String statusLabel(AppLocalizations l10n, [OrderStatus? step]) {
+    if (step == null) {
+      if (stageLabel(l10n) case final stage?) {
+        return stage;
+      }
+    }
+    return switch ((isPickup, step ?? status)) {
+      (true, OrderStatus.packed) => l10n.statusReadyForPickup,
+      (true, OrderStatus.delivered) => l10n.statusPickedUp,
+      (_, final other) => other.label(l10n),
+    };
+  }
+
+  /// "Malipo yanakaguliwa" · "Tunapima mzigo" · "Salio la kulipa" — or null when the status says it all.
+  String? stageLabel(AppLocalizations l10n) => switch (this) {
+    Order(status: OrderStatus.pendingPayment, payment: final payment)
+        when payment.isUnderReview =>
+      l10n.statusCheckingPayment,
+    Order(isAwaitingTransportPrice: true) => l10n.statusMeasuringLoad,
+    Order(payment: final payment) when payment.isBalance =>
+      l10n.statusBalanceDue,
+    _ => null,
+  };
 
   String bannerTitle(AppLocalizations l10n) =>
-      isPickup ? statusLabel(l10n) : status.bannerTitle(l10n);
+      stageLabel(l10n) ??
+      (isPickup ? statusLabel(l10n) : status.bannerTitle(l10n));
 
   String bannerMessage(AppLocalizations l10n) => switch ((isPickup, status)) {
     (true, OrderStatus.packed) => l10n.trackingReadyForPickup,

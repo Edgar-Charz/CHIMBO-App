@@ -16,6 +16,7 @@ class LocationFields extends ConsumerWidget {
     required this.onRegionChanged,
     required this.onDistrictChanged,
     this.enabled = true,
+    this.fieldMinHeight,
   });
 
   final Region? region;
@@ -23,6 +24,7 @@ class LocationFields extends ConsumerWidget {
   final ValueChanged<Region?> onRegionChanged;
   final ValueChanged<District?> onDistrictChanged;
   final bool enabled;
+  final double? fieldMinHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,6 +46,7 @@ class LocationFields extends ConsumerWidget {
           validator: (value) => value == null ? l10n.regionRequired : null,
           onChanged: enabled ? onRegionChanged : null,
           onRetry: enabled ? () => ref.invalidate(regionsProvider) : null,
+          minHeight: fieldMinHeight,
         ),
         const SizedBox(height: AppSpacing.md),
         _AsyncSearchPicker<District>(
@@ -60,6 +63,7 @@ class LocationFields extends ConsumerWidget {
           onRetry: !enabled || selectedRegion == null
               ? null
               : () => ref.invalidate(districtsProvider(selectedRegion.id)),
+          minHeight: fieldMinHeight,
         ),
       ],
     );
@@ -78,6 +82,7 @@ class _AsyncSearchPicker<T> extends StatelessWidget {
     required this.onChanged,
     required this.onRetry,
     this.validator,
+    this.minHeight,
   });
 
   final AsyncValue<List<T>> options;
@@ -88,6 +93,7 @@ class _AsyncSearchPicker<T> extends StatelessWidget {
   final ValueChanged<T?>? onChanged;
   final VoidCallback? onRetry;
   final FormFieldValidator<T>? validator;
+  final double? minHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +128,9 @@ class _AsyncSearchPicker<T> extends StatelessWidget {
           decoration: InputDecoration(
             labelText: label,
             hintText: hint,
+            constraints: minHeight == null
+                ? null
+                : BoxConstraints(minHeight: minHeight!),
             errorText: options.hasError
                 ? context.l10n.locationsLoadFailed
                 : field.errorText,

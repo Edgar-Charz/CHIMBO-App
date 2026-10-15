@@ -7,6 +7,7 @@ import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
+import 'package:chimbo/features/orders/presentation/widgets/order_labels.dart';
 import 'package:chimbo/features/orders/presentation/widgets/order_payment_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -144,6 +145,19 @@ void main() {
       expect(find.textContaining('hadi Mwanza'), findsOneWidget);
       expect(find.textContaining(Money.format(15000)), findsOneWidget);
       expect(find.text('Nimelipa'), findsNothing);
+    });
+
+    test('the status says the stage: measuring the load', () async {
+      final l10n = await AppLocalizations.delegate.load(const Locale('sw'));
+      final order = _upcountryOrder(
+        feeFields: {'delivery_fee_status': 'awaiting_confirmation'},
+      );
+
+      expect(order.statusLabel(l10n), 'Tunapima mzigo');
+      expect(
+        order.statusLabel(l10n, OrderStatus.pendingPayment),
+        'Inasubiri malipo',
+      ); // the timeline step
     });
 
     test('confirmed: the reason staff gave comes with the order', () {

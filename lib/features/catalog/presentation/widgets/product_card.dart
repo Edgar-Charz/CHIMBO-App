@@ -146,8 +146,10 @@ class _CardInfo extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 32,
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: AppSizes.productCardNameMinHeight,
+                ),
                 child: Text(
                   product.name,
                   maxLines: 2,

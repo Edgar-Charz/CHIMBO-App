@@ -55,4 +55,32 @@ void main() {
       expect(repository.readCachedImages(), images);
     },
   );
+
+  test('the logo uploaded in the admin comes as slot "logo"', () async {
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+    final (client, _) = clientReplying(
+      (_) => jsonReply({
+        'success': true,
+        'data': [
+          {
+            'app_image_slot': 'logo',
+            'app_image_url': 'https://images.test/brand/new-512.png',
+            'updated_at': '2026-10-15T10:48:00+00:00',
+          },
+        ],
+      }),
+    );
+
+    final images = await ApiAppImagesRepository(
+      client,
+      preferences,
+    ).fetchImages();
+
+    expect(
+      images[AppImageSlot.logo]?.url,
+      'https://images.test/brand/new-512.png',
+    );
+    expect(AppImageSlot.beforeHome, contains(AppImageSlot.logo));
+  });
 }

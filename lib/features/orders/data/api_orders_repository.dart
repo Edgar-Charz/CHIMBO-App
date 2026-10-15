@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
+import 'package:chimbo/features/orders/data/models/order_list_page.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
 
@@ -27,14 +28,18 @@ class ApiOrdersRepository implements OrdersRepository {
   }
 
   @override
-  Future<List<Order>> getOrders(OrderGroup group) async {
+  Future<OrderListPage> getOrders(OrderGroup group) async {
     final response = await _apiClient.get(
       '/orders',
       query: {'group': group.apiValue},
     );
-    return response.dataAsList
+    final orders = response.dataAsList
         .map((json) => Order.fromJson(json! as Map<String, dynamic>))
         .toList();
+    return OrderListPage(
+      orders: orders,
+      total: response.meta['total'] as int? ?? orders.length,
+    );
   }
 
   @override

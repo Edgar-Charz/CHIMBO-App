@@ -11,6 +11,7 @@ import 'package:chimbo/features/checkout/data/checkout_repository.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
+import 'package:chimbo/features/orders/data/models/order_list_page.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
 import 'package:chimbo/features/profile/data/profile_repository.dart';
@@ -111,10 +112,13 @@ class FakeOrdersRepository implements OrdersRepository {
   }
 
   @override
-  Future<List<Order>> getOrders(OrderGroup group) async {
+  Future<OrderListPage> getOrders(OrderGroup group) async {
     final orders = (await _readRecords()).map(_toOrder).toList()
       ..sort((a, b) => b.placedAt.compareTo(a.placedAt));
-    return orders.where((order) => _isInGroup(order.status, group)).toList();
+    final matching = orders
+        .where((order) => _isInGroup(order.status, group))
+        .toList();
+    return OrderListPage(orders: matching, total: matching.length);
   }
 
   @override

@@ -134,6 +134,36 @@ abstract class AppLocalizations {
   /// **'Wasifu'**
   String get navProfile;
 
+  /// No description provided for @homeOrderNeedsPayment.
+  ///
+  /// In sw, this message translates to:
+  /// **'Malizia malipo ya oda yako'**
+  String get homeOrderNeedsPayment;
+
+  /// No description provided for @homeOrderInProgress.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda yako inaendelea'**
+  String get homeOrderInProgress;
+
+  /// No description provided for @homeOrderLine.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda #{number} · {status}'**
+  String homeOrderLine(String number, String status);
+
+  /// No description provided for @homeOrderActionPay.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa sasa'**
+  String get homeOrderActionPay;
+
+  /// No description provided for @homeOrderActionTrack.
+  ///
+  /// In sw, this message translates to:
+  /// **'Fuatilia'**
+  String get homeOrderActionTrack;
+
   /// No description provided for @comingSoonTitle.
   ///
   /// In sw, this message translates to:
@@ -608,6 +638,12 @@ abstract class AppLocalizations {
   /// **'Rudia PIN ili kuthibitisha'**
   String get pinStepConfirm;
 
+  /// Current step in the change PIN flow.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hatua {step} kati ya {total}'**
+  String pinStepProgress(int step, int total);
+
   /// No description provided for @pinWrongLength.
   ///
   /// In sw, this message translates to:
@@ -770,12 +806,6 @@ abstract class AppLocalizations {
   /// **'Futa'**
   String get actionDelete;
 
-  /// No description provided for @comingSoonShort.
-  ///
-  /// In sw, this message translates to:
-  /// **'Inakuja'**
-  String get comingSoonShort;
-
   /// No description provided for @profileEdit.
   ///
   /// In sw, this message translates to:
@@ -805,6 +835,30 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Jina la duka na mawasiliano'**
   String get menuBusinessInfoHint;
+
+  /// No description provided for @profileSectionBusiness.
+  ///
+  /// In sw, this message translates to:
+  /// **'Biashara'**
+  String get profileSectionBusiness;
+
+  /// No description provided for @profileSectionShopping.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ununuzi'**
+  String get profileSectionShopping;
+
+  /// No description provided for @profileSectionHelp.
+  ///
+  /// In sw, this message translates to:
+  /// **'Msaada na taarifa'**
+  String get profileSectionHelp;
+
+  /// No description provided for @profileSectionAccount.
+  ///
+  /// In sw, this message translates to:
+  /// **'Usalama wa akaunti'**
+  String get profileSectionAccount;
 
   /// No description provided for @menuAddresses.
   ///
@@ -1292,11 +1346,71 @@ abstract class AppLocalizations {
   /// **'Chuja'**
   String get filterAction;
 
+  /// No description provided for @activePriceRange.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bei: {minimum} – {maximum}'**
+  String activePriceRange(String minimum, String maximum);
+
+  /// No description provided for @activePriceFrom.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bei kuanzia {amount}'**
+  String activePriceFrom(String amount);
+
+  /// No description provided for @activePriceTo.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bei hadi {amount}'**
+  String activePriceTo(String amount);
+
+  /// No description provided for @activeMoqLimit.
+  ///
+  /// In sw, this message translates to:
+  /// **'MOQ hadi {count}'**
+  String activeMoqLimit(int count);
+
+  /// No description provided for @filterSheetTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chuja bidhaa'**
+  String get filterSheetTitle;
+
+  /// No description provided for @filterSheetSubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chagua bei na kiwango cha juu cha MOQ.'**
+  String get filterSheetSubtitle;
+
+  /// No description provided for @priceFilterDescription.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka kiwango cha chini na cha juu cha bei ya bidhaa.'**
+  String get priceFilterDescription;
+
+  /// No description provided for @moqFilterDescription.
+  ///
+  /// In sw, this message translates to:
+  /// **'Onyesha bidhaa zenye MOQ isiyozidi kiasi unachoweka.'**
+  String get moqFilterDescription;
+
   /// No description provided for @sortAction.
   ///
   /// In sw, this message translates to:
   /// **'Panga'**
   String get sortAction;
+
+  /// No description provided for @sortSheetTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Panga bidhaa'**
+  String get sortSheetTitle;
+
+  /// No description provided for @sortSheetSubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chagua jinsi bidhaa zitakavyoonyeshwa.'**
+  String get sortSheetSubtitle;
 
   /// No description provided for @priceFilter.
   ///
@@ -1610,6 +1724,12 @@ abstract class AppLocalizations {
   /// **'Ongeza pcs {count} za {product} upate {price} kila moja.'**
   String cartNudge(int count, String product, String price);
 
+  /// No description provided for @cartNudgeAction.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ongeza {count} pcs'**
+  String cartNudgeAction(int count);
+
   /// No description provided for @wholesalePriceTag.
   ///
   /// In sw, this message translates to:
@@ -1640,11 +1760,23 @@ abstract class AppLocalizations {
   /// **'Bidhaa ({count})'**
   String summaryItems(int count);
 
+  /// No description provided for @summaryItemsWithPieces.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bidhaa ({products}) · Vipande ({pieces})'**
+  String summaryItemsWithPieces(int products, int pieces);
+
   /// No description provided for @summaryDelivery.
   ///
   /// In sw, this message translates to:
   /// **'Usafirishaji'**
   String get summaryDelivery;
+
+  /// No description provided for @summaryDiscount.
+  ///
+  /// In sw, this message translates to:
+  /// **'Punguzo'**
+  String get summaryDiscount;
 
   /// No description provided for @summaryTotal.
   ///
@@ -1922,6 +2054,24 @@ abstract class AppLocalizations {
   /// **'Lipa {amount} kwa {method}'**
   String payToTitle(String amount, String method);
 
+  /// No description provided for @payBalanceTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa salio la {amount} kwa {method}'**
+  String payBalanceTitle(String amount, String method);
+
+  /// No description provided for @paymentBalanceLine.
+  ///
+  /// In sw, this message translates to:
+  /// **'Umelipa {paid} · Salio la kulipa {balance}'**
+  String paymentBalanceLine(String paid, String balance);
+
+  /// No description provided for @refundDueLine.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tutakurudishia {amount}'**
+  String refundDueLine(String amount);
+
   /// No description provided for @payToNumber.
   ///
   /// In sw, this message translates to:
@@ -2144,6 +2294,12 @@ abstract class AppLocalizations {
   /// **'Fuatilia Oda'**
   String get actionTrackOrder;
 
+  /// No description provided for @actionPayNow.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa sasa'**
+  String get actionPayNow;
+
   /// No description provided for @actionBackHome.
   ///
   /// In sw, this message translates to:
@@ -2264,17 +2420,47 @@ abstract class AppLocalizations {
   /// **'Zimefika'**
   String get tabDeliveredOrders;
 
+  /// No description provided for @orderTabCount.
+  ///
+  /// In sw, this message translates to:
+  /// **'{label} ({count})'**
+  String orderTabCount(String label, int count);
+
   /// No description provided for @ordersEmptyTitle.
   ///
   /// In sw, this message translates to:
-  /// **'Hakuna oda hapa'**
+  /// **'Bado hujaweka oda'**
   String get ordersEmptyTitle;
 
   /// No description provided for @ordersEmptyMessage.
   ///
   /// In sw, this message translates to:
-  /// **'Oda zako zitaonekana hapa.'**
+  /// **'Oda zako zote zitaonekana hapa ukishaweka oda.'**
   String get ordersEmptyMessage;
+
+  /// No description provided for @ordersActiveEmptyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna oda inayoendelea'**
+  String get ordersActiveEmptyTitle;
+
+  /// No description provided for @ordersActiveEmptyMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda unazosubiri au zinazoandaliwa zitaonekana hapa.'**
+  String get ordersActiveEmptyMessage;
+
+  /// No description provided for @ordersDeliveredEmptyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bado hakuna oda iliyofika'**
+  String get ordersDeliveredEmptyTitle;
+
+  /// No description provided for @ordersDeliveredEmptyMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda zako zitahamia hapa baada ya kufikishwa.'**
+  String get ordersDeliveredEmptyMessage;
 
   /// No description provided for @statusPendingPayment.
   ///
@@ -2323,6 +2509,24 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Muda umeisha'**
   String get statusExpired;
+
+  /// No description provided for @statusCheckingPayment.
+  ///
+  /// In sw, this message translates to:
+  /// **'Malipo yanakaguliwa'**
+  String get statusCheckingPayment;
+
+  /// No description provided for @statusMeasuringLoad.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tunapima mzigo'**
+  String get statusMeasuringLoad;
+
+  /// No description provided for @statusBalanceDue.
+  ///
+  /// In sw, this message translates to:
+  /// **'Salio la kulipa'**
+  String get statusBalanceDue;
 
   /// No description provided for @trackingPendingPayment.
   ///
@@ -2375,7 +2579,7 @@ abstract class AppLocalizations {
   /// No description provided for @trackingExpired.
   ///
   /// In sw, this message translates to:
-  /// **'Muda wa malipo umeisha.'**
+  /// **'Muda wa malipo umeisha. Bonyeza \"Agiza Tena\" kuagiza bidhaa hizi kwa bei za leo, au wasiliana nasi.'**
   String get trackingExpired;
 
   /// No description provided for @estimatedDeliveryTitle.

@@ -4,6 +4,7 @@ import 'package:chimbo/core/network/network_providers.dart';
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:chimbo/features/orders/data/api_orders_repository.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
+import 'package:chimbo/features/orders/data/models/order_list_page.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,7 +37,7 @@ abstract interface class OrdersRepository {
   Future<Order> placeOrder(PlaceOrderInput input);
 
   /// `GET /orders?group=…`, newest first.
-  Future<List<Order>> getOrders(OrderGroup group);
+  Future<OrderListPage> getOrders(OrderGroup group);
 
   /// `GET /orders/{id}` + `/tracking`.
   Future<Order> getOrder(int orderId);

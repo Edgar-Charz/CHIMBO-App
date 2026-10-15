@@ -39,8 +39,10 @@ enum OrderStatus {
   /// Ended without delivery (payment status `cancelled`): shown the same way either way.
   bool get isStopped => this == cancelled || this == expired;
 
-  /// "Agiza Tena" is offered only for orders that are over: delivered or cancelled.
-  bool get canReorder => this == delivered || this == cancelled;
+  /// "Agiza Tena" is offered only for orders that are over: delivered, cancelled, or expired
+  /// (the time to pay ran out — the same products again at today's prices).
+  bool get canReorder =>
+      this == delivered || this == cancelled || this == expired;
 
   /// "Zinazoendelea" tab.
   bool get isActive =>
@@ -119,6 +121,8 @@ class Order {
     required this.items,
     required this.subtotal,
     required this.deliveryFee,
+    this.discountTotal = 0,
+    this.discountNote,
     required this.total,
     required this.deliveryMethod,
     required this.payment,
@@ -153,6 +157,8 @@ class Order {
           .toList(),
       subtotal: json['order_subtotal'] as int,
       deliveryFee: json['order_delivery_fee'] as int,
+      discountTotal: json['order_discount_total'] as int? ?? 0,
+      discountNote: json['order_discount_note'] as String?,
       total: json['order_total'] as int,
       deliveryMethod: deliveryMethod,
       payment: OrderPayment.fromJson(json['payment'] as Map<String, dynamic>),
@@ -191,6 +197,10 @@ class Order {
   final List<OrderItem> items;
   final int subtotal;
   final int deliveryFee;
+
+  /// A discount staff gave on the products (0 when none), and why ("Mteja wa kudumu").
+  final int discountTotal;
+  final String? discountNote;
   final int total;
   final DeliveryMethod deliveryMethod;
   final OrderPayment payment;

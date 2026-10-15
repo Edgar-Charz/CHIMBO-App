@@ -41,13 +41,14 @@ abstract final class AppSizes {
   static const double stepperValueWidth = 40;
 
   static const double railCardWidth = 150;
+  static const double productCardNameMinHeight = 32;
   static const double quickActionIcon = 56;
   static const double categoryCardImage = 110;
   static const double bannerImageWidth = 112;
   static const double galleryThumbnail = 64;
   static const double loadMoreThreshold = 400;
   static const double cartLineImage = 88;
-  static const double compactStepperHeight = 34;
+  static const double compactStepperHeight = 44;
   static const double orderThumbnail = 56;
   static const double successBadge = 120;
   static const double timelineDot = 36;

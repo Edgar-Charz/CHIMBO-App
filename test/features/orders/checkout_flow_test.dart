@@ -76,7 +76,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Oda Zangu'), findsOneWidget);
-    await tester.tap(find.text('Zimefika'));
+    // The tab shows its count ("Zimefika (2)"); on a narrow phone the row scrolls to it first
+    final deliveredTab = find.textContaining('Zimefika');
+    await tester.ensureVisible(deliveredTab);
+    await tester.pumpAndSettle();
+    await tester.tap(deliveredTab);
     await tester.pumpAndSettle();
 
     expect(find.text('Imewasili'), findsWidgets);

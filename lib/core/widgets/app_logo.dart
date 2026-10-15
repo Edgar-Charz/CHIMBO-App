@@ -4,11 +4,14 @@ import 'package:chimbo/core/assets/app_images.dart';
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
-import 'package:chimbo/core/widgets/image_slot.dart';
 import 'package:chimbo/core/widgets/separated_text.dart';
+import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
+import 'package:chimbo/features/app_images/presentation/widgets/replaceable_image_slot.dart';
 import 'package:flutter/material.dart';
 
 /// The CHIMBO logo: mark, "CHI" (green) + "MBO" (orange) wordmark and the three-part tagline.
+/// The mark is the logo uploaded in the admin when there is one (Settings → Logo & pictures),
+/// else the bundled one.
 /// Every part scales with [markSize], so one widget serves the splash and smaller headers.
 class AppLogo extends StatelessWidget {
   const AppLogo({super.key, this.markSize = 96, this.showTagline = true});
@@ -32,11 +35,7 @@ class AppLogo extends StatelessWidget {
         children: [
           SizedBox.square(
             dimension: markSize,
-            child: ImageSlot(
-              asset: AppImages.logoMark,
-              placeholderIcons: const [Icons.shopping_cart_rounded],
-              // The mark is wider than tall; contain keeps the speed lines from being cropped.
-              fit: BoxFit.contain,
+            child: _LogoMark(
               borderRadius: BorderRadius.circular(markSize * _cornerScale),
             ),
           ),
@@ -71,15 +70,7 @@ class AppLogoInline extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            height: height,
-            width: height,
-            child: const ImageSlot(
-              asset: AppImages.logoMark,
-              placeholderIcons: [Icons.shopping_cart_rounded],
-              fit: BoxFit.contain,
-            ),
-          ),
+          SizedBox(height: height, width: height, child: const _LogoMark()),
           const SizedBox(width: AppSpacing.sm),
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -149,6 +140,25 @@ class _Tagline extends StatelessWidget {
         fontWeight: FontWeight.w600,
         color: AppColors.primary,
       ),
+    );
+  }
+}
+
+/// The mark alone: the uploaded logo (slot `logo`), falling back to the bundled one.
+class _LogoMark extends StatelessWidget {
+  const _LogoMark({this.borderRadius = BorderRadius.zero});
+
+  final BorderRadius borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    return ReplaceableImageSlot(
+      slot: AppImageSlot.logo,
+      asset: AppImages.logoMark,
+      placeholderIcons: const [Icons.shopping_cart_rounded],
+      // A logo may be wider than tall; contain never crops it.
+      fit: BoxFit.contain,
+      borderRadius: borderRadius,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/cart/application/cart_controller.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
+import 'package:chimbo/features/orders/data/models/order_list_page.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// One Oda Zangu tab.
 final ordersProvider = FutureProvider.autoDispose
-    .family<List<Order>, OrderGroup>((ref, group) {
+    .family<OrderListPage, OrderGroup>((ref, group) {
       ref.watch(authControllerProvider.select((state) => state.user?.id));
       return ref.watch(ordersRepositoryProvider).getOrders(group);
     });

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chimbo/core/assets/app_images.dart';
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/router/app_routes.dart';
@@ -13,10 +15,13 @@ import 'package:chimbo/features/catalog/data/models/product_query.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:chimbo/features/home/data/home_data.dart';
 import 'package:chimbo/features/home/presentation/widgets/greeting_card.dart';
+import 'package:chimbo/features/home/presentation/widgets/home_order_attention.dart';
 import 'package:chimbo/features/home/presentation/widgets/home_sections.dart';
 import 'package:chimbo/features/home/presentation/widgets/product_rail.dart';
 import 'package:chimbo/features/home/presentation/widgets/recently_ordered_rail.dart';
 import 'package:chimbo/features/notifications/application/notifications_controller.dart';
+import 'package:chimbo/features/orders/application/orders_providers.dart';
+import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/profile/application/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,6 +40,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _greetingCardKey = GlobalKey();
+  final GlobalKey _recentlyOrderedKey = GlobalKey();
   final GlobalKey _scrollViewportKey = GlobalKey();
   bool _showStickySearch = false;
 
@@ -70,6 +76,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
+  void _openRecentlyOrdered() {
+    final sectionContext = _recentlyOrderedKey.currentContext;
+    if (sectionContext == null) {
+      context.go(AppRoutes.orders);
+      return;
+    }
+
+    unawaited(
+      Scrollable.ensureVisible(
+        sectionContext,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+        alignment: 0.12,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final fullName = ref.watch(
@@ -97,67 +120,67 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               child: _Header(),
             ),
-            Expanded(
-              child: Stack(
-                children: [
-                  RefreshIndicator(
-                    onRefresh: () {
-                      ref.invalidate(unreadNotificationsProvider);
-                      return ref.refresh(homeDataProvider.future);
-                    },
-                    child: ListView(
-                      key: _scrollViewportKey,
-                      controller: _scrollController,
-                      padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.lg,
-                        AppSpacing.sm,
-                        AppSpacing.lg,
-                        AppSpacing.lg,
-                      ),
-                      children: [
-                        GreetingCard(
-                          key: _greetingCardKey,
-                          fullName: fullName ?? '',
-                          photoUrl: photoUrl,
-                          now: DateTime.now(),
-                          onSearchTap: () => context.go(AppRoutes.discover),
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        home.when(
-                          data: (data) => _HomeSections(data: data),
-                          error: (error, _) => ErrorState(
-                            error: error,
-                            onRetry: () => ref.invalidate(homeDataProvider),
-                          ),
-                          loading: () => const Skeletonizer(
-                            child: _HomeSections(data: _skeletonData),
-                          ),
-                        ),
-                      ],
-                    ),
+            if (_showStickySearch)
+              Material(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                elevation: 2,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg,
+                    AppSpacing.sm,
+                    AppSpacing.lg,
+                    AppSpacing.sm,
                   ),
-                  if (_showStickySearch)
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: Material(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        elevation: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            AppSpacing.lg,
-                            AppSpacing.sm,
-                            AppSpacing.lg,
-                            AppSpacing.sm,
-                          ),
-                          child: HomeSearchBar(
-                            onTap: () => context.go(AppRoutes.discover),
-                          ),
+                  child: HomeSearchBar(
+                    onTap: () => context.go(AppRoutes.discover),
+                  ),
+                ),
+              ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () {
+                  ref.invalidate(unreadNotificationsProvider);
+                  ref.invalidate(ordersProvider(OrderGroup.active));
+                  return ref.refresh(homeDataProvider.future);
+                },
+                child: ListView(
+                  key: _scrollViewportKey,
+                  controller: _scrollController,
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg,
+                    AppSpacing.sm,
+                    AppSpacing.lg,
+                    AppSpacing.lg,
+                  ),
+                  children: [
+                    GreetingCard(
+                      key: _greetingCardKey,
+                      fullName: fullName ?? '',
+                      photoUrl: photoUrl,
+                      now: DateTime.now(),
+                      onSearchTap: () => context.go(AppRoutes.discover),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    const HomeOrderAttention(),
+                    home.when(
+                      data: (data) => _HomeSections(
+                        data: data,
+                        recentlyOrderedKey: _recentlyOrderedKey,
+                        onReorderTap: _openRecentlyOrdered,
+                      ),
+                      error: (error, _) => ErrorState(
+                        error: error,
+                        onRetry: () => ref.invalidate(homeDataProvider),
+                      ),
+                      loading: () => Skeletonizer(
+                        child: _HomeSections(
+                          data: _skeletonData,
+                          onReorderTap: _openRecentlyOrdered,
                         ),
                       ),
                     ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -212,7 +235,11 @@ class _Header extends ConsumerWidget {
 }
 
 class _HomeSections extends StatelessWidget {
-  const _HomeSections({required this.data});
+  const _HomeSections({
+    required this.data,
+    required this.onReorderTap,
+    this.recentlyOrderedKey,
+  });
 
   // Picture and colour per card position (cosmetics first, jewelry second, as in the design).
   static const List<({String image, IconData icon, Color background})>
@@ -230,6 +257,8 @@ class _HomeSections extends StatelessWidget {
   ];
 
   final HomeData data;
+  final GlobalKey? recentlyOrderedKey;
+  final VoidCallback onReorderTap;
 
   @override
   Widget build(BuildContext context) {
@@ -238,42 +267,30 @@ class _HomeSections extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (var start = 0; start < categories.length; start += 2) ...[
-          if (start > 0) const SizedBox(height: AppSpacing.md),
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: AppSpacing.md,
-              children: [
-                for (
-                  var index = start;
-                  index < categories.length && index < start + 2;
-                  index++
-                )
-                  Expanded(
-                    child: CategoryCard(
-                      category: categories[index],
-                      image:
-                          _categoryStyles[index % _categoryStyles.length].image,
-                      imageUrl: categories[index].imageUrl,
-                      placeholderIcon:
-                          _categoryStyles[index % _categoryStyles.length].icon,
-                      background:
-                          _categoryStyles[index % _categoryStyles.length]
-                              .background,
-                      onBrowse: () => context.push(
-                        AppRoutes.category(categories[index].id),
-                      ),
-                    ),
-                  ),
-                if (categories.length.isOdd && start + 1 >= categories.length)
-                  const Expanded(child: SizedBox()),
-              ],
+        if (categories.length == 1)
+          _categoryCard(context, categories, 0)
+        else
+          for (var start = 0; start < categories.length; start += 2) ...[
+            if (start > 0) const SizedBox(height: AppSpacing.md),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: AppSpacing.md,
+                children: [
+                  for (
+                    var index = start;
+                    index < categories.length && index < start + 2;
+                    index++
+                  )
+                    Expanded(child: _categoryCard(context, categories, index)),
+                  if (categories.length.isOdd && start + 1 >= categories.length)
+                    const Expanded(child: SizedBox()),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
         const SizedBox(height: AppSpacing.lg),
-        const _QuickActions(),
+        _QuickActions(onReorderTap: onReorderTap),
         const SizedBox(height: AppSpacing.lg),
         for (final banner in data.banners)
           Padding(
@@ -321,6 +338,7 @@ class _HomeSections extends StatelessWidget {
         if (data.recentlyOrdered.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.lg),
           RecentlyOrderedRail(
+            key: recentlyOrderedKey,
             title: l10n.recentlyOrdered,
             products: data.recentlyOrdered,
             actionLabel: l10n.actionViewAll,
@@ -337,6 +355,23 @@ class _HomeSections extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  CategoryCard _categoryCard(
+    BuildContext context,
+    List<Category> categories,
+    int index,
+  ) {
+    final category = categories[index];
+    final style = _categoryStyles[index % _categoryStyles.length];
+    return CategoryCard(
+      category: category,
+      image: style.image,
+      imageUrl: category.imageUrl,
+      placeholderIcon: style.icon,
+      background: style.background,
+      onBrowse: () => context.push(AppRoutes.category(category.id)),
     );
   }
 }
@@ -371,7 +406,9 @@ void _openBannerTarget(BuildContext context, HomeBanner banner) {
 
 /// Ofa · Bidhaa Mpya · Zinazouzwa Sana · Agiza Tena.
 class _QuickActions extends StatelessWidget {
-  const _QuickActions();
+  const _QuickActions({required this.onReorderTap});
+
+  final VoidCallback onReorderTap;
 
   @override
   Widget build(BuildContext context) {
@@ -408,8 +445,7 @@ class _QuickActions extends StatelessWidget {
           label: l10n.quickReorder,
           color: AppColors.primary,
           background: AppColors.primaryLight,
-          // Reorder lives on the Oda tab (Phase 4).
-          onTap: () => context.go(AppRoutes.orders),
+          onTap: onReorderTap,
         ),
       ],
     );

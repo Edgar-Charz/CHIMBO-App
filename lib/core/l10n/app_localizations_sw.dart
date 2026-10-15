@@ -28,6 +28,23 @@ class AppLocalizationsSw extends AppLocalizations {
   String get navProfile => 'Wasifu';
 
   @override
+  String get homeOrderNeedsPayment => 'Malizia malipo ya oda yako';
+
+  @override
+  String get homeOrderInProgress => 'Oda yako inaendelea';
+
+  @override
+  String homeOrderLine(String number, String status) {
+    return 'Oda #$number · $status';
+  }
+
+  @override
+  String get homeOrderActionPay => 'Lipa sasa';
+
+  @override
+  String get homeOrderActionTrack => 'Fuatilia';
+
+  @override
   String get comingSoonTitle => 'Inakuja hivi karibuni';
 
   @override
@@ -284,6 +301,11 @@ class AppLocalizationsSw extends AppLocalizations {
   String get pinStepConfirm => 'Rudia PIN ili kuthibitisha';
 
   @override
+  String pinStepProgress(int step, int total) {
+    return 'Hatua $step kati ya $total';
+  }
+
+  @override
   String get pinWrongLength => 'PIN iwe tarakimu 4 hadi 6.';
 
   @override
@@ -371,9 +393,6 @@ class AppLocalizationsSw extends AppLocalizations {
   String get actionDelete => 'Futa';
 
   @override
-  String get comingSoonShort => 'Inakuja';
-
-  @override
   String get profileEdit => 'Hariri Wasifu';
 
   @override
@@ -387,6 +406,18 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get menuBusinessInfoHint => 'Jina la duka na mawasiliano';
+
+  @override
+  String get profileSectionBusiness => 'Biashara';
+
+  @override
+  String get profileSectionShopping => 'Ununuzi';
+
+  @override
+  String get profileSectionHelp => 'Msaada na taarifa';
+
+  @override
+  String get profileSectionAccount => 'Usalama wa akaunti';
 
   @override
   String get menuAddresses => 'Anwani za Usafirishaji';
@@ -653,7 +684,47 @@ class AppLocalizationsSw extends AppLocalizations {
   String get filterAction => 'Chuja';
 
   @override
+  String activePriceRange(String minimum, String maximum) {
+    return 'Bei: $minimum – $maximum';
+  }
+
+  @override
+  String activePriceFrom(String amount) {
+    return 'Bei kuanzia $amount';
+  }
+
+  @override
+  String activePriceTo(String amount) {
+    return 'Bei hadi $amount';
+  }
+
+  @override
+  String activeMoqLimit(int count) {
+    return 'MOQ hadi $count';
+  }
+
+  @override
+  String get filterSheetTitle => 'Chuja bidhaa';
+
+  @override
+  String get filterSheetSubtitle => 'Chagua bei na kiwango cha juu cha MOQ.';
+
+  @override
+  String get priceFilterDescription =>
+      'Weka kiwango cha chini na cha juu cha bei ya bidhaa.';
+
+  @override
+  String get moqFilterDescription =>
+      'Onyesha bidhaa zenye MOQ isiyozidi kiasi unachoweka.';
+
+  @override
   String get sortAction => 'Panga';
+
+  @override
+  String get sortSheetTitle => 'Panga bidhaa';
+
+  @override
+  String get sortSheetSubtitle => 'Chagua jinsi bidhaa zitakavyoonyeshwa.';
 
   @override
   String get priceFilter => 'Bei';
@@ -844,6 +915,11 @@ class AppLocalizationsSw extends AppLocalizations {
   }
 
   @override
+  String cartNudgeAction(int count) {
+    return 'Ongeza $count pcs';
+  }
+
+  @override
   String get wholesalePriceTag => 'Bei ya jumla';
 
   @override
@@ -863,7 +939,15 @@ class AppLocalizationsSw extends AppLocalizations {
   }
 
   @override
+  String summaryItemsWithPieces(int products, int pieces) {
+    return 'Bidhaa ($products) · Vipande ($pieces)';
+  }
+
+  @override
   String get summaryDelivery => 'Usafirishaji';
+
+  @override
+  String get summaryDiscount => 'Punguzo';
 
   @override
   String get summaryTotal => 'Jumla';
@@ -1026,6 +1110,21 @@ class AppLocalizationsSw extends AppLocalizations {
   }
 
   @override
+  String payBalanceTitle(String amount, String method) {
+    return 'Lipa salio la $amount kwa $method';
+  }
+
+  @override
+  String paymentBalanceLine(String paid, String balance) {
+    return 'Umelipa $paid · Salio la kulipa $balance';
+  }
+
+  @override
+  String refundDueLine(String amount) {
+    return 'Tutakurudishia $amount';
+  }
+
+  @override
   String get payToNumber => 'Lipa Namba / simu';
 
   @override
@@ -1151,6 +1250,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get actionTrackOrder => 'Fuatilia Oda';
 
   @override
+  String get actionPayNow => 'Lipa sasa';
+
+  @override
   String get actionBackHome => 'Rudi Nyumbani';
 
   @override
@@ -1212,10 +1314,30 @@ class AppLocalizationsSw extends AppLocalizations {
   String get tabDeliveredOrders => 'Zimefika';
 
   @override
-  String get ordersEmptyTitle => 'Hakuna oda hapa';
+  String orderTabCount(String label, int count) {
+    return '$label ($count)';
+  }
 
   @override
-  String get ordersEmptyMessage => 'Oda zako zitaonekana hapa.';
+  String get ordersEmptyTitle => 'Bado hujaweka oda';
+
+  @override
+  String get ordersEmptyMessage =>
+      'Oda zako zote zitaonekana hapa ukishaweka oda.';
+
+  @override
+  String get ordersActiveEmptyTitle => 'Hakuna oda inayoendelea';
+
+  @override
+  String get ordersActiveEmptyMessage =>
+      'Oda unazosubiri au zinazoandaliwa zitaonekana hapa.';
+
+  @override
+  String get ordersDeliveredEmptyTitle => 'Bado hakuna oda iliyofika';
+
+  @override
+  String get ordersDeliveredEmptyMessage =>
+      'Oda zako zitahamia hapa baada ya kufikishwa.';
 
   @override
   String get statusPendingPayment => 'Inasubiri malipo';
@@ -1240,6 +1362,15 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get statusExpired => 'Muda umeisha';
+
+  @override
+  String get statusCheckingPayment => 'Malipo yanakaguliwa';
+
+  @override
+  String get statusMeasuringLoad => 'Tunapima mzigo';
+
+  @override
+  String get statusBalanceDue => 'Salio la kulipa';
 
   @override
   String get trackingPendingPayment =>
@@ -1267,7 +1398,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get trackingCancelled => 'Oda hii imeghairiwa.';
 
   @override
-  String get trackingExpired => 'Muda wa malipo umeisha.';
+  String get trackingExpired =>
+      'Muda wa malipo umeisha. Bonyeza \"Agiza Tena\" kuagiza bidhaa hizi kwa bei za leo, au wasiliana nasi.';
 
   @override
   String get estimatedDeliveryTitle => 'Makadirio ya Uwasilishaji';

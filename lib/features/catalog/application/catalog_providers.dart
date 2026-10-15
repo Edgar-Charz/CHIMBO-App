@@ -18,7 +18,7 @@ final homeDataProvider = FutureProvider<HomeData>((ref) async {
   if (home.recentlyOrdered.isNotEmpty) return home;
 
   try {
-    final orders = await ordersRepository.getOrders(OrderGroup.all);
+    final orders = (await ordersRepository.getOrders(OrderGroup.all)).orders;
     final productIds = <int>{};
     for (final order in orders) {
       for (final item in order.items) {
