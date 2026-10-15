@@ -20,6 +20,7 @@ import 'package:chimbo/features/orders/presentation/widgets/agent_card.dart';
 import 'package:chimbo/features/orders/presentation/widgets/order_labels.dart';
 import 'package:chimbo/features/orders/presentation/widgets/order_payment_section.dart';
 import 'package:chimbo/features/orders/presentation/widgets/order_timeline.dart';
+import 'package:chimbo/features/orders/presentation/widgets/pickup_point_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -93,39 +94,52 @@ class _TrackingContent extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final agent = order.agent;
     final deliveredAt = order.deliveredAt;
+    final feeWords = order.deliveryMethod.feeWords(l10n);
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         Text(l10n.orderNumber(order.number), style: textTheme.titleLarge),
         const SizedBox(height: AppSpacing.md),
-        _StatusBanner(status: order.status),
+        _StatusBanner(order: order),
         const SizedBox(height: AppSpacing.lg),
         OrderPaymentSection(order: order),
-        if (order.payment.canSubmit || order.payment.isUnderReview)
+        if (order.payment.canSubmit ||
+            order.payment.isUnderReview ||
+            order.isAwaitingTransportPrice)
           const SizedBox(height: AppSpacing.lg),
         OrderTimeline(order: order),
-        SectionCard(
-          title: deliveredAt == null
-              ? l10n.estimatedDeliveryTitle
-              : l10n.deliveredOnTitle,
-          child: Text(
-            AppDates.formatDate(
-              deliveredAt ?? order.estimatedDelivery,
-              l10n.localeName,
+        if (!order.isPickup)
+          SectionCard(
+            title: deliveredAt == null
+                ? l10n.estimatedDeliveryTitle
+                : l10n.deliveredOnTitle,
+            child: Text(
+              AppDates.formatDate(
+                deliveredAt ?? order.estimatedDelivery,
+                l10n.localeName,
+              ),
+              style: textTheme.titleMedium,
             ),
-            style: textTheme.titleMedium,
           ),
-        ),
         if (agent != null && order.status.isActive) ...[
           const SizedBox(height: AppSpacing.md),
           AgentCard(agent: agent),
         ],
         const SizedBox(height: AppSpacing.md),
-        SectionCard(
-          title: l10n.deliveryAddressTitle,
-          child: AddressDetails(address: order.address),
-        ),
+        if (order.pickupPoint case final pickupPoint?)
+          SectionCard(
+            title: l10n.pickupPointTitle,
+            child: PickupPointDetails(
+              pickupPoint: pickupPoint,
+              orderNumber: order.number,
+            ),
+          )
+        else
+          SectionCard(
+            title: l10n.deliveryAddressTitle,
+            child: AddressDetails(address: order.address),
+          ),
         const SizedBox(height: AppSpacing.md),
         SectionCard(
           title: l10n.orderSummaryTitle,
@@ -166,11 +180,29 @@ class _TrackingContent extends StatelessWidget {
               label: l10n.summaryItems(order.items.length),
               amount: order.subtotal,
             ),
-            (label: l10n.summaryDelivery, amount: order.deliveryFee),
+            (
+              label: order.isAwaitingTransportPrice
+                  ? l10n.summaryTransportEstimate
+                  : l10n.summaryDelivery,
+              // Upcountry with no estimate: staff will set the price. Bolt / pickup: words.
+              amount:
+                  (order.isAwaitingTransportPrice && order.deliveryFee == 0) ||
+                      feeWords != null
+                  ? null
+                  : order.deliveryFee,
+            ),
           ],
-          totalLabel: l10n.summaryTotal,
+          totalLabel: order.isAwaitingTransportPrice
+              ? l10n.summaryTotalEstimate
+              : l10n.summaryTotal,
           total: order.total,
+          unknownAmountLabel: feeWords ?? l10n.summaryWeWillTellYou,
         ),
+        // Why staff changed the upcountry transport price ("Mzigo mkubwa, katoni 6").
+        if (order.deliveryMethod.feeNote case final note?) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(l10n.transportFeeNote(note), style: textTheme.bodySmall),
+        ],
         const SizedBox(height: AppSpacing.lg),
         if (order.canCancel)
           AppButton(
@@ -209,13 +241,14 @@ class _TrackingContent extends StatelessWidget {
 
 /// "Njiani — Oda yako inakuja." in the status colour.
 class _StatusBanner extends StatelessWidget {
-  const _StatusBanner({required this.status});
+  const _StatusBanner({required this.order});
 
-  final OrderStatus status;
+  final Order order;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final status = order.status;
     final textTheme = Theme.of(context).textTheme;
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -232,12 +265,12 @@ class _StatusBanner extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    status.bannerTitle(l10n),
+                    order.bannerTitle(l10n),
                     style: textTheme.headlineSmall?.copyWith(
                       color: status.color,
                     ),
                   ),
-                  Text(status.bannerMessage(l10n), style: textTheme.bodyMedium),
+                  Text(order.bannerMessage(l10n), style: textTheme.bodyMedium),
                 ],
               ),
             ),

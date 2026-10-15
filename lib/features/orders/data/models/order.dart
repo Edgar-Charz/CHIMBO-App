@@ -17,6 +17,13 @@ enum OrderStatus {
 
   final String apiValue;
 
+  /// A pickup order: ready ("Tayari kuchukuliwa") → collected ("Imechukuliwa"), never sent.
+  static const List<OrderStatus> pickupTimeline = [
+    confirmed,
+    packed,
+    delivered,
+  ];
+
   /// The happy path shown on the tracking timeline, in order.
   static const List<OrderStatus> timeline = [
     confirmed,
@@ -120,6 +127,7 @@ class Order {
     required this.canCancel,
     this.agent,
     this.expiresAt,
+    this.pickupPoint,
   });
 
   /// An order from `GET /orders`, `GET /orders/{id}` or `POST /orders`.
@@ -155,6 +163,10 @@ class Order {
       ],
       canCancel: json['can_cancel'] as bool,
       expiresAt: expiresAt == null ? null : DateTime.parse(expiresAt),
+      pickupPoint: switch (json['pickup_point']) {
+        final Map<String, dynamic> point => PickupPoint.fromJson(point),
+        _ => null,
+      },
       agent: agent == null
           ? null
           : (
@@ -195,6 +207,17 @@ class Order {
 
   /// Known once the order is dispatched.
   final DeliveryAgent? agent;
+
+  /// Where to collect it (pickup orders only).
+  final PickupPoint? pickupPoint;
+
+  /// "Nitachukua mwenyewe dukani": collected at the shop, never sent.
+  bool get isPickup => deliveryMethod.isPickup;
+
+  /// Upcountry: staff are measuring the load to confirm the transport price; no paying yet.
+  bool get isAwaitingTransportPrice =>
+      status == OrderStatus.pendingPayment &&
+      deliveryMethod.feeStatus == DeliveryFeeStatus.awaitingConfirmation;
 
   DateTime? get deliveredAt {
     for (final event in events) {

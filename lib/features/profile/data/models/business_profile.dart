@@ -7,6 +7,7 @@ class BusinessProfile {
     this.businessName,
     this.districtId,
     this.districtName,
+    this.isVerified = false,
   });
 
   factory BusinessProfile.fromJson(Map<String, dynamic> json) {
@@ -16,6 +17,7 @@ class BusinessProfile {
       regionName: json['region_name'] as String,
       districtId: json['district_id'] as int?,
       districtName: json['district_name'] as String?,
+      isVerified: json['business_verification_status'] == 'verified',
     );
   }
 
@@ -25,11 +27,15 @@ class BusinessProfile {
   final int? districtId;
   final String? districtName;
 
+  /// Staff checked the shop: the "Biashara Imethibitishwa" badge in Wasifu.
+  final bool isVerified;
+
   Map<String, dynamic> toJson() => {
     'business_name': businessName,
     'region_id': regionId,
     'region_name': regionName,
     'district_id': districtId,
     'district_name': districtName,
+    'business_verification_status': isVerified ? 'verified' : 'unverified',
   };
 }

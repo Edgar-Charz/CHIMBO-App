@@ -1,6 +1,7 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
+import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,25 @@ extension DeliveryMethodLabel on DeliveryMethod {
   /// "siku 2–3" / "kesho". (The server's [DeliveryMethod.name] already includes it.)
   String eta(AppLocalizations l10n) =>
       isNextDay ? l10n.deliveryTomorrow : l10n.deliveryDays(daysMin, daysMax);
+
+  /// "TZS 5,000", "Bure", "Unamlipa dereva" (Bolt); upcountry: "~TZS 15,000" (the region's
+  /// estimate) or "Bei itathibitishwa".
+  String feeLabel(AppLocalizations l10n) => switch (fee) {
+    _ when isPaidToRider => l10n.deliveryPaidToRider,
+    null => l10n.deliveryFeeToConfirm,
+    final amount when needsConfirmation => '~${Money.format(amount)}',
+    0 => l10n.deliveryFree,
+    final amount => Money.format(amount),
+  };
+
+  /// The transport line's words instead of an amount: "Unamlipa dereva" (Bolt) or
+  /// "Bure (dukani)" (pickup); null = show the amount.
+  String? feeWords(AppLocalizations l10n) {
+    if (isPaidToRider) {
+      return l10n.deliveryPaidToRider;
+    }
+    return isPickup ? l10n.pickupFreeLabel : null;
+  }
 }
 
 /// ①──②──③──④ with labels; done and current steps are green, the last step (Hakiki) turns

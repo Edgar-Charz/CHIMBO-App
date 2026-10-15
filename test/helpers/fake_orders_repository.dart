@@ -82,7 +82,7 @@ class FakeOrdersRepository implements OrdersRepository {
     final deliveryMethod = options.deliveryMethods.firstWhere(
       (method) => method.id == input.deliveryMethodId,
     );
-    if (cart.subtotal + deliveryMethod.fee != input.expectedTotal) {
+    if (cart.subtotal + (deliveryMethod.fee ?? 0) != input.expectedTotal) {
       throw const ApiException(code: ApiErrorCode.priceChanged);
     }
 
@@ -309,7 +309,9 @@ class FakeOrdersRepository implements OrdersRepository {
     required List<OrderItem> items,
   }) {
     final subtotal = items.fold(0, (sum, item) => sum + item.lineTotal);
-    final fee = deliveryMethod.fee;
+    final fee =
+        deliveryMethod.fee ??
+        0; // no estimate yet: 0 until staff price it, like the server
     return {
       'order_id': id,
       // "CHB" + 6 digits (blueprint §11.1).

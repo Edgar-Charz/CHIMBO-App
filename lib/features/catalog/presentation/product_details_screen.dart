@@ -91,16 +91,15 @@ class _ProductViewState extends ConsumerState<_ProductView> {
     try {
       final contacts = switch (supportState) {
         AsyncData(:final value) => value,
-        AsyncLoading() || AsyncError() =>
-          await ref.refresh(supportContactsProvider.future),
+        AsyncLoading() ||
+        AsyncError() => await ref.refresh(supportContactsProvider.future),
       };
       final product = widget.details.summary;
       final message =
           'Habari CHIMBO, nina swali kuhusu ${product.name}: '
           '${ProductLinks.webUrl(product)}';
-      final whatsappUrl = Uri.parse(contacts.whatsappUrl).replace(
-        queryParameters: {'text': message},
-      );
+      final whatsappUrl = Uri.parse(contacts.whatsappUrl)
+          .replace(queryParameters: {'text': message});
       final opened = await ref.read(externalUrlLauncherProvider)(whatsappUrl);
       if (!opened) {
         toast.error(l10n.helpCannotOpen);

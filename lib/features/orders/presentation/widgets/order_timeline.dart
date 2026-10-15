@@ -22,14 +22,14 @@ class OrderTimeline extends StatelessWidget {
     // A cancelled or expired order shows the steps it reached, then how it ended.
     final steps = order.status.isStopped
         ? [...reachedAt.keys]
-        : OrderStatus.timeline;
+        : order.timelineSteps;
 
     return Column(
       children: [
         for (final (index, status) in steps.indexed)
           _TimelineStep(
             status: status,
-            label: status.label(l10n),
+            label: order.statusLabel(l10n, status),
             date: switch (reachedAt[status]) {
               final at? => AppDates.formatDayTime(at, l10n.localeName),
               null => null,

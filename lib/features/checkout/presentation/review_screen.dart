@@ -7,7 +7,6 @@ import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_network_image.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
-import 'package:chimbo/core/widgets/totals_card.dart';
 import 'package:chimbo/features/cart/application/cart_controller.dart';
 import 'package:chimbo/features/cart/data/models/cart.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
@@ -96,7 +95,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               title: l10n.deliveryMethodTitle,
               icon: Icons.local_shipping_outlined,
               label: deliveryMethod.name,
-              amount: deliveryMethod.fee,
+              priceLabel: deliveryMethod.feeLabel(l10n),
             ),
           ],
           if (paymentMethod != null) ...[
@@ -106,11 +105,14 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               icon: paymentMethod.icon,
               label: paymentMethod.name,
             ),
-            // Mobile money / bank: where to pay is shown once the order exists.
+            // Mobile money / bank: where to pay is shown once the order exists (upcountry: once
+            // staff have confirmed the transport price).
             if (!paymentMethod.isCashOnDelivery) ...[
               const SizedBox(height: AppSpacing.xs),
               Text(
-                l10n.payAfterOrderingHint,
+                deliveryMethod?.needsConfirmation ?? false
+                    ? l10n.transportPayLaterHint
+                    : l10n.payAfterOrderingHint,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
@@ -138,16 +140,11 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           ),
           if (preview != null) ...[
             const SizedBox(height: AppSpacing.md),
-            TotalsCard(
-              rows: [
-                (
-                  label: l10n.summaryItems(preview.lineCount),
-                  amount: preview.subtotal,
-                ),
-                (label: l10n.summaryDelivery, amount: preview.deliveryFee),
-              ],
+            CheckoutTotalsCard(
+              preview: preview,
+              deliveryMethod: deliveryMethod,
+              itemsLabel: l10n.summaryItems(preview.lineCount),
               totalLabel: l10n.summaryTotal,
-              total: preview.total,
             ),
           ],
           const SizedBox(height: AppSpacing.lg),

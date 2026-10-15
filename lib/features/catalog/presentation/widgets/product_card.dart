@@ -67,6 +67,10 @@ class ProductCard extends StatelessWidget {
                   AppNetworkImage(
                     url: product.imageUrl,
                     placeholderIcon: placeholderIcon,
+                    memCacheWidth: 480,
+                    memCacheHeight: 480,
+                    maxWidthDiskCache: 480,
+                    maxHeightDiskCache: 480,
                   ),
                   if (product.isInStock)
                     // Bottom-left, so the heart has the top-right to itself on narrow cards.

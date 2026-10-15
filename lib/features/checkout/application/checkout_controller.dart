@@ -117,20 +117,44 @@ typedef CheckoutChoices = ({
   PaymentMethod? paymentMethod,
 });
 
+/// The chosen delivery method, or the first one that reaches the address. Null while loading.
+final checkoutDeliveryMethodProvider = Provider<DeliveryMethod?>((ref) {
+  final chosenId = ref.watch(
+    checkoutControllerProvider.select(
+      (selection) => selection.deliveryMethodId,
+    ),
+  );
+  return _chosenOrFirst(
+    ref.watch(checkoutOptionsProvider).value?.deliveryMethods,
+    (method) => method.id == chosenId,
+  );
+});
+
+/// The payment methods that can be chosen: no cash on delivery while the transport price is
+/// still to be confirmed (upcountry — the customer pays after staff price the load).
+final checkoutPaymentMethodsProvider = Provider<List<PaymentMethod>?>((ref) {
+  final methods = ref.watch(checkoutOptionsProvider).value?.paymentMethods;
+  final priceToConfirm =
+      ref.watch(checkoutDeliveryMethodProvider)?.needsConfirmation ?? false;
+  return methods
+      ?.where((method) => !(priceToConfirm && method.isCashOnDelivery))
+      .toList();
+});
+
 /// What will actually be ordered: the chosen options, or the first available ones when nothing
 /// (or something no longer offered) is chosen. Parts are null while loading.
 final checkoutChoicesProvider = Provider<CheckoutChoices>((ref) {
-  final selection = ref.watch(checkoutControllerProvider);
-  final options = ref.watch(checkoutOptionsProvider).value;
+  final chosenCode = ref.watch(
+    checkoutControllerProvider.select(
+      (selection) => selection.paymentMethodCode,
+    ),
+  );
   return (
     address: ref.watch(checkoutAddressProvider),
-    deliveryMethod: _chosenOrFirst(
-      options?.deliveryMethods,
-      (method) => method.id == selection.deliveryMethodId,
-    ),
+    deliveryMethod: ref.watch(checkoutDeliveryMethodProvider),
     paymentMethod: _chosenOrFirst(
-      options?.paymentMethods,
-      (method) => method.code == selection.paymentMethodCode,
+      ref.watch(checkoutPaymentMethodsProvider),
+      (method) => method.code == chosenCode,
     ),
   );
 });

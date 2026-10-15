@@ -11,6 +11,12 @@ class FakeSupportRepository implements SupportRepository {
     phone: '+255700111222',
     whatsappUrl: 'https://wa.me/255700111222',
     hours: 'Jumatatu–Jumamosi, saa 2 asubuhi – saa 12 jioni',
+    questions: [
+      (
+        question: 'Usafiri unalipwaje?',
+        answer: 'Dar es Salaam unamlipa dereva moja kwa moja ukipokea.',
+      ),
+    ],
   );
 
   @override

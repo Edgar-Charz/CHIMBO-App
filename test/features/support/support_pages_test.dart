@@ -34,6 +34,26 @@ void main() {
     expect(find.text('Tuma ujumbe WhatsApp'), findsOneWidget);
   });
 
+  testWidgets('Msaada lists the common questions; a tap shows the answer', (
+    tester,
+  ) async {
+    await openWasifuItem(tester, 'Msaada');
+    final question = find.text('Usafiri unalipwaje?');
+    await tester.dragUntilVisible(
+      question,
+      find.byType(Scrollable).first,
+      const Offset(0, -200),
+    );
+
+    await tester.tap(question);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Dar es Salaam unamlipa dereva moja kwa moja ukipokea.'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('Vigezo na Masharti shows each paragraph', (tester) async {
     await openWasifuItem(tester, 'Vigezo na Masharti');
 

@@ -196,9 +196,24 @@
   "paymentStatusConfirmed": "Imethibitishwa",
   "paymentStatusRejected": "Imekataliwa",
   "paymentOrderLine": "Oda #{number} · {date}",
-  "@paymentOrderLine": {"placeholders": {"number": {"type": "String"}, "date": {"type": "String"}}},
+  "@paymentOrderLine": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "paymentReferenceLine": "Namba ya muamala: {reference}",
-  "@paymentReferenceLine": {"placeholders": {"reference": {"type": "String"}}},
+  "@paymentReferenceLine": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
   "menuReceipts": "Risiti na Historia",
   "menuReceiptsHint": "Ona oda na risiti zako",
   "menuNotifications": "Arifa",
@@ -224,6 +239,7 @@
   "menuPrivacyHint": "Jinsi tunavyolinda taarifa zako",
   "helpIntro": "Una swali kuhusu oda, malipo au akaunti yako? Tuko tayari kukusaidia.",
   "helpHoursTitle": "Saa za huduma",
+  "helpQuestionsTitle": "Maswali ya mara kwa mara",
   "helpCall": "Piga simu {phone}",
   "@helpCall": {
     "placeholders": {
@@ -503,6 +519,57 @@
   },
   "paymentMethodTitle": "Njia ya Malipo",
   "payAfterOrderingHint": "Utaona namba ya kulipia baada ya kuthibitisha oda.",
+  "deliveryFeeToConfirm": "Bei itathibitishwa",
+  "deliveryEstimateNote": "Bei ni makadirio. Tutapima mzigo na kukuthibitishia bei kabla hujalipa.",
+  "summaryTransportEstimate": "Usafiri (makadirio)",
+  "summaryTotalEstimate": "Jumla (makadirio)",
+  "summaryWeWillTellYou": "Tutakujulisha",
+  "transportPayLaterHint": "Usilipe sasa. Tutapima mzigo na kukutumia bei kamili ya usafiri, kisha utalipa jumla kamili.",
+  "transportPendingTitle": "Tunapima mzigo wako",
+  "transportPendingMessage": "Tunathibitisha bei ya usafiri hadi {region}. Makadirio ni {estimate}; mzigo ukiwa mkubwa bei inaweza kuongezeka. Usilipe bado — tutakujulisha bei kamili, kisha utalipa hapa.",
+  "@transportPendingMessage": {
+    "placeholders": {
+      "region": {
+        "type": "String"
+      },
+      "estimate": {
+        "type": "String"
+      }
+    }
+  },
+  "transportPendingNoEstimateMessage": "Tunathibitisha bei ya usafiri hadi {region}. Usilipe bado — tutakujulisha bei, kisha utalipa hapa.",
+  "@transportPendingNoEstimateMessage": {
+    "placeholders": {
+      "region": {
+        "type": "String"
+      }
+    }
+  },
+  "transportFeeNote": "Usafiri: {note}",
+  "@transportFeeNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "deliveryPaidToRider": "Unamlipa dereva",
+  "deliveryPaidToRiderNote": "Usafiri unamlipa dereva ukipokea mzigo — hauko kwenye jumla.",
+  "deliveryFree": "Bure",
+  "pickupFreeLabel": "Bure (dukani)",
+  "pickupPointTitle": "Kuchukua dukani",
+  "pickupPointHint": "Tutakujulisha oda ikiwa tayari. Njoo na namba ya oda #{number}.",
+  "@pickupPointHint": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "statusReadyForPickup": "Tayari kuchukuliwa",
+  "statusPickedUp": "Imechukuliwa",
+  "trackingReadyForPickup": "Oda yako iko tayari — njoo uichukue dukani.",
+  "trackingPickedUp": "Umechukua oda yako. Asante kwa kununua CHIMBO!",
   "payToTitle": "Lipa {amount} kwa {method}",
   "@payToTitle": {
     "placeholders": {

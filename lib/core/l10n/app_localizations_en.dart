@@ -510,6 +510,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpHoursTitle => 'Support hours';
 
   @override
+  String get helpQuestionsTitle => 'Common questions';
+
+  @override
   String helpCall(String phone) {
     return 'Call $phone';
   }
@@ -939,6 +942,79 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get payAfterOrderingHint =>
       'You will see where to pay after confirming the order.';
+
+  @override
+  String get deliveryFeeToConfirm => 'Price to be confirmed';
+
+  @override
+  String get deliveryEstimateNote =>
+      'This is an estimate. We\'ll measure your load and confirm the price before you pay.';
+
+  @override
+  String get summaryTransportEstimate => 'Transport (estimate)';
+
+  @override
+  String get summaryTotalEstimate => 'Total (estimate)';
+
+  @override
+  String get summaryWeWillTellYou => 'We\'ll tell you';
+
+  @override
+  String get transportPayLaterHint =>
+      'Don\'t pay yet. We\'ll measure your load and send you the final transport price, then you pay the full total.';
+
+  @override
+  String get transportPendingTitle => 'We\'re measuring your load';
+
+  @override
+  String transportPendingMessage(String region, String estimate) {
+    return 'We\'re confirming the transport price to $region. The estimate is $estimate; a large load may cost more. Don\'t pay yet — we\'ll tell you the final price, then you pay here.';
+  }
+
+  @override
+  String transportPendingNoEstimateMessage(String region) {
+    return 'We\'re confirming the transport price to $region. Don\'t pay yet — we\'ll tell you the price, then you pay here.';
+  }
+
+  @override
+  String transportFeeNote(String note) {
+    return 'Transport: $note';
+  }
+
+  @override
+  String get deliveryPaidToRider => 'Pay the rider';
+
+  @override
+  String get deliveryPaidToRiderNote =>
+      'You pay the rider for transport when the order arrives — it isn\'t in the total.';
+
+  @override
+  String get deliveryFree => 'Free';
+
+  @override
+  String get pickupFreeLabel => 'Free (at the shop)';
+
+  @override
+  String get pickupPointTitle => 'Collect at the shop';
+
+  @override
+  String pickupPointHint(String number) {
+    return 'We\'ll tell you when the order is ready. Bring order number #$number.';
+  }
+
+  @override
+  String get statusReadyForPickup => 'Ready for pickup';
+
+  @override
+  String get statusPickedUp => 'Picked up';
+
+  @override
+  String get trackingReadyForPickup =>
+      'Your order is ready — come and collect it at the shop.';
+
+  @override
+  String get trackingPickedUp =>
+      'You collected your order. Thank you for shopping with CHIMBO!';
 
   @override
   String payToTitle(String amount, String method) {

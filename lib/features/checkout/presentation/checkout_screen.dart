@@ -2,7 +2,6 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
-import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
@@ -54,6 +53,8 @@ class _CheckoutForm extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final choices = ref.watch(checkoutChoicesProvider);
+    final paymentMethods =
+        ref.watch(checkoutPaymentMethodsProvider) ?? const [];
     final preview = ref.watch(checkoutPreviewProvider).value;
     final controller = ref.read(checkoutControllerProvider.notifier);
 
@@ -71,12 +72,14 @@ class _CheckoutForm extends ConsumerWidget {
             title: method.name,
             isSelected: method.id == choices.deliveryMethod?.id,
             onTap: () => controller.selectDelivery(method.id),
-            trailing: Text(Money.format(method.fee)),
+            trailing: Text(method.feeLabel(l10n)),
           ),
+        if (_deliveryNote(context, choices.deliveryMethod) case final note?)
+          Text(note, style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: AppSpacing.md),
         Text(l10n.paymentMethodTitle, style: _sectionTitle(context)),
         const SizedBox(height: AppSpacing.sm),
-        for (final method in options.paymentMethods)
+        for (final method in paymentMethods)
           ChoiceTile(
             title: method.name,
             isSelected: method.code == choices.paymentMethod?.code,
@@ -85,13 +88,11 @@ class _CheckoutForm extends ConsumerWidget {
           ),
         if (preview != null) ...[
           const SizedBox(height: AppSpacing.md),
-          TotalsCard(
-            rows: [
-              (label: l10n.summaryItemsTotal, amount: preview.subtotal),
-              (label: l10n.summaryDelivery, amount: preview.deliveryFee),
-            ],
+          CheckoutTotalsCard(
+            preview: preview,
+            deliveryMethod: choices.deliveryMethod,
+            itemsLabel: l10n.summaryItemsTotal,
             totalLabel: l10n.summaryAmountToPay,
-            total: preview.total,
           ),
         ],
         const SizedBox(height: AppSpacing.lg),
@@ -107,6 +108,61 @@ class _CheckoutForm extends ConsumerWidget {
 
   TextStyle? _sectionTitle(BuildContext context) =>
       Theme.of(context).textTheme.titleSmall;
+
+  /// Under the delivery options: how the chosen one's price works, or where to collect.
+  String? _deliveryNote(BuildContext context, DeliveryMethod? method) {
+    final l10n = context.l10n;
+    final pickupPoint = options.pickupPoint;
+    return switch (method) {
+      DeliveryMethod(needsConfirmation: true) => l10n.deliveryEstimateNote,
+      DeliveryMethod(isPaidToRider: true) => l10n.deliveryPaidToRiderNote,
+      DeliveryMethod(isPickup: true) when pickupPoint != null =>
+        '${pickupPoint.address} · ${pickupPoint.hours}',
+      _ => null,
+    };
+  }
+}
+
+/// The server's totals at checkout. With upcountry transport the transport and the total are
+/// labelled "(makadirio)", and a region without an estimate shows "Tutakujulisha".
+class CheckoutTotalsCard extends StatelessWidget {
+  const CheckoutTotalsCard({
+    super.key,
+    required this.preview,
+    required this.deliveryMethod,
+    required this.itemsLabel,
+    required this.totalLabel,
+  });
+
+  final CheckoutPreview preview;
+  final DeliveryMethod? deliveryMethod;
+  final String itemsLabel;
+  final String totalLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final isEstimate = preview.deliveryFeeNeedsConfirmation;
+    final hasNoEstimate = isEstimate && deliveryMethod?.fee == null;
+    // Bolt (paid to the rider) and pickup show words instead of an amount.
+    final feeWords = deliveryMethod?.feeWords(l10n);
+    return TotalsCard(
+      rows: [
+        (label: itemsLabel, amount: preview.subtotal),
+        (
+          label: isEstimate
+              ? l10n.summaryTransportEstimate
+              : l10n.summaryDelivery,
+          amount: hasNoEstimate || feeWords != null
+              ? null
+              : preview.deliveryFee,
+        ),
+      ],
+      totalLabel: isEstimate ? l10n.summaryTotalEstimate : totalLabel,
+      total: preview.total,
+      unknownAmountLabel: feeWords ?? l10n.summaryWeWillTellYou,
+    );
+  }
 }
 
 /// Delivery method and payment method as read-only rows (Hakiki Oda).
@@ -116,17 +172,19 @@ class ChosenOptionRow extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.label,
-    this.amount,
+    this.priceLabel,
   });
 
   final String title;
   final IconData icon;
   final String label;
-  final int? amount;
+
+  /// "TZS 5,000", "~TZS 15,000"…
+  final String? priceLabel;
 
   @override
   Widget build(BuildContext context) {
-    final price = amount;
+    final price = priceLabel;
     return SectionCard(
       title: title,
       child: Row(
@@ -134,7 +192,7 @@ class ChosenOptionRow extends StatelessWidget {
           Icon(icon, color: AppColors.primary),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: Text(label)),
-          if (price != null) Text(Money.format(price)),
+          if (price != null) Text(price),
         ],
       ),
     );

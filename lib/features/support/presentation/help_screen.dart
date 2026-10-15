@@ -12,7 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Wasifu → Msaada: when support answers, a call button and a WhatsApp button.
+/// Wasifu → Msaada: when support answers, a call button, a WhatsApp button and the common
+/// questions (tap one to read its answer).
 class HelpScreen extends ConsumerWidget {
   const HelpScreen({super.key});
 
@@ -87,6 +88,19 @@ class _HelpContent extends StatelessWidget {
           variant: AppButtonVariant.outlined,
           onPressed: () => _open(context, Uri.parse(contacts.whatsappUrl)),
         ),
+        if (contacts.questions.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.xl),
+          Text(l10n.helpQuestionsTitle, style: textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.sm),
+          for (final item in contacts.questions)
+            ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              childrenPadding: const EdgeInsets.only(bottom: AppSpacing.md),
+              expandedAlignment: Alignment.centerLeft,
+              title: Text(item.question, style: textTheme.titleSmall),
+              children: [Text(item.answer, style: textTheme.bodyMedium)],
+            ),
+        ],
       ],
     );
   }

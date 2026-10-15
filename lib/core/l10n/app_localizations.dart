@@ -1040,6 +1040,12 @@ abstract class AppLocalizations {
   /// **'Saa za huduma'**
   String get helpHoursTitle;
 
+  /// No description provided for @helpQuestionsTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Maswali ya mara kwa mara'**
+  String get helpQuestionsTitle;
+
   /// No description provided for @helpCall.
   ///
   /// In sw, this message translates to:
@@ -1789,6 +1795,126 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Utaona namba ya kulipia baada ya kuthibitisha oda.'**
   String get payAfterOrderingHint;
+
+  /// No description provided for @deliveryFeeToConfirm.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bei itathibitishwa'**
+  String get deliveryFeeToConfirm;
+
+  /// No description provided for @deliveryEstimateNote.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bei ni makadirio. Tutapima mzigo na kukuthibitishia bei kabla hujalipa.'**
+  String get deliveryEstimateNote;
+
+  /// No description provided for @summaryTransportEstimate.
+  ///
+  /// In sw, this message translates to:
+  /// **'Usafiri (makadirio)'**
+  String get summaryTransportEstimate;
+
+  /// No description provided for @summaryTotalEstimate.
+  ///
+  /// In sw, this message translates to:
+  /// **'Jumla (makadirio)'**
+  String get summaryTotalEstimate;
+
+  /// No description provided for @summaryWeWillTellYou.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tutakujulisha'**
+  String get summaryWeWillTellYou;
+
+  /// No description provided for @transportPayLaterHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Usilipe sasa. Tutapima mzigo na kukutumia bei kamili ya usafiri, kisha utalipa jumla kamili.'**
+  String get transportPayLaterHint;
+
+  /// No description provided for @transportPendingTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tunapima mzigo wako'**
+  String get transportPendingTitle;
+
+  /// No description provided for @transportPendingMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tunathibitisha bei ya usafiri hadi {region}. Makadirio ni {estimate}; mzigo ukiwa mkubwa bei inaweza kuongezeka. Usilipe bado — tutakujulisha bei kamili, kisha utalipa hapa.'**
+  String transportPendingMessage(String region, String estimate);
+
+  /// No description provided for @transportPendingNoEstimateMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tunathibitisha bei ya usafiri hadi {region}. Usilipe bado — tutakujulisha bei, kisha utalipa hapa.'**
+  String transportPendingNoEstimateMessage(String region);
+
+  /// No description provided for @transportFeeNote.
+  ///
+  /// In sw, this message translates to:
+  /// **'Usafiri: {note}'**
+  String transportFeeNote(String note);
+
+  /// No description provided for @deliveryPaidToRider.
+  ///
+  /// In sw, this message translates to:
+  /// **'Unamlipa dereva'**
+  String get deliveryPaidToRider;
+
+  /// No description provided for @deliveryPaidToRiderNote.
+  ///
+  /// In sw, this message translates to:
+  /// **'Usafiri unamlipa dereva ukipokea mzigo — hauko kwenye jumla.'**
+  String get deliveryPaidToRiderNote;
+
+  /// No description provided for @deliveryFree.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bure'**
+  String get deliveryFree;
+
+  /// No description provided for @pickupFreeLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bure (dukani)'**
+  String get pickupFreeLabel;
+
+  /// No description provided for @pickupPointTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kuchukua dukani'**
+  String get pickupPointTitle;
+
+  /// No description provided for @pickupPointHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tutakujulisha oda ikiwa tayari. Njoo na namba ya oda #{number}.'**
+  String pickupPointHint(String number);
+
+  /// No description provided for @statusReadyForPickup.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tayari kuchukuliwa'**
+  String get statusReadyForPickup;
+
+  /// No description provided for @statusPickedUp.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imechukuliwa'**
+  String get statusPickedUp;
+
+  /// No description provided for @trackingReadyForPickup.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda yako iko tayari — njoo uichukue dukani.'**
+  String get trackingReadyForPickup;
+
+  /// No description provided for @trackingPickedUp.
+  ///
+  /// In sw, this message translates to:
+  /// **'Umechukua oda yako. Asante kwa kununua CHIMBO!'**
+  String get trackingPickedUp;
 
   /// No description provided for @payToTitle.
   ///

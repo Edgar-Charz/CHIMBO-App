@@ -15,6 +15,7 @@ import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.d
 import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/presentation/widgets/order_payment_section.dart';
+import 'package:chimbo/features/orders/presentation/widgets/pickup_point_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -104,8 +105,8 @@ class _SuccessContent extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.lg),
-        // Mobile money / bank: pay now, then "Nimelipa".
-        if (order.payment.canSubmit) ...[
+        // Mobile money / bank: pay now, then "Nimelipa" (upcountry: "Tunapima mzigo wako" first).
+        if (order.payment.canSubmit || order.isAwaitingTransportPrice) ...[
           OrderPaymentSection(order: order),
           const SizedBox(height: AppSpacing.lg),
         ],
@@ -128,6 +129,13 @@ class _SuccessContent extends ConsumerWidget {
                   Text(order.deliveryMethod.eta(l10n)),
                 ],
               ),
+              if (order.pickupPoint case final pickupPoint?) ...[
+                const Divider(),
+                PickupPointDetails(
+                  pickupPoint: pickupPoint,
+                  orderNumber: order.number,
+                ),
+              ],
             ],
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/phone.dart';
 import 'package:chimbo/core/widgets/person_avatar.dart';
+import 'package:chimbo/core/widgets/verified_badge.dart';
 import 'package:chimbo/features/auth/data/models/app_user.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,10 @@ class ProfileCard extends StatelessWidget {
                           color: AppColors.textSecondary,
                         ),
                       ),
+                      if (business?.isVerified ?? false) ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        const VerifiedBadge(),
+                      ],
                     ],
                   ),
                 ),

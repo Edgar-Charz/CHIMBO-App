@@ -64,7 +64,7 @@ class OrderCard extends StatelessWidget {
                 ],
               ),
               Text(
-                status.label(l10n),
+                order.statusLabel(l10n),
                 style: textTheme.titleSmall?.copyWith(color: status.color),
               ),
               const SizedBox(height: AppSpacing.xs),

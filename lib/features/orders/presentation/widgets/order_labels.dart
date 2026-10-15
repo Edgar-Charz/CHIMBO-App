@@ -48,3 +48,28 @@ extension OrderStatusLabel on OrderStatus {
     OrderStatus.cancelled || OrderStatus.expired => Icons.cancel_outlined,
   };
 }
+
+/// A pickup order ("Nitachukua mwenyewe dukani") uses the same statuses with its own words:
+/// packed = "Tayari kuchukuliwa", delivered = "Imechukuliwa".
+extension OrderStatusWords on Order {
+  /// The word for [step] (default: the current status) on this order.
+  String statusLabel(AppLocalizations l10n, [OrderStatus? step]) =>
+      switch ((isPickup, step ?? status)) {
+        (true, OrderStatus.packed) => l10n.statusReadyForPickup,
+        (true, OrderStatus.delivered) => l10n.statusPickedUp,
+        (_, final other) => other.label(l10n),
+      };
+
+  String bannerTitle(AppLocalizations l10n) =>
+      isPickup ? statusLabel(l10n) : status.bannerTitle(l10n);
+
+  String bannerMessage(AppLocalizations l10n) => switch ((isPickup, status)) {
+    (true, OrderStatus.packed) => l10n.trackingReadyForPickup,
+    (true, OrderStatus.delivered) => l10n.trackingPickedUp,
+    _ => status.bannerMessage(l10n),
+  };
+
+  /// The timeline's happy path: a pickup order is never sent.
+  List<OrderStatus> get timelineSteps =>
+      isPickup ? OrderStatus.pickupTimeline : OrderStatus.timeline;
+}

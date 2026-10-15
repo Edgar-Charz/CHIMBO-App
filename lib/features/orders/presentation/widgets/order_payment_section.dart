@@ -13,6 +13,7 @@ import 'package:chimbo/features/orders/presentation/widgets/payment_submit_sheet
 import 'package:flutter/material.dart';
 
 /// Paying a mobile money / bank order (staff check it by hand):
+/// - upcountry, transport price not confirmed yet → "Tunapima mzigo wako" (no paying yet);
 /// - waiting for payment → where to pay and "Nimelipa" (after a rejection, staff's note first);
 /// - sent → "Tunakagua malipo yako";
 /// - anything else (cash, paid, expired) → nothing.
@@ -26,6 +27,19 @@ class OrderPaymentSection extends StatelessWidget {
     final l10n = context.l10n;
     final payment = order.payment;
     final latest = payment.latest;
+    if (order.isAwaitingTransportPrice) {
+      final estimate = order.deliveryMethod.feeEstimate ?? 0;
+      final region = order.address.regionName;
+      return _Notice(
+        icon: Icons.local_shipping_outlined,
+        color: AppColors.accent,
+        background: AppColors.accentLight,
+        title: l10n.transportPendingTitle,
+        message: estimate > 0
+            ? l10n.transportPendingMessage(region, Money.format(estimate))
+            : l10n.transportPendingNoEstimateMessage(region),
+      );
+    }
     if (payment.isUnderReview && latest != null) {
       return _Notice(
         icon: Icons.hourglass_top_rounded,

@@ -61,9 +61,11 @@ class FakeCheckoutRepository implements CheckoutRepository {
     required int addressId,
   }) async {
     final cart = await _cartRepository.getCart();
-    final fee = deliveryMethods
-        .firstWhere((method) => method.id == deliveryMethodId)
-        .fee;
+    final fee =
+        deliveryMethods
+            .firstWhere((method) => method.id == deliveryMethodId)
+            .fee ??
+        0;
     return CheckoutPreview(
       lineCount: cart.lineCount,
       subtotal: cart.subtotal,

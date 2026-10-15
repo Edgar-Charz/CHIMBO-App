@@ -15,6 +15,9 @@ void main() {
           'support_whatsapp': '+255700111222',
           'support_whatsapp_url': 'https://wa.me/255700111222',
           'support_hours': 'Jumatatu–Jumamosi, saa 2 asubuhi – saa 12 jioni',
+          'help_questions': [
+            {'question': 'Ninalipaje?', 'answer': 'Unalipa kwa M-Pesa.'},
+          ],
         },
       }),
     );
@@ -24,6 +27,7 @@ void main() {
     expect(adapter.lastRequest!.uri.path, endsWith('/support'));
     expect(contacts.phone, '+255700111222');
     expect(contacts.whatsappUrl, 'https://wa.me/255700111222');
+    expect(contacts.questions.single.question, 'Ninalipaje?');
   });
 
   test('a page body becomes paragraphs at the empty lines', () async {

@@ -513,6 +513,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get helpHoursTitle => 'Saa za huduma';
 
   @override
+  String get helpQuestionsTitle => 'Maswali ya mara kwa mara';
+
+  @override
   String helpCall(String phone) {
     return 'Piga simu $phone';
   }
@@ -943,6 +946,79 @@ class AppLocalizationsSw extends AppLocalizations {
   @override
   String get payAfterOrderingHint =>
       'Utaona namba ya kulipia baada ya kuthibitisha oda.';
+
+  @override
+  String get deliveryFeeToConfirm => 'Bei itathibitishwa';
+
+  @override
+  String get deliveryEstimateNote =>
+      'Bei ni makadirio. Tutapima mzigo na kukuthibitishia bei kabla hujalipa.';
+
+  @override
+  String get summaryTransportEstimate => 'Usafiri (makadirio)';
+
+  @override
+  String get summaryTotalEstimate => 'Jumla (makadirio)';
+
+  @override
+  String get summaryWeWillTellYou => 'Tutakujulisha';
+
+  @override
+  String get transportPayLaterHint =>
+      'Usilipe sasa. Tutapima mzigo na kukutumia bei kamili ya usafiri, kisha utalipa jumla kamili.';
+
+  @override
+  String get transportPendingTitle => 'Tunapima mzigo wako';
+
+  @override
+  String transportPendingMessage(String region, String estimate) {
+    return 'Tunathibitisha bei ya usafiri hadi $region. Makadirio ni $estimate; mzigo ukiwa mkubwa bei inaweza kuongezeka. Usilipe bado — tutakujulisha bei kamili, kisha utalipa hapa.';
+  }
+
+  @override
+  String transportPendingNoEstimateMessage(String region) {
+    return 'Tunathibitisha bei ya usafiri hadi $region. Usilipe bado — tutakujulisha bei, kisha utalipa hapa.';
+  }
+
+  @override
+  String transportFeeNote(String note) {
+    return 'Usafiri: $note';
+  }
+
+  @override
+  String get deliveryPaidToRider => 'Unamlipa dereva';
+
+  @override
+  String get deliveryPaidToRiderNote =>
+      'Usafiri unamlipa dereva ukipokea mzigo — hauko kwenye jumla.';
+
+  @override
+  String get deliveryFree => 'Bure';
+
+  @override
+  String get pickupFreeLabel => 'Bure (dukani)';
+
+  @override
+  String get pickupPointTitle => 'Kuchukua dukani';
+
+  @override
+  String pickupPointHint(String number) {
+    return 'Tutakujulisha oda ikiwa tayari. Njoo na namba ya oda #$number.';
+  }
+
+  @override
+  String get statusReadyForPickup => 'Tayari kuchukuliwa';
+
+  @override
+  String get statusPickedUp => 'Imechukuliwa';
+
+  @override
+  String get trackingReadyForPickup =>
+      'Oda yako iko tayari — njoo uichukue dukani.';
+
+  @override
+  String get trackingPickedUp =>
+      'Umechukua oda yako. Asante kwa kununua CHIMBO!';
 
   @override
   String payToTitle(String amount, String method) {

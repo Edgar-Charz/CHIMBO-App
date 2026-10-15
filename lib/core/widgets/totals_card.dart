@@ -4,18 +4,21 @@ import 'package:chimbo/core/utils/money.dart';
 import 'package:flutter/material.dart';
 
 /// "Bidhaa (4)  TZS 94,400 / Usafirishaji  TZS 5,000 / Jumla  TZS 99,400".
-/// Amounts are whole TZS from the server; this widget only shows them.
+/// Amounts are whole TZS from the server; this widget only shows them. A row's amount is null
+/// when it isn't known yet (upcountry transport before staff price it): [unknownAmountLabel].
 class TotalsCard extends StatelessWidget {
   const TotalsCard({
     super.key,
     required this.rows,
     required this.totalLabel,
     required this.total,
+    this.unknownAmountLabel = '—',
   });
 
-  final List<({String label, int amount})> rows;
+  final List<({String label, int? amount})> rows;
   final String totalLabel;
   final int total;
+  final String unknownAmountLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +38,17 @@ class TotalsCard extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                 child: _AmountRow(
                   label: row.label,
-                  amount: row.amount,
+                  value: switch (row.amount) {
+                    final amount? => Money.format(amount),
+                    null => unknownAmountLabel,
+                  },
                   style: textTheme.bodyMedium,
                 ),
               ),
             const Divider(height: AppSpacing.lg),
             _AmountRow(
               label: totalLabel,
-              amount: total,
+              value: Money.format(total),
               style: textTheme.titleLarge,
             ),
           ],
@@ -53,10 +59,10 @@ class TotalsCard extends StatelessWidget {
 }
 
 class _AmountRow extends StatelessWidget {
-  const _AmountRow({required this.label, required this.amount, this.style});
+  const _AmountRow({required this.label, required this.value, this.style});
 
   final String label;
-  final int amount;
+  final String value;
   final TextStyle? style;
 
   @override
@@ -64,7 +70,7 @@ class _AmountRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: Text(label, style: style)),
-        Text(Money.format(amount), style: style),
+        Text(value, style: style),
       ],
     );
   }

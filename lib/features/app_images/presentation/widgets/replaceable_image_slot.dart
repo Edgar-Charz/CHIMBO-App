@@ -1,5 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chimbo/core/config/env.dart';
+import 'package:chimbo/core/utils/network_image_cache.dart';
 import 'package:chimbo/core/widgets/app_network_image.dart';
 import 'package:chimbo/features/app_images/application/app_images_controller.dart';
 import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
@@ -32,19 +31,13 @@ class ReplaceableImageSlot extends ConsumerWidget {
   /// a screen opened afterwards shows it in its first frame. Never throws: on failure the
   /// slot simply loads (or falls back) as usual.
   static Future<void> precache(BuildContext context, String url) {
-    return precacheImage(
-      ResizeImage.resizeIfNeeded(
-        _cacheDimension,
-        _cacheDimension,
-        CachedNetworkImageProvider(
-          url,
-          headers: Env.tunnelHeaders,
-          maxWidth: _cacheDimension,
-          maxHeight: _cacheDimension,
-        ),
-      ),
+    return precacheAppNetworkImage(
       context,
-      onError: (_, _) {},
+      url,
+      cacheWidth: _cacheDimension,
+      cacheHeight: _cacheDimension,
+      diskCacheWidth: _cacheDimension,
+      diskCacheHeight: _cacheDimension,
     );
   }
 
