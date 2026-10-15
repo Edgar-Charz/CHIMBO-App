@@ -1910,6 +1910,18 @@ abstract class AppLocalizations {
   /// **'kesho'**
   String get deliveryTomorrow;
 
+  /// No description provided for @deliveryToday.
+  ///
+  /// In sw, this message translates to:
+  /// **'leo'**
+  String get deliveryToday;
+
+  /// No description provided for @deliveryTodayOrTomorrow.
+  ///
+  /// In sw, this message translates to:
+  /// **'leo au kesho'**
+  String get deliveryTodayOrTomorrow;
+
   /// No description provided for @deliveryOption.
   ///
   /// In sw, this message translates to:

@@ -96,9 +96,6 @@ class DeliveryMethod {
   /// Orders only: why staff changed the price ("Mzigo mkubwa, katoni 6").
   final String? feeNote;
 
-  /// "Haraka (kesho)": next-day delivery.
-  bool get isNextDay => daysMax == 1;
-
   Map<String, dynamic> toJson() => {
     'delivery_method_id': id,
     'delivery_method_name': name,

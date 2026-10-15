@@ -1020,6 +1020,12 @@ class AppLocalizationsSw extends AppLocalizations {
   String get deliveryTomorrow => 'kesho';
 
   @override
+  String get deliveryToday => 'leo';
+
+  @override
+  String get deliveryTodayOrTomorrow => 'leo au kesho';
+
+  @override
   String deliveryOption(String name, String eta) {
     return '$name ($eta)';
   }

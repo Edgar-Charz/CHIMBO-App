@@ -16,9 +16,13 @@ extension PaymentMethodIcon on PaymentMethod {
 }
 
 extension DeliveryMethodLabel on DeliveryMethod {
-  /// "siku 2–3" / "kesho". (The server's [DeliveryMethod.name] already includes it.)
-  String eta(AppLocalizations l10n) =>
-      isNextDay ? l10n.deliveryTomorrow : l10n.deliveryDays(daysMin, daysMax);
+  /// "leo" · "leo au kesho" (Bolt) · "kesho" · "siku 2–5" — the same words as the website.
+  String eta(AppLocalizations l10n) => switch ((daysMin, daysMax)) {
+    (_, 0) => l10n.deliveryToday,
+    (0, 1) => l10n.deliveryTodayOrTomorrow,
+    (1, 1) => l10n.deliveryTomorrow,
+    _ => l10n.deliveryDays(daysMin, daysMax),
+  };
 
   /// "TZS 5,000", "Bure", "Unamlipa dereva" (Bolt); upcountry: "~TZS 15,000" (the region's
   /// estimate) or "Bei itathibitishwa".

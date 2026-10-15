@@ -1016,6 +1016,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deliveryTomorrow => 'tomorrow';
 
   @override
+  String get deliveryToday => 'today';
+
+  @override
+  String get deliveryTodayOrTomorrow => 'today or tomorrow';
+
+  @override
   String deliveryOption(String name, String eta) {
     return '$name ($eta)';
   }

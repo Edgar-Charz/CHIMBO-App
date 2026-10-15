@@ -597,6 +597,8 @@
   "noAddressMessage": "Ongeza anwani ya kupokelea oda yako.",
   "chooseDeliveryTitle": "Chagua Usafirishaji",
   "deliveryTomorrow": "kesho",
+  "deliveryToday": "leo",
+  "deliveryTodayOrTomorrow": "leo au kesho",
   "deliveryOption": "{name} ({eta})",
   "@deliveryOption": {
     "placeholders": {
