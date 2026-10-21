@@ -21,6 +21,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        createOrderNotificationChannel()
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DOWNLOADS_CHANNEL)
             .setMethodCallHandler { call, result ->
@@ -46,6 +47,91 @@ class MainActivity : FlutterActivity() {
                 pendingSaveResult = result
                 requestNotificationPermissionOrChooseLocation()
             }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NOTIFICATIONS_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method == "showNotification") {
+                    val title = call.argument<String>("title") ?: "CHIMBO"
+                    val body = call.argument<String>("body") ?: ""
+                    showOrderSystemNotification(title, body)
+                    result.success(true)
+                } else {
+                    result.notImplemented()
+                }
+            }
+    }
+
+    private fun createOrderNotificationChannel() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val existing = notificationManager.getNotificationChannel(ORDER_NOTIFICATION_CHANNEL_ID)
+        if (existing != null && existing.importance < NotificationManager.IMPORTANCE_HIGH) {
+            notificationManager.deleteNotificationChannel(ORDER_NOTIFICATION_CHANNEL_ID)
+        }
+
+        val channel = NotificationChannel(
+            ORDER_NOTIFICATION_CHANNEL_ID,
+            ORDER_NOTIFICATION_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_HIGH,
+        ).apply {
+            description = ORDER_NOTIFICATION_CHANNEL_DESCRIPTION
+            enableVibration(true)
+            enableLights(true)
+            setShowBadge(true)
+        }
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun showOrderSystemNotification(title: String, body: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        createOrderNotificationChannel()
+
+        val openAppIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        val pendingIntentFlags = PendingIntent.FLAG_UPDATE_CURRENT or
+            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            })
+        val openApp = PendingIntent.getActivity(
+            this,
+            System.currentTimeMillis().toInt(),
+            openAppIntent,
+            pendingIntentFlags,
+        )
+
+        @Suppress("DEPRECATION")
+        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Notification.Builder(this, ORDER_NOTIFICATION_CHANNEL_ID)
+        } else {
+            Notification.Builder(this)
+        }
+
+        val notification = builder
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setStyle(Notification.BigTextStyle().bigText(body))
+            .setContentIntent(openApp)
+            .setAutoCancel(true)
+            .setPriority(Notification.PRIORITY_HIGH)
+            .setDefaults(Notification.DEFAULT_ALL)
+            .build()
+
+        notificationManager.notify((System.currentTimeMillis() % 100000).toInt(), notification)
     }
 
     private fun requestNotificationPermissionOrChooseLocation() {
@@ -171,10 +257,14 @@ class MainActivity : FlutterActivity() {
 
     private companion object {
         const val DOWNLOADS_CHANNEL = "com.chimbo.chimbo/downloads"
+        const val NOTIFICATIONS_CHANNEL = "com.chimbo.chimbo/notifications"
         const val SAVE_RECEIPT_REQUEST = 4107
         const val NOTIFICATION_PERMISSION_REQUEST = 4108
         const val PDF_TYPE = "application/pdf"
         const val RECEIPT_CHANNEL_ID = "receipt_downloads"
+        const val ORDER_NOTIFICATION_CHANNEL_ID = "chimbo_orders"
+        const val ORDER_NOTIFICATION_CHANNEL_NAME = "Arifa za oda"
+        const val ORDER_NOTIFICATION_CHANNEL_DESCRIPTION = "Taarifa kuhusu mabadiliko ya oda zako."
         const val RECEIPT_CHANNEL_NAME = "Risiti zilizopakuliwa"
         const val RECEIPT_CHANNEL_DESCRIPTION = "Arifa za risiti zilizohifadhiwa."
         const val RECEIPT_NOTIFICATION_TITLE = "Risiti imehifadhiwa"

@@ -47,8 +47,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     curve: Curves.easeOutCubic,
   );
 
-  /// Set when the saved login couldn't be checked; the splash then shows "Jaribu tena".
+  /// Set when the saved login couldn't be checked; a separate error view replaces the splash.
   ApiException? _restoreError;
+  bool _isRetrying = false;
 
   @override
   void initState() {
@@ -68,20 +69,30 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   /// The router then sends a logged-out customer to the phone screen. Someone heading to
   /// onboarding or login also waits (briefly) for those screens' pictures, so they don't
   /// appear a few seconds late.
-  Future<void> _leaveWhenReady() async {
+  Future<void> _leaveWhenReady({bool waitForSplash = true}) async {
     final illustrations = _loadIllustrations().timeout(
       _illustrationWaitLimit,
       onTimeout: () {},
     );
     try {
-      await Future.wait([
-        Future<void>.delayed(SplashScreen.displayTime),
-        ref.read(authControllerProvider.notifier).restoreSession(),
-      ]);
+      final restoreSession = ref
+          .read(authControllerProvider.notifier)
+          .restoreSession();
+      if (waitForSplash) {
+        await Future.wait<Object?>([
+          Future<void>.delayed(SplashScreen.displayTime),
+          restoreSession,
+        ]);
+      } else {
+        await restoreSession;
+      }
     } on ApiException catch (error) {
-      // Checking the saved login needs the server (e.g. no network): offer to try again.
+      // Keep the separate error screen visible until this attempt finishes.
       if (mounted) {
-        setState(() => _restoreError = error);
+        setState(() {
+          _restoreError = error;
+          _isRetrying = false;
+        });
       }
       return;
     }
@@ -111,39 +122,85 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   void _retry() {
-    setState(() => _restoreError = null);
-    _leaveWhenReady();
+    if (_isRetrying) {
+      return;
+    }
+    setState(() => _isRetrying = true);
+    unawaited(_leaveWhenReady(waitForSplash: false));
   }
 
   @override
   Widget build(BuildContext context) {
+    final restoreError = _restoreError;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppTheme.fullScreenSystemBars,
-      child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            const SplashBackground(),
-            Center(
-              child: FadeTransition(
-                opacity: _curve,
-                child: ScaleTransition(
-                  scale: Tween<double>(
-                    begin: _startScale,
-                    end: 1,
-                  ).animate(_curve),
-                  child: const _SplashContent(),
+      child: restoreError == null
+          ? Scaffold(
+              body: Stack(
+                fit: StackFit.expand,
+                children: [
+                  const SplashBackground(),
+                  Center(
+                    child: FadeTransition(
+                      opacity: _curve,
+                      child: ScaleTransition(
+                        scale: Tween<double>(
+                          begin: _startScale,
+                          end: 1,
+                        ).animate(_curve),
+                        child: const _SplashContent(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : _StartupRestoreError(
+              error: restoreError,
+              isRetrying: _isRetrying,
+              onRetry: _retry,
+            ),
+    );
+  }
+}
+
+class _StartupRestoreError extends StatelessWidget {
+  const _StartupRestoreError({
+    required this.error,
+    required this.isRetrying,
+    required this.onRetry,
+  });
+
+  final ApiException error;
+  final bool isRetrying;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xl),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const AppLogo(markSize: AppSizes.headerLogo),
+                    const SizedBox(height: AppSpacing.xxl),
+                    ErrorState(
+                      error: error,
+                      onRetry: onRetry,
+                      isLoading: isRetrying,
+                    ),
+                  ],
                 ),
               ),
             ),
-            if (_restoreError case final error?)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SafeArea(
-                  child: ErrorState(error: error, onRetry: _retry),
-                ),
-              ),
-          ],
+          ),
         ),
       ),
     );

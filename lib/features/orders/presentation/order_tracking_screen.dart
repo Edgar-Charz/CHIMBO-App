@@ -1,5 +1,6 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/network/api_exception.dart';
+import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/dates.dart';
@@ -7,6 +8,7 @@ import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/core/widgets/confirm_dialog.dart';
+import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/core/widgets/totals_card.dart';
@@ -23,6 +25,7 @@ import 'package:chimbo/features/orders/presentation/widgets/order_timeline.dart'
 import 'package:chimbo/features/orders/presentation/widgets/pickup_point_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Fuatilia Oda (design PDF p.9): status banner, timeline, ETA, agent, and the order itself.
 /// The live map is deferred (D-15).
@@ -67,10 +70,28 @@ class OrderTrackingScreen extends ConsumerWidget {
             onReorder: () => reorderAndOpenCart(context, ref, orderId),
           ),
         ),
-        error: (error, _) => ErrorState(
-          error: error,
-          onRetry: () => ref.invalidate(orderProvider(orderId)),
-        ),
+        error: (error, _) {
+          final isNotFound = error is ApiException &&
+              (error.code == ApiErrorCode.notFound || error.statusCode == 404);
+          if (isNotFound) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xl),
+                child: EmptyState(
+                  icon: Icons.search_off_rounded,
+                  title: l10n.orderNotFoundTitle,
+                  message: error.message ?? l10n.orderNotFoundMessage,
+                  actionLabel: l10n.actionViewAllOrders,
+                  onAction: () => context.go(AppRoutes.orders),
+                ),
+              ),
+            );
+          }
+          return ErrorState(
+            error: error,
+            onRetry: () => ref.invalidate(orderProvider(orderId)),
+          );
+        },
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
@@ -109,7 +130,9 @@ class _TrackingContent extends StatelessWidget {
             order.isAwaitingTransportPrice)
           const SizedBox(height: AppSpacing.lg),
         OrderTimeline(order: order),
-        if (!order.isPickup)
+        if (!order.isPickup &&
+            !order.status.isStopped &&
+            !order.payment.deadlinePassed)
           SectionCard(
             title: deliveredAt == null
                 ? l10n.estimatedDeliveryTitle
@@ -166,7 +189,7 @@ class _TrackingContent extends StatelessWidget {
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
-                  leading: Icon(method.icon, color: AppColors.primary),
+                  leading: PaymentMethodIconView(method: method),
                   title: Text(method.name),
                   subtitle: Text(order.deliveryMethod.name),
                 ),
@@ -264,7 +287,7 @@ class _TrackingContent extends StatelessWidget {
   }
 }
 
-/// "Njiani — Oda yako inakuja." in the status colour.
+/// "Njiani â€” Oda yako inakuja." in the status colour.
 class _StatusBanner extends StatelessWidget {
   const _StatusBanner({required this.order});
 
@@ -274,12 +297,18 @@ class _StatusBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final status = order.status;
+    final statusColor = order.payment.deadlinePassed
+        ? AppColors.danger
+        : status.color;
+    final statusIcon = order.payment.deadlinePassed
+        ? Icons.error_outline_rounded
+        : status.icon;
     final textTheme = Theme.of(context).textTheme;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: status.color.withValues(alpha: 0.1),
+        color: statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: status.color.withValues(alpha: 0.4)),
+        border: Border.all(color: statusColor.withValues(alpha: 0.4)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -292,14 +321,14 @@ class _StatusBanner extends StatelessWidget {
                   Text(
                     order.bannerTitle(l10n),
                     style: textTheme.headlineSmall?.copyWith(
-                      color: status.color,
+                      color: statusColor,
                     ),
                   ),
                   Text(order.bannerMessage(l10n), style: textTheme.bodyMedium),
                 ],
               ),
             ),
-            Icon(status.icon, size: AppSizes.iconLarge, color: status.color),
+            Icon(statusIcon, size: AppSizes.iconLarge, color: statusColor),
           ],
         ),
       ),

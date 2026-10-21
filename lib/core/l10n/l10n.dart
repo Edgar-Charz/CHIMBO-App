@@ -26,6 +26,7 @@ extension ErrorMessages on AppLocalizations {
       ApiErrorCode.moqNotMet => error.message ?? errorMoqNotMet,
       ApiErrorCode.outOfStock => error.message ?? errorOutOfStock,
       ApiErrorCode.priceChanged => error.message ?? errorPriceChanged,
+      ApiErrorCode.notFound => error.message ?? orderNotFoundMessage,
       _ => error.message ?? errorUnknown,
     };
   }

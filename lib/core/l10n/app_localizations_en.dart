@@ -63,6 +63,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionRetry => 'Try again';
 
   @override
+  String get actionRetryLoading => 'Loading...';
+
+  @override
+  String get homeRetryLoading => 'Loading the shop...';
+
+  @override
   String get phoneLabel => 'Phone number';
 
   @override
@@ -635,7 +641,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionViewAll => 'View all';
 
   @override
-  String get quickDeals => 'Hot Deals';
+  String get quickDeals => 'Price reductions';
 
   @override
   String get timedOffersTitle => 'Limited-time offers';
@@ -664,6 +670,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickReorder => 'Reorder';
+
+  @override
+  String get editCartQuantity => 'Change quantity';
 
   @override
   String get bannerTitle => 'WHOLESALE PRICES';
@@ -810,7 +819,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get badgeNew => 'New';
 
   @override
-  String get badgeDeal => 'Deal';
+  String get badgeDeal => 'Price reduction';
 
   @override
   String get infoStock => 'Stock';
@@ -1405,6 +1414,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'The time to pay ran out. Tap \"Reorder\" to order these products at today\'s prices, or contact us.';
 
   @override
+  String get paymentDeadlinePassed =>
+      'The payment deadline passed. You can no longer pay this order. It will be closed shortly; contact us if you still want to continue.';
+
+  @override
   String get estimatedDeliveryTitle => 'Estimated delivery';
 
   @override
@@ -1434,6 +1447,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get cancelOrderConfirmMessage =>
       'The order is cancelled and the items go back to stock. This can\'t be undone.';
+
+  @override
+  String get orderNotFoundTitle => 'Order not found';
+
+  @override
+  String get orderNotFoundMessage =>
+      'This order does not exist or may have been removed.';
+
+  @override
+  String get actionViewAllOrders => 'View my orders';
 
   @override
   String get orderCancelledMessage => 'Order cancelled.';

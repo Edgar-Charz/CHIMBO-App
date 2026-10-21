@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/router/app_routes.dart';
@@ -28,9 +30,22 @@ class NotificationsScreen extends ConsumerWidget {
     // Shown as read at once; the server call finishes in the background.
     final markingRead = _controller(ref).markAsRead(notification);
     final orderId = notification.orderId;
-    if (orderId != null) {
+    final productId = notification.productId;
+    final categoryId = notification.categoryId;
+    final collection = notification.collection;
+
+    if (productId != null) {
+      unawaited(context.push(AppRoutes.productDetails(productId)));
+    } else if (notification.isWishlist) {
+      unawaited(context.push(AppRoutes.wishlist));
+    } else if (orderId != null) {
       context.go(AppRoutes.orderDetails(orderId));
+    } else if (categoryId != null) {
+      unawaited(context.push(AppRoutes.category(categoryId)));
+    } else if (collection != null && collection.isNotEmpty) {
+      unawaited(context.push(AppRoutes.collection(collection)));
     }
+
     try {
       await markingRead;
     } on ApiException {

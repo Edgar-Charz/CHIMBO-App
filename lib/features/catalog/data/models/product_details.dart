@@ -1,6 +1,7 @@
 import 'package:chimbo/features/catalog/data/models/price_tier.dart';
 import 'package:chimbo/features/catalog/data/models/product_photo.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
+import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
 
 /// Everything the product page shows (`GET /products/{id}`).
 class ProductDetails {
@@ -12,6 +13,7 @@ class ProductDetails {
     required this.deliveryDaysMax,
     this.photos = const [],
     this.description,
+    this.deliveryOptions = const [],
   });
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,11 @@ class ProductDetails {
                 .toList()
           : images.cast<String>().map(ProductPhoto.singleSize).toList(),
       description: json['product_description'] as String?,
+      deliveryOptions: [
+        for (final option
+            in json['delivery_options'] as List<dynamic>? ?? const [])
+          DeliveryMethod.fromJson(option as Map<String, dynamic>),
+      ],
     );
   }
 
@@ -46,6 +53,18 @@ class ProductDetails {
   final int stockQuantity;
   final int deliveryDaysMin;
   final int deliveryDaysMax;
+
+  /// How orders reach customers (Bolt in Dar, upcountry, pickup …); empty from an older server, then
+  /// [deliveryDaysMin]–[deliveryDaysMax] is shown.
+  final List<DeliveryMethod> deliveryOptions;
+
+  /// The quickest option that brings the order (pickup left out), for the info strip.
+  DeliveryMethod? get fastestDelivery {
+    final delivered =
+        deliveryOptions.where((option) => !option.isPickup).toList()
+          ..sort((a, b) => a.daysMax.compareTo(b.daysMax));
+    return delivered.firstOrNull;
+  }
 
   /// In display order; empty until the admin uploads photos (a placeholder shows).
   final List<ProductPhoto> photos;

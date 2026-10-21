@@ -56,6 +56,9 @@ Future<SharedPreferences> pumpApp(
   bool isLoggedIn = false,
   bool hasAccount = false,
   AppImagesRepository? appImagesRepository,
+  Object? authRestoreError,
+  CatalogRepository? catalogRepository,
+  NotificationsRepository? notificationsRepository,
 }) async {
   // A phone-sized screen (360 × 800), so layouts are tested at a realistic size.
   tester.view
@@ -81,15 +84,19 @@ Future<SharedPreferences> pumpApp(
 
   await tester.pumpWidget(
     ProviderScope(
+      // Match the app: failures wait for an explicit customer retry.
+      retry: (retryCount, error) => null,
       overrides: [
         sharedPreferencesProvider.overrideWithValue(preferences),
         appImagesRepositoryProvider.overrideWithValue(
           appImagesRepository ?? FakeAppImagesRepository(),
         ),
         catalogRepositoryProvider.overrideWithValue(
-          const FakeCatalogRepository(),
+          catalogRepository ?? const FakeCatalogRepository(),
         ),
-        authRepositoryProvider.overrideWithValue(FakeAuthRepository(accounts)),
+        authRepositoryProvider.overrideWithValue(
+          FakeAuthRepository(accounts, restoreError: authRestoreError),
+        ),
         profileRepositoryProvider.overrideWithValue(
           FakeProfileRepository(accounts),
         ),
@@ -116,7 +123,7 @@ Future<SharedPreferences> pumpApp(
           (ref) => FakeCheckoutRepository(ref.watch(cartRepositoryProvider)),
         ),
         notificationsRepositoryProvider.overrideWith(
-          (ref) => FakeNotificationsRepository(),
+          (ref) => notificationsRepository ?? FakeNotificationsRepository(),
         ),
         ordersRepositoryProvider.overrideWith(
           (ref) => FakeOrdersRepository(
@@ -148,6 +155,9 @@ Future<SharedPreferences> pumpAppPastSplash(
   bool isLoggedIn = false,
   bool hasAccount = false,
   AppImagesRepository? appImagesRepository,
+  Object? authRestoreError,
+  CatalogRepository? catalogRepository,
+  NotificationsRepository? notificationsRepository,
 }) async {
   final preferences = await pumpApp(
     tester,
@@ -155,6 +165,9 @@ Future<SharedPreferences> pumpAppPastSplash(
     isLoggedIn: isLoggedIn,
     hasAccount: hasAccount,
     appImagesRepository: appImagesRepository,
+    authRestoreError: authRestoreError,
+    catalogRepository: catalogRepository,
+    notificationsRepository: notificationsRepository,
   );
   await tester.pump(SplashScreen.displayTime);
   await tester.pumpAndSettle();

@@ -200,6 +200,18 @@ abstract class AppLocalizations {
   /// **'Jaribu tena'**
   String get actionRetry;
 
+  /// No description provided for @actionRetryLoading.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapakia...'**
+  String get actionRetryLoading;
+
+  /// No description provided for @homeRetryLoading.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapakia duka...'**
+  String get homeRetryLoading;
+
   /// No description provided for @phoneLabel.
   ///
   /// In sw, this message translates to:
@@ -1265,7 +1277,7 @@ abstract class AppLocalizations {
   /// No description provided for @quickDeals.
   ///
   /// In sw, this message translates to:
-  /// **'Ofa'**
+  /// **'Punguzo'**
   String get quickDeals;
 
   /// No description provided for @timedOffersTitle.
@@ -1315,6 +1327,12 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Agiza Tena'**
   String get quickReorder;
+
+  /// No description provided for @editCartQuantity.
+  ///
+  /// In sw, this message translates to:
+  /// **'Badili kiasi'**
+  String get editCartQuantity;
 
   /// No description provided for @bannerTitle.
   ///
@@ -1571,7 +1589,7 @@ abstract class AppLocalizations {
   /// No description provided for @badgeDeal.
   ///
   /// In sw, this message translates to:
-  /// **'Ofa'**
+  /// **'Punguzo'**
   String get badgeDeal;
 
   /// No description provided for @infoStock.
@@ -2594,6 +2612,12 @@ abstract class AppLocalizations {
   /// **'Muda wa malipo umeisha. Bonyeza \"Agiza Tena\" kuagiza bidhaa hizi kwa bei za leo, au wasiliana nasi.'**
   String get trackingExpired;
 
+  /// No description provided for @paymentDeadlinePassed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda wa kulipa umeisha. Huwezi kulipa oda hii tena. Oda itasitishwa hivi karibuni; wasiliana nasi ikiwa bado unahitaji kuendelea.'**
+  String get paymentDeadlinePassed;
+
   /// No description provided for @estimatedDeliveryTitle.
   ///
   /// In sw, this message translates to:
@@ -2653,6 +2677,24 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Oda itaghairiwa na bidhaa kurudishwa stock. Huwezi kutendua hili.'**
   String get cancelOrderConfirmMessage;
+
+  /// No description provided for @orderNotFoundTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda haijapatikana'**
+  String get orderNotFoundTitle;
+
+  /// No description provided for @orderNotFoundMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Oda hii haipo au huenda imeondolewa.'**
+  String get orderNotFoundMessage;
+
+  /// No description provided for @actionViewAllOrders.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ona oda zangu'**
+  String get actionViewAllOrders;
 
   /// No description provided for @orderCancelledMessage.
   ///

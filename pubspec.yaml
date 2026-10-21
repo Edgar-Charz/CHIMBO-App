@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  firebase_core: ^5.0.0
+  firebase_messaging: ^17.0.0
   cached_network_image: ^4.0.2
   device_info_plus: ^13.2.0
   dio: ^5.11.1

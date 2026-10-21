@@ -6,6 +6,7 @@ import 'package:chimbo/core/utils/dates.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
+import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/payment_method_details.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/payments/application/payments_providers.dart';
@@ -96,6 +97,7 @@ class _MethodsTab extends ConsumerWidget {
               for (final method in methods) ...[
                 SectionCard(
                   title: method.name,
+                  titleLeading: PaymentMethodIconView(method: method),
                   child: method.isCashOnDelivery
                       ? Text(
                           l10n.acceptedMethodsCash,

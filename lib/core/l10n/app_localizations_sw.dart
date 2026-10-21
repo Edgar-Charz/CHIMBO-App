@@ -63,6 +63,12 @@ class AppLocalizationsSw extends AppLocalizations {
   String get actionRetry => 'Jaribu tena';
 
   @override
+  String get actionRetryLoading => 'Inapakia...';
+
+  @override
+  String get homeRetryLoading => 'Inapakia duka...';
+
+  @override
   String get phoneLabel => 'Namba ya simu';
 
   @override
@@ -638,7 +644,7 @@ class AppLocalizationsSw extends AppLocalizations {
   String get actionViewAll => 'Ona zote';
 
   @override
-  String get quickDeals => 'Ofa';
+  String get quickDeals => 'Punguzo';
 
   @override
   String get timedOffersTitle => 'Ofa za muda';
@@ -667,6 +673,9 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get quickReorder => 'Agiza Tena';
+
+  @override
+  String get editCartQuantity => 'Badili kiasi';
 
   @override
   String get bannerTitle => 'BEI ZA JUMLA';
@@ -814,7 +823,7 @@ class AppLocalizationsSw extends AppLocalizations {
   String get badgeNew => 'Mpya';
 
   @override
-  String get badgeDeal => 'Ofa';
+  String get badgeDeal => 'Punguzo';
 
   @override
   String get infoStock => 'Stock';
@@ -1408,6 +1417,10 @@ class AppLocalizationsSw extends AppLocalizations {
       'Muda wa malipo umeisha. Bonyeza \"Agiza Tena\" kuagiza bidhaa hizi kwa bei za leo, au wasiliana nasi.';
 
   @override
+  String get paymentDeadlinePassed =>
+      'Muda wa kulipa umeisha. Huwezi kulipa oda hii tena. Oda itasitishwa hivi karibuni; wasiliana nasi ikiwa bado unahitaji kuendelea.';
+
+  @override
   String get estimatedDeliveryTitle => 'Makadirio ya Uwasilishaji';
 
   @override
@@ -1437,6 +1450,15 @@ class AppLocalizationsSw extends AppLocalizations {
   @override
   String get cancelOrderConfirmMessage =>
       'Oda itaghairiwa na bidhaa kurudishwa stock. Huwezi kutendua hili.';
+
+  @override
+  String get orderNotFoundTitle => 'Oda haijapatikana';
+
+  @override
+  String get orderNotFoundMessage => 'Oda hii haipo au huenda imeondolewa.';
+
+  @override
+  String get actionViewAllOrders => 'Ona oda zangu';
 
   @override
   String get orderCancelledMessage => 'Oda imeghairiwa.';

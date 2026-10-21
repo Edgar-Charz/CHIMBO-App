@@ -5,6 +5,7 @@ import 'package:chimbo/features/auth/data/models/business_profile_input.dart';
 import 'package:chimbo/features/auth/data/models/login_start.dart';
 import 'package:chimbo/features/auth/data/models/otp_request_result.dart';
 import 'package:chimbo/features/auth/data/models/pin_input.dart';
+import 'package:chimbo/features/notifications/data/push_notification_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Holds the login state for the whole app. Screens call these methods; the router watches the
@@ -68,11 +69,13 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
+    await ref.read(pushNotificationServiceProvider).removeCurrentRegistration();
     await _repository.logout();
     state = const AuthState.unauthenticated();
   }
 
   Future<void> deleteAccount() async {
+    await ref.read(pushNotificationServiceProvider).removeCurrentRegistration();
     await _repository.deleteAccount();
     state = const AuthState.unauthenticated();
   }

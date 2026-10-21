@@ -1,5 +1,7 @@
+import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/features/onboarding/presentation/splash_screen.dart';
+import 'package:chimbo/features/onboarding/presentation/widgets/splash_background.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/fake_app_images_repository.dart';
@@ -31,6 +33,25 @@ void main() {
     await tester.pump(SplashScreen.displayTime);
     await tester.pumpAndSettle();
     expect(find.byType(SplashScreen), findsNothing);
+  });
+
+  testWidgets('startup failure shows a separate retry screen', (tester) async {
+    await pumpApp(
+      tester,
+      hasSeenOnboarding: true,
+      isLoggedIn: true,
+      authRestoreError: const ApiException(code: ApiErrorCode.network),
+    );
+    await tester.pump(AppDurations.slow);
+    await tester.pump(SplashScreen.displayTime);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SplashBackground), findsNothing);
+    expect(
+      find.text('Hakuna mtandao. Angalia intaneti yako kisha ujaribu tena.'),
+      findsOneWidget,
+    );
+    expect(find.text('Jaribu tena'), findsOneWidget);
   });
 
   testWidgets(

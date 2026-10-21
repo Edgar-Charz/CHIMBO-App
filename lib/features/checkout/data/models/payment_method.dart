@@ -27,6 +27,7 @@ class PaymentMethod {
     this.accountNumber,
     this.bankName,
     this.instructions,
+    this.iconUrl,
   });
 
   factory PaymentMethod.fromJson(Map<String, dynamic> json) {
@@ -38,6 +39,7 @@ class PaymentMethod {
       accountNumber: json['payment_method_account_number'] as String?,
       bankName: json['payment_method_bank_name'] as String?,
       instructions: json['payment_method_instructions'] as String?,
+      iconUrl: json['payment_method_icon_url'] as String?,
     );
   }
 
@@ -55,6 +57,9 @@ class PaymentMethod {
   final String? accountNumber;
   final String? bankName;
   final String? instructions;
+
+  /// Uploaded payment brand image, when staff set one.
+  final String? iconUrl;
 
   bool get isCashOnDelivery => type == PaymentMethodType.cash;
 }

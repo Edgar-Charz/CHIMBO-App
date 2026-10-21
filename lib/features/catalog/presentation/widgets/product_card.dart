@@ -1,10 +1,15 @@
 import 'package:chimbo/core/l10n/l10n.dart';
+import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_network_image.dart';
+import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/core/widgets/price_text.dart';
+import 'package:chimbo/core/widgets/quantity_stepper.dart';
+import 'package:chimbo/features/cart/application/cart_controller.dart';
+import 'package:chimbo/features/cart/data/models/cart.dart';
 import 'package:chimbo/features/cart/presentation/quick_add_sheet.dart';
 import 'package:chimbo/features/catalog/application/catalog_providers.dart';
 import 'package:chimbo/features/catalog/data/models/product_offer.dart';
@@ -16,9 +21,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// The one product card used everywhere (blueprint I-7): square picture with one badge and the
-/// heart, 2-line name, price (with the old price on deals), MOQ with the verified tick, and the
+/// heart, 2-line name, price (with a crossed-out old price when applicable), MOQ with the verified tick, and the
 /// round (+). The wholesale tiers are on the product page.
-class ProductCard extends StatelessWidget {
+class ProductCard extends ConsumerWidget {
   const ProductCard({super.key, required this.product});
 
   static const IconData placeholderIcon = Icons.inventory_2_outlined;
@@ -44,7 +49,10 @@ class ProductCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cart = ref.watch(cartControllerProvider).value;
+    final cartLine = _findCartLine(cart, product.id);
+
     // Soft shadow instead of a border lifts the white card off the cream page.
     return Card(
       elevation: AppSizes.cardElevation,
@@ -73,18 +81,25 @@ class ProductCard extends StatelessWidget {
                     maxHeightDiskCache: 480,
                   ),
                   if (product.isInStock)
-                    // Bottom-left, so the heart has the top-right to itself on narrow cards.
                     Positioned(
                       left: AppSpacing.sm,
-                      right: AppSpacing.sm,
-                      bottom: AppSpacing.sm,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: _CardBadge(product: product),
-                      ),
+                      top: AppSpacing.sm,
+                      child: Align(child: _CardBadge(product: product)),
                     )
                   else
                     const _SoldOutCover(),
+                  if (cartLine != null && product.isInStock)
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: AppSpacing.sm,
+                      child: Center(
+                        child: _InCartQuantityStepper(
+                          product: product,
+                          cartLine: cartLine,
+                        ),
+                      ),
+                    ),
                   Positioned(
                     top: AppSpacing.xs,
                     right: AppSpacing.xs,
@@ -103,8 +118,9 @@ class ProductCard extends StatelessWidget {
             ),
             child: _CardInfo(
               product: product,
+              showQuickAdd: product.isInStock && cartLine == null,
               onProductTap: () => _open(context),
-              onQuickAdd: product.isInStock
+              onQuickAdd: product.isInStock && cartLine == null
                   ? () => showQuickAddSheet(context, product)
                   : null,
             ),
@@ -115,16 +131,89 @@ class ProductCard extends StatelessWidget {
   }
 }
 
+CartLine? _findCartLine(Cart? cart, int productId) {
+  if (cart == null) {
+    return null;
+  }
+  for (final line in cart.lines) {
+    if (line.product.id == productId) {
+      return line;
+    }
+  }
+  return null;
+}
+
+class _InCartQuantityStepper extends ConsumerStatefulWidget {
+  const _InCartQuantityStepper({required this.product, required this.cartLine});
+
+  final ProductSummary product;
+  final CartLine cartLine;
+
+  @override
+  ConsumerState<_InCartQuantityStepper> createState() =>
+      _InCartQuantityStepperState();
+}
+
+class _InCartQuantityStepperState
+    extends ConsumerState<_InCartQuantityStepper> {
+  bool _isUpdating = false;
+
+  Future<void> _updateQuantity(int quantity) async {
+    if (_isUpdating) {
+      return;
+    }
+    setState(() => _isUpdating = true);
+    try {
+      await ref
+          .read(cartControllerProvider.notifier)
+          .setQuantity(widget.product.id, quantity);
+    } on ApiException catch (error) {
+      if (mounted) {
+        AppToast.of(context).error(context.l10n.errorMessage(error));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isUpdating = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.cardShadow,
+            blurRadius: AppSizes.cardElevation,
+          ),
+        ],
+      ),
+      child: QuantityStepper(
+        value: widget.cartLine.quantity,
+        min: widget.product.moq,
+        max: widget.cartLine.availableQuantity,
+        compact: true,
+        onChanged: _isUpdating ? (_) {} : _updateQuantity,
+      ),
+    );
+  }
+}
+
 /// Name, price and MOQ beside the (+).
 class _CardInfo extends StatelessWidget {
   const _CardInfo({
     required this.product,
     required this.onProductTap,
+    required this.showQuickAdd,
     required this.onQuickAdd,
   });
 
   final ProductSummary product;
   final VoidCallback onProductTap;
+  final bool showQuickAdd;
 
   /// Null when sold out (the (+) is disabled).
   final VoidCallback? onQuickAdd;
@@ -214,7 +303,7 @@ class _CardInfo extends StatelessWidget {
                 ],
               ),
             ),
-            _QuickAddButton(onPressed: onQuickAdd),
+            if (showQuickAdd) _QuickAddButton(onPressed: onQuickAdd),
           ],
         ),
       ],
@@ -223,7 +312,7 @@ class _CardInfo extends StatelessWidget {
 }
 
 /// One badge at most (§6.2): a time-limited offer ("Ofa −15%" and its countdown), else
-/// "-17%" for a deal, otherwise Inauzwa Sana / Mpya / Ofa.
+/// "-17%" for a general price reduction, otherwise Inauzwa Sana / Mpya / Punguzo.
 class _CardBadge extends StatelessWidget {
   const _CardBadge({required this.product});
 

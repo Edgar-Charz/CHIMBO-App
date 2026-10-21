@@ -52,6 +52,7 @@ void main() {
             'payment_method_account_number': '123456',
             'payment_method_bank_name': null,
             'payment_method_instructions': null,
+            'payment_method_icon_url': 'https://cdn.example.test/mpesa.png',
           },
         ],
       }),
@@ -62,5 +63,6 @@ void main() {
     expect(adapter.lastRequest!.uri.path, endsWith('/payment-methods'));
     expect(methods.single.type, PaymentMethodType.mobileMoney);
     expect(methods.single.accountNumber, '123456');
+    expect(methods.single.iconUrl, 'https://cdn.example.test/mpesa.png');
   });
 }

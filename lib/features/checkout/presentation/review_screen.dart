@@ -103,6 +103,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             ChosenOptionRow(
               title: l10n.paymentMethodTitle,
               icon: paymentMethod.icon,
+              leadingWidget: PaymentMethodIconView(method: paymentMethod),
               label: paymentMethod.name,
             ),
             // Mobile money / bank: where to pay is shown once the order exists (upcountry: once

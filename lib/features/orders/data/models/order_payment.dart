@@ -51,6 +51,7 @@ class OrderPayment {
     required this.noteHint,
     required this.canSubmit,
     this.canChangeMethod = false,
+    this.deadlinePassed = false,
     this.latest,
     this.isBalance = false,
     this.amountPaid = 0,
@@ -66,6 +67,7 @@ class OrderPayment {
       noteHint: json['payment_note_hint'] as String,
       canSubmit: json['can_submit_payment'] as bool,
       canChangeMethod: json['can_change_payment_method'] as bool,
+      deadlinePassed: json['payment_deadline_passed'] as bool? ?? false,
       latest: latest == null ? null : PaymentAttempt.fromJson(latest),
       isBalance: json['is_balance_payment'] as bool? ?? false,
       amountPaid: json['amount_paid'] as int? ?? 0,
@@ -94,6 +96,9 @@ class OrderPayment {
 
   /// "Badilisha njia ya malipo" is offered (unpaid, not under review, time not over).
   final bool canChangeMethod;
+
+  /// The deadline passed while the expiry job is waiting to close the order.
+  final bool deadlinePassed;
   final PaymentAttempt? latest;
 
   /// Sent and waiting for staff: "Tunakagua malipo yako".

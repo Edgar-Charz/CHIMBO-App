@@ -43,6 +43,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final GlobalKey _recentlyOrderedKey = GlobalKey();
   final GlobalKey _scrollViewportKey = GlobalKey();
   bool _showStickySearch = false;
+  bool _isRetryingHome = false;
 
   @override
   void initState() {
@@ -73,6 +74,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final shouldShow = greetingBottom <= viewportTop;
     if (shouldShow != _showStickySearch && mounted) {
       setState(() => _showStickySearch = shouldShow);
+    }
+  }
+
+  Future<void> _retryHome() async {
+    if (_isRetryingHome) {
+      return;
+    }
+    setState(() => _isRetryingHome = true);
+    try {
+      final homeData = ref.refresh(homeDataProvider.future);
+      await homeData;
+    } catch (_) {
+      // The provider holds the error and shows the retry state again.
+    } finally {
+      if (mounted) {
+        setState(() => _isRetryingHome = false);
+      }
     }
   }
 
@@ -162,29 +180,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     const HomeOrderAttention(),
-                    home.when(
-                      data: (data) => _HomeSections(
-                        data: data,
-                        recentlyOrderedKey: _recentlyOrderedKey,
-                        onReorderTap: _openRecentlyOrdered,
-                      ),
-                      error: (error, _) => ErrorState(
-                        error: error,
-                        onRetry: () => ref.invalidate(homeDataProvider),
-                      ),
-                      loading: () => Skeletonizer(
-                        child: _HomeSections(
-                          data: _skeletonData,
-                          onReorderTap: _openRecentlyOrdered,
-                        ),
-                      ),
-                    ),
+                    _isRetryingHome
+                        ? const _HomeRetryProgress()
+                        : home.when(
+                            data: (data) => _HomeSections(
+                              data: data,
+                              recentlyOrderedKey: _recentlyOrderedKey,
+                              onReorderTap: _openRecentlyOrdered,
+                            ),
+                            error: (error, _) =>
+                                ErrorState(error: error, onRetry: _retryHome),
+                            loading: () => Skeletonizer(
+                              child: _HomeSections(
+                                data: _skeletonData,
+                                onReorderTap: _openRecentlyOrdered,
+                              ),
+                            ),
+                          ),
                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _HomeRetryProgress extends StatelessWidget {
+  const _HomeRetryProgress();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxl),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            context.l10n.homeRetryLoading,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
       ),
     );
   }
@@ -421,10 +461,10 @@ class _QuickActions extends StatelessWidget {
       children: [
         QuickAction(
           icon: Icons.local_fire_department_outlined,
-          label: l10n.quickDeals,
+          label: l10n.timedOffersTitle,
           color: AppColors.danger,
           background: AppColors.accentLight,
-          onTap: () => openCollection(ProductCollection.deals),
+          onTap: () => openCollection(ProductCollection.offers),
         ),
         QuickAction(
           icon: Icons.new_releases_outlined,

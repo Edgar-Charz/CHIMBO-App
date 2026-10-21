@@ -156,6 +156,10 @@ class _ProductViewState extends ConsumerState<_ProductView> {
                 ],
                 const SizedBox(height: AppSpacing.lg),
                 ProductInfoStrip(details: details),
+                if (details.deliveryOptions.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  ProductDeliveryOptions(details: details),
+                ],
                 const SizedBox(height: AppSpacing.lg),
                 TierTable(pricing: _pricing, quantity: _quantity),
                 const SizedBox(height: AppSpacing.lg),

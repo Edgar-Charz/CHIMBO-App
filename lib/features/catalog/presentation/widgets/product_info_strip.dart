@@ -2,6 +2,7 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
+import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:flutter/material.dart';
 
 /// MOQ · Stock · Uwasilishaji, side by side.
@@ -45,10 +46,13 @@ class ProductInfoStrip extends StatelessWidget {
             _InfoItem(
               icon: Icons.local_shipping_outlined,
               label: l10n.infoDelivery,
-              value: l10n.deliveryDays(
-                details.deliveryDaysMin,
-                details.deliveryDaysMax,
-              ),
+              // The quickest real option ("leo au kesho" with Bolt); the per-product guess if none
+              value:
+                  details.fastestDelivery?.eta(l10n) ??
+                  l10n.deliveryDays(
+                    details.deliveryDaysMin,
+                    details.deliveryDaysMax,
+                  ),
             ),
           ],
         ),
@@ -96,6 +100,48 @@ class _InfoItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Every delivery option under the info strip: "Bolt (Dar es Salaam) · leo au kesho",
+/// "Usafiri wa mikoani · siku 2–5", "Nitachukua mwenyewe dukani · Bure" — the same as the website.
+class ProductDeliveryOptions extends StatelessWidget {
+  const ProductDeliveryOptions({super.key, required this.details});
+
+  final ProductDetails details;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (final option in details.deliveryOptions)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+            child: Row(
+              children: [
+                Icon(
+                  option.isPickup
+                      ? Icons.storefront_outlined
+                      : Icons.local_shipping_outlined,
+                  size: AppSizes.iconMedium,
+                  color: AppColors.textSecondary,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(child: Text(option.name, style: textTheme.bodyMedium)),
+                Text(
+                  option.isPickup ? l10n.deliveryFree : option.eta(l10n),
+                  style: textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

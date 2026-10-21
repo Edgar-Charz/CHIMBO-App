@@ -111,7 +111,7 @@ class _ChangePaymentMethodSheetState
                       title: method.name,
                       isSelected: method.code == _currentCode,
                       onTap: () => _choose(method),
-                      leading: Icon(method.icon, color: AppColors.primary),
+                      leading: PaymentMethodIconView(method: method),
                       trailing: method.code == _changingTo
                           ? const SizedBox.square(
                               dimension: AppSizes.buttonProgress,

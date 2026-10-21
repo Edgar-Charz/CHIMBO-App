@@ -72,6 +72,9 @@ extension OrderStatusWords on Order {
     Order(status: OrderStatus.pendingPayment, payment: final payment)
         when payment.isUnderReview =>
       l10n.statusCheckingPayment,
+    Order(status: OrderStatus.pendingPayment, payment: final payment)
+        when payment.deadlinePassed =>
+      l10n.statusExpired,
     Order(isAwaitingTransportPrice: true) => l10n.statusMeasuringLoad,
     Order(payment: final payment) when payment.isBalance =>
       l10n.statusBalanceDue,
@@ -82,11 +85,16 @@ extension OrderStatusWords on Order {
       stageLabel(l10n) ??
       (isPickup ? statusLabel(l10n) : status.bannerTitle(l10n));
 
-  String bannerMessage(AppLocalizations l10n) => switch ((isPickup, status)) {
-    (true, OrderStatus.packed) => l10n.trackingReadyForPickup,
-    (true, OrderStatus.delivered) => l10n.trackingPickedUp,
-    _ => status.bannerMessage(l10n),
-  };
+  String bannerMessage(AppLocalizations l10n) {
+    if (payment.deadlinePassed) {
+      return l10n.paymentDeadlinePassed;
+    }
+    return switch ((isPickup, status)) {
+      (true, OrderStatus.packed) => l10n.trackingReadyForPickup,
+      (true, OrderStatus.delivered) => l10n.trackingPickedUp,
+      _ => status.bannerMessage(l10n),
+    };
+  }
 
   /// The timeline's happy path: a pickup order is never sent.
   List<OrderStatus> get timelineSteps =>

@@ -31,3 +31,23 @@ Future<bool> addToCart(
     return false;
   }
 }
+
+/// Updates an existing cart line and shows the server's reason if it is refused (MOQ, stock).
+Future<bool> updateCartQuantity(
+  BuildContext context,
+  WidgetRef ref, {
+  required int productId,
+  required int quantity,
+}) async {
+  final toast = AppToast.of(context);
+  final l10n = context.l10n;
+  try {
+    await ref
+        .read(cartControllerProvider.notifier)
+        .setQuantity(productId, quantity);
+    return true;
+  } on ApiException catch (error) {
+    toast.error(l10n.errorMessage(error));
+    return false;
+  }
+}

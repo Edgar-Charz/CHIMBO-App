@@ -23,12 +23,17 @@ class NotificationTile extends StatelessWidget {
     final style = _styleOf(notification.type);
     final isUnread = !notification.isRead;
     return Card(
-      elevation: 0,
+      elevation: isUnread ? 1 : 0,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       color: isUnread ? AppColors.surface : AppColors.background,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.large),
-        side: const BorderSide(color: AppColors.border),
+        side: BorderSide(
+          color: isUnread
+              ? AppColors.accent.withValues(alpha: 0.35)
+              : AppColors.border,
+          width: isUnread ? 1.5 : 1,
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -57,11 +62,27 @@ class NotificationTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      notification.title,
-                      style: textTheme.titleSmall?.copyWith(
-                        fontWeight: isUnread ? FontWeight.w700 : null,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            notification.title,
+                            style: textTheme.titleSmall?.copyWith(
+                              fontWeight: isUnread ? FontWeight.w700 : null,
+                            ),
+                          ),
+                        ),
+                        if (isUnread) ...[
+                          const SizedBox(width: AppSpacing.xs),
+                          const DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: AppColors.accent,
+                              shape: BoxShape.circle,
+                            ),
+                            child: SizedBox.square(dimension: AppSizes.pageDot),
+                          ),
+                        ],
+                      ],
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(notification.body, style: textTheme.bodyMedium),
@@ -71,22 +92,13 @@ class NotificationTile extends StatelessWidget {
                         notification.createdAt,
                         context.l10n.localeName,
                       ),
-                      style: textTheme.bodySmall,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
               ),
-              if (isUnread)
-                const Padding(
-                  padding: EdgeInsets.only(left: AppSpacing.sm),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: AppColors.accent,
-                      shape: BoxShape.circle,
-                    ),
-                    child: SizedBox.square(dimension: AppSizes.pageDot),
-                  ),
-                ),
             ],
           ),
         ),

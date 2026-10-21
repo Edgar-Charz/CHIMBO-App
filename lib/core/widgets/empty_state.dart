@@ -14,6 +14,7 @@ class EmptyState extends StatelessWidget {
     this.title,
     this.actionLabel,
     this.onAction,
+    this.isLoading = false,
   });
 
   final IconData icon;
@@ -21,6 +22,7 @@ class EmptyState extends StatelessWidget {
   final String message;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,12 @@ class EmptyState extends StatelessWidget {
             ),
             if (label != null) ...[
               const SizedBox(height: AppSpacing.xl),
-              AppButton(label: label, onPressed: onAction, expand: false),
+              AppButton(
+                label: label,
+                onPressed: onAction,
+                isLoading: isLoading,
+                expand: false,
+              ),
             ],
           ],
         ),

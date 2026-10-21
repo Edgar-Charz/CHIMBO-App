@@ -8,6 +8,7 @@ class SectionCard extends StatelessWidget {
     super.key,
     required this.child,
     this.title,
+    this.titleLeading,
     this.actionLabel,
     this.onAction,
     this.color = AppColors.surface,
@@ -15,6 +16,7 @@ class SectionCard extends StatelessWidget {
 
   final Widget child;
   final String? title;
+  final Widget? titleLeading;
   final String? actionLabel;
   final VoidCallback? onAction;
   final Color color;
@@ -37,6 +39,10 @@ class SectionCard extends StatelessWidget {
             if (heading != null) ...[
               Row(
                 children: [
+                  if (titleLeading != null) ...[
+                    titleLeading!,
+                    const SizedBox(width: AppSpacing.sm),
+                  ],
                   Expanded(
                     child: Text(
                       heading,

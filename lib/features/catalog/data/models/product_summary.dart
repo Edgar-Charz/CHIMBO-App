@@ -76,7 +76,7 @@ class ProductSummary {
   final int priceFrom;
 
   /// The crossed-out price: the normal price during a time-limited [offer], otherwise the old
-  /// price of a Hot Deal; null when neither.
+  /// old price for a general reduction; null when neither.
   final int? compareAtPrice;
 
   /// Minimum order quantity.
@@ -94,7 +94,7 @@ class ProductSummary {
   /// Null unless a time-limited offer runs ("Ofa −15%", countdown).
   final ProductOffer? offer;
 
-  /// "-17%" for a deal; null when not on offer.
+  /// "-17%" for a general price reduction; null when not on offer.
   int? get discountPercent {
     final oldPrice = compareAtPrice;
     if (oldPrice == null || oldPrice <= price) {

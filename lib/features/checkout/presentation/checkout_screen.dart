@@ -84,7 +84,7 @@ class _CheckoutForm extends ConsumerWidget {
             title: method.name,
             isSelected: method.code == choices.paymentMethod?.code,
             onTap: () => controller.selectPayment(method),
-            leading: Icon(method.icon, color: AppColors.primary),
+            leading: PaymentMethodIconView(method: method),
           ),
         if (preview != null) ...[
           const SizedBox(height: AppSpacing.md),
@@ -173,10 +173,12 @@ class ChosenOptionRow extends StatelessWidget {
     required this.icon,
     required this.label,
     this.priceLabel,
+    this.leadingWidget,
   });
 
   final String title;
   final IconData icon;
+  final Widget? leadingWidget;
   final String label;
 
   /// "TZS 5,000", "~TZS 15,000"…
@@ -189,7 +191,7 @@ class ChosenOptionRow extends StatelessWidget {
       title: title,
       child: Row(
         children: [
-          Icon(icon, color: AppColors.primary),
+          leadingWidget ?? Icon(icon, color: AppColors.primary),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: Text(label)),
           if (price != null) Text(price),

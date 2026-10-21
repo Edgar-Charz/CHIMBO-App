@@ -14,7 +14,7 @@ import 'fake_account_store.dart';
 /// code** is accepted; PINs are 4–6 digits, `0000` and `1234` are refused as easy, and 5 wrong
 /// PINs lock the account until a new PIN is set after an SMS code.
 class FakeAuthRepository implements AuthRepository {
-  const FakeAuthRepository(this._store);
+  const FakeAuthRepository(this._store, {this.restoreError});
 
   static const Duration _codeLifetime = Duration(minutes: 5);
   static const Duration _resendDelay = Duration(seconds: 60);
@@ -27,6 +27,7 @@ class FakeAuthRepository implements AuthRepository {
   );
 
   final FakeAccountStore _store;
+  final Object? restoreError;
 
   @override
   Future<LoginStart> startLogin(String phone) async {
@@ -104,6 +105,9 @@ class FakeAuthRepository implements AuthRepository {
 
   @override
   Future<AuthSession?> restoreSession() async {
+    if (restoreError case final error?) {
+      throw error;
+    }
     final current = await _store.readCurrent();
     return current == null ? null : _store.sessionOf(current);
   }

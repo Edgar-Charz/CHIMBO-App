@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "865527174385",
+    "project_id": "chimbo-30386",
+    "storage_bucket": "chimbo-30386.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865527174385:android:d81cebdbcc71553c484550",
+        "android_client_info": {
+          "package_name": "com.chimbo.chimbo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA26od0gOM6pQ49DZCTek1PuRlER2cucFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

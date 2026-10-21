@@ -14,19 +14,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The (+) on a product card: pick a quantity (from the MOQ) and add, without leaving the list.
-Future<void> showQuickAddSheet(BuildContext context, ProductSummary product) {
+Future<void> showQuickAddSheet(
+  BuildContext context,
+  ProductSummary product, {
+  int? currentQuantity,
+}) {
   return showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
     isScrollControlled: true,
-    builder: (context) => _QuickAddSheet(product: product),
+    builder: (context) =>
+        _QuickAddSheet(product: product, currentQuantity: currentQuantity),
   );
 }
 
 class _QuickAddSheet extends ConsumerWidget {
-  const _QuickAddSheet({required this.product});
+  const _QuickAddSheet({required this.product, this.currentQuantity});
 
   final ProductSummary product;
+  final int? currentQuantity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +46,8 @@ class _QuickAddSheet extends ConsumerWidget {
           AppSpacing.lg,
         ),
         child: details.when(
-          data: (value) => _QuickAddForm(details: value),
+          data: (value) =>
+              _QuickAddForm(details: value, currentQuantity: currentQuantity),
           error: (error, _) => ErrorState(
             error: error,
             onRetry: () => ref.invalidate(productDetailsProvider(product.id)),
@@ -94,9 +101,10 @@ class _QuickAddPreview extends StatelessWidget {
 }
 
 class _QuickAddForm extends ConsumerStatefulWidget {
-  const _QuickAddForm({required this.details});
+  const _QuickAddForm({required this.details, this.currentQuantity});
 
   final ProductDetails details;
+  final int? currentQuantity;
 
   @override
   ConsumerState<_QuickAddForm> createState() => _QuickAddFormState();
@@ -104,21 +112,28 @@ class _QuickAddForm extends ConsumerStatefulWidget {
 
 class _QuickAddFormState extends ConsumerState<_QuickAddForm> {
   late final TierPricing _pricing = TierPricing(widget.details.tiers);
-  late int _quantity = _pricing.moq;
+  late int _quantity = widget.currentQuantity ?? _pricing.moq;
   bool _isAdding = false;
 
   Future<void> _add() async {
     setState(() => _isAdding = true);
-    final added = await addToCart(
-      context,
-      ref,
-      productId: widget.details.summary.id,
-      quantity: _quantity,
-    );
+    final changed = widget.currentQuantity == null
+        ? await addToCart(
+            context,
+            ref,
+            productId: widget.details.summary.id,
+            quantity: _quantity,
+          )
+        : await updateCartQuantity(
+            context,
+            ref,
+            productId: widget.details.summary.id,
+            quantity: _quantity,
+          );
     if (!mounted) {
       return;
     }
-    if (added) {
+    if (changed) {
       Navigator.of(context).pop();
     } else {
       setState(() => _isAdding = false);
@@ -171,7 +186,9 @@ class _QuickAddFormState extends ConsumerState<_QuickAddForm> {
         const SizedBox(height: AppSpacing.lg),
         AppButton(
           label: summary.isInStock
-              ? l10n.actionAddToCart
+              ? widget.currentQuantity == null
+                    ? l10n.actionAddToCart
+                    : l10n.actionSave
               : l10n.actionOutOfStock,
           icon: Icons.shopping_cart_outlined,
           variant: AppButtonVariant.accent,

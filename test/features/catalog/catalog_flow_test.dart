@@ -82,22 +82,14 @@ void main() {
     expect(find.text('Hakuna bidhaa'), findsOneWidget);
   });
 
-  testWidgets('deal cards show the discount and old price; the heart saves', (
-    tester,
-  ) async {
+  testWidgets('Ofa quick action filters for active timed offers', (tester) async {
     await openHome(tester);
-    await tester.tap(find.text('Ofa'));
+    await tester.tap(find.text('Ofa za muda'));
     await tester.pumpAndSettle();
 
-    // Matte Lipstick Set: 7,500 instead of 9,000 → -17%; no "kuanzia" line on cards.
-    expect(find.text('-17%'), findsOneWidget);
-    expect(find.text('TZS 9,000'), findsOneWidget);
-    expect(find.textContaining('kuanzia'), findsNothing);
-
-    await tester.tap(find.byTooltip('Penda').first);
-    await tester.pumpAndSettle();
-    expect(find.text('Imehifadhiwa kwenye vipendwa.'), findsOneWidget);
-    expect(find.byTooltip('Ondoa kwenye vipendwa'), findsOneWidget);
+    // The fake catalog has markdown deals but no running offers; Ofa must not include them.
+    expect(find.widgetWithText(AppBar, 'Ofa za muda'), findsOneWidget);
+    expect(find.text('Matte Lipstick Set'), findsNothing);
   });
 
   testWidgets('a sold-out product says Imeisha and cannot be added', (

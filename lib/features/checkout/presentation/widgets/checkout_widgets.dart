@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chimbo/core/config/env.dart';
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
@@ -13,6 +15,37 @@ extension PaymentMethodIcon on PaymentMethod {
     PaymentMethodType.bank => Icons.account_balance_outlined,
     PaymentMethodType.cash => Icons.payments_outlined,
   };
+}
+
+/// A payment method logo with its familiar type icon shown during loading or when unavailable.
+class PaymentMethodIconView extends StatelessWidget {
+  const PaymentMethodIconView({
+    super.key,
+    required this.method,
+    this.size = AppSizes.menuIconBox,
+  });
+
+  final PaymentMethod method;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final fallback = Icon(method.icon, color: AppColors.primary, size: size);
+    final iconUrl = method.iconUrl;
+    if (iconUrl == null || iconUrl.isEmpty) {
+      return fallback;
+    }
+    return SizedBox.square(
+      dimension: size,
+      child: CachedNetworkImage(
+        imageUrl: iconUrl,
+        httpHeaders: Env.tunnelHeaders,
+        fit: BoxFit.contain,
+        placeholder: (_, _) => fallback,
+        errorWidget: (_, _, _) => fallback,
+      ),
+    );
+  }
 }
 
 extension DeliveryMethodLabel on DeliveryMethod {

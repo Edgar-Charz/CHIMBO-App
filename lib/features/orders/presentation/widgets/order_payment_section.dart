@@ -5,6 +5,7 @@ import 'package:chimbo/core/utils/dates.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
+import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/payment_method_details.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
@@ -106,6 +107,9 @@ class _PayToCard extends StatelessWidget {
               method?.name ?? '',
             )
           : l10n.payToTitle(Money.format(payment.amount), method?.name ?? ''),
+      titleLeading: method == null
+          ? null
+          : PaymentMethodIconView(method: method),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
