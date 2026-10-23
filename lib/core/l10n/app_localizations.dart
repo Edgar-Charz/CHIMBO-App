@@ -254,6 +254,78 @@ abstract class AppLocalizations {
   /// **'Kuna tatizo limetokea. Tafadhali jaribu tena.'**
   String get errorUnknown;
 
+  /// No description provided for @errorValidation.
+  ///
+  /// In sw, this message translates to:
+  /// **'Baadhi ya taarifa zinahitaji kurekebishwa. Kagua taarifa zako kisha ujaribu tena.'**
+  String get errorValidation;
+
+  /// No description provided for @errorValidationField.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kagua taarifa hii kisha ujaribu tena.'**
+  String get errorValidationField;
+
+  /// No description provided for @errorSessionExpired.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda wa kuingia umeisha. Tafadhali ingia tena.'**
+  String get errorSessionExpired;
+
+  /// No description provided for @errorForbidden.
+  ///
+  /// In sw, this message translates to:
+  /// **'Huwezi kufanya hivyo sasa. Wasiliana nasi ukihitaji msaada.'**
+  String get errorForbidden;
+
+  /// No description provided for @errorRateLimited.
+  ///
+  /// In sw, this message translates to:
+  /// **'Umejaribu mara nyingi. Subiri kidogo kisha ujaribu tena.'**
+  String get errorRateLimited;
+
+  /// No description provided for @errorOtpExpired.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda wa namba hii umeisha. Omba namba nyingine.'**
+  String get errorOtpExpired;
+
+  /// No description provided for @errorPinInvalid.
+  ///
+  /// In sw, this message translates to:
+  /// **'PIN si sahihi. Tafadhali jaribu tena.'**
+  String get errorPinInvalid;
+
+  /// No description provided for @errorPinLocked.
+  ///
+  /// In sw, this message translates to:
+  /// **'PIN yako imefungwa. Iweke upya kwa kutumia namba ya uthibitisho.'**
+  String get errorPinLocked;
+
+  /// No description provided for @errorNotFound.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa uliyoomba haijapatikana au huenda imeondolewa.'**
+  String get errorNotFound;
+
+  /// No description provided for @errorPaymentTimeOver.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda wa kulipa umeisha. Wasiliana nasi ikiwa bado unahitaji oda hii.'**
+  String get errorPaymentTimeOver;
+
+  /// No description provided for @errorPaymentNotExpected.
+  ///
+  /// In sw, this message translates to:
+  /// **'Huwezi kutuma malipo ya oda hii sasa.'**
+  String get errorPaymentNotExpected;
+
+  /// No description provided for @errorPaymentMethodLocked.
+  ///
+  /// In sw, this message translates to:
+  /// **'Njia ya malipo ya oda hii haiwezi kubadilishwa tena.'**
+  String get errorPaymentMethodLocked;
+
   /// No description provided for @debugOpenTools.
   ///
   /// In sw, this message translates to:

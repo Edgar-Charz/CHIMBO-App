@@ -37,6 +37,7 @@ abstract final class AppSizes {
   static const double otpBoxHeight = 56;
   static const double headerLogo = 56;
   static const double avatarRadius = 40;
+  static const double compactAvatarRadius = 30;
   static const double menuIconBox = 44;
   static const double stepperValueWidth = 40;
 

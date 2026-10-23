@@ -166,9 +166,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   controller: _scrollController,
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.lg,
-                    AppSpacing.sm,
+                    AppSpacing.xs,
                     AppSpacing.lg,
-                    AppSpacing.lg,
+                    AppSpacing.md,
                   ),
                   children: [
                     GreetingCard(
@@ -178,7 +178,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       now: DateTime.now(),
                       onSearchTap: () => context.go(AppRoutes.discover),
                     ),
-                    const SizedBox(height: AppSpacing.lg),
+                    const SizedBox(height: AppSpacing.md),
                     const HomeOrderAttention(),
                     _isRetryingHome
                         ? const _HomeRetryProgress()

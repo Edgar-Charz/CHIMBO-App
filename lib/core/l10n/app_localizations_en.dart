@@ -93,6 +93,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorUnknown => 'Something went wrong. Please try again.';
 
   @override
+  String get errorValidation =>
+      'Some details need attention. Review your entries and try again.';
+
+  @override
+  String get errorValidationField => 'Check this information and try again.';
+
+  @override
+  String get errorSessionExpired =>
+      'Your session has expired. Please log in again.';
+
+  @override
+  String get errorForbidden =>
+      'You can\'t do that right now. Contact support if you need help.';
+
+  @override
+  String get errorRateLimited =>
+      'Too many attempts. Wait a little and try again.';
+
+  @override
+  String get errorOtpExpired => 'This code has expired. Request a new code.';
+
+  @override
+  String get errorPinInvalid => 'That PIN is incorrect. Please try again.';
+
+  @override
+  String get errorPinLocked =>
+      'Your PIN is locked. Reset it with a verification code.';
+
+  @override
+  String get errorNotFound =>
+      'We couldn\'t find what you requested. It may have been removed.';
+
+  @override
+  String get errorPaymentTimeOver =>
+      'The payment deadline has passed. Contact support if you still need this order.';
+
+  @override
+  String get errorPaymentNotExpected =>
+      'A payment can\'t be submitted for this order right now.';
+
+  @override
+  String get errorPaymentMethodLocked =>
+      'The payment method can no longer be changed for this order.';
+
+  @override
   String get debugOpenTools => 'Developer tools';
 
   @override

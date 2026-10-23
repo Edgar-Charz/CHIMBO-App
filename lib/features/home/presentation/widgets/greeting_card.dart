@@ -53,30 +53,38 @@ class GreetingCard extends StatelessWidget {
         border: Border.all(color: AppColors.accentLight),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(_greeting(l10n), style: textTheme.bodyLarge),
+                      Text(_greeting(l10n), style: textTheme.bodyMedium),
                       Text(
                         l10n.greetingName(firstName),
-                        style: textTheme.headlineSmall,
+                        style: textTheme.titleMedium,
                       ),
                     ],
                   ),
                 ),
-                PersonAvatar(name: fullName, photoUrl: photoUrl),
+                PersonAvatar(
+                  name: fullName,
+                  photoUrl: photoUrl,
+                  radius: AppSizes.compactAvatarRadius,
+                ),
               ],
             ),
             const SizedBox(height: AppSpacing.xs),
-            const BrandSlogan(),
-            const SizedBox(height: AppSpacing.md),
+            BrandSlogan(style: textTheme.bodySmall),
+            const SizedBox(height: AppSpacing.sm),
             HomeSearchBar(onTap: onSearchTap),
           ],
         ),

@@ -71,7 +71,8 @@ class OrderTrackingScreen extends ConsumerWidget {
           ),
         ),
         error: (error, _) {
-          final isNotFound = error is ApiException &&
+          final isNotFound =
+              error is ApiException &&
               (error.code == ApiErrorCode.notFound || error.statusCode == 404);
           if (isNotFound) {
             return Center(
@@ -80,7 +81,7 @@ class OrderTrackingScreen extends ConsumerWidget {
                 child: EmptyState(
                   icon: Icons.search_off_rounded,
                   title: l10n.orderNotFoundTitle,
-                  message: error.message ?? l10n.orderNotFoundMessage,
+                  message: l10n.errorMessage(error),
                   actionLabel: l10n.actionViewAllOrders,
                   onAction: () => context.go(AppRoutes.orders),
                 ),

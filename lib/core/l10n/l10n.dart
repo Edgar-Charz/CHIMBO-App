@@ -10,10 +10,40 @@ extension L10nContext on BuildContext {
 }
 
 extension ErrorMessages on AppLocalizations {
+  String fieldErrorMessage(ApiException error, String field) {
+    if (localeName == 'en') {
+      return errorValidationField;
+    }
+    return error.fields[field] ?? errorMessage(error);
+  }
+
   /// A message the user can read for any error: the server's own text, or a translated fallback.
   String errorMessage(Object error) {
     if (error is! ApiException) {
       return errorUnknown;
+    }
+    if (localeName == 'en') {
+      return switch (error.code) {
+        ApiErrorCode.validation => errorValidation,
+        ApiErrorCode.unauthenticated => errorSessionExpired,
+        ApiErrorCode.forbidden => errorForbidden,
+        ApiErrorCode.rateLimited => errorRateLimited,
+        ApiErrorCode.otpInvalid => otpInvalid,
+        ApiErrorCode.otpExpired => errorOtpExpired,
+        ApiErrorCode.otpTooManyAttempts => errorRateLimited,
+        ApiErrorCode.pinInvalid => errorPinInvalid,
+        ApiErrorCode.pinLocked => errorPinLocked,
+        ApiErrorCode.moqNotMet => errorMoqNotMet,
+        ApiErrorCode.outOfStock => errorOutOfStock,
+        ApiErrorCode.priceChanged => errorPriceChanged,
+        ApiErrorCode.notFound => errorNotFound,
+        ApiErrorCode.paymentTimeOver => errorPaymentTimeOver,
+        ApiErrorCode.paymentNotExpected => errorPaymentNotExpected,
+        ApiErrorCode.paymentMethodLocked => errorPaymentMethodLocked,
+        ApiErrorCode.network => errorNetwork,
+        ApiErrorCode.timeout => errorTimeout,
+        _ => errorUnknown,
+      };
     }
     return switch (error.code) {
       // The field's own message says exactly what's wrong ("Kiwango cha chini … (MOQ).");

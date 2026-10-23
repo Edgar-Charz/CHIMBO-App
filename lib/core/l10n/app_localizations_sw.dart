@@ -93,6 +93,51 @@ class AppLocalizationsSw extends AppLocalizations {
   String get errorUnknown => 'Kuna tatizo limetokea. Tafadhali jaribu tena.';
 
   @override
+  String get errorValidation =>
+      'Baadhi ya taarifa zinahitaji kurekebishwa. Kagua taarifa zako kisha ujaribu tena.';
+
+  @override
+  String get errorValidationField => 'Kagua taarifa hii kisha ujaribu tena.';
+
+  @override
+  String get errorSessionExpired =>
+      'Muda wa kuingia umeisha. Tafadhali ingia tena.';
+
+  @override
+  String get errorForbidden =>
+      'Huwezi kufanya hivyo sasa. Wasiliana nasi ukihitaji msaada.';
+
+  @override
+  String get errorRateLimited =>
+      'Umejaribu mara nyingi. Subiri kidogo kisha ujaribu tena.';
+
+  @override
+  String get errorOtpExpired =>
+      'Muda wa namba hii umeisha. Omba namba nyingine.';
+
+  @override
+  String get errorPinInvalid => 'PIN si sahihi. Tafadhali jaribu tena.';
+
+  @override
+  String get errorPinLocked =>
+      'PIN yako imefungwa. Iweke upya kwa kutumia namba ya uthibitisho.';
+
+  @override
+  String get errorNotFound =>
+      'Taarifa uliyoomba haijapatikana au huenda imeondolewa.';
+
+  @override
+  String get errorPaymentTimeOver =>
+      'Muda wa kulipa umeisha. Wasiliana nasi ikiwa bado unahitaji oda hii.';
+
+  @override
+  String get errorPaymentNotExpected => 'Huwezi kutuma malipo ya oda hii sasa.';
+
+  @override
+  String get errorPaymentMethodLocked =>
+      'Njia ya malipo ya oda hii haiwezi kubadilishwa tena.';
+
+  @override
   String get debugOpenTools => 'Zana za wasanidi';
 
   @override

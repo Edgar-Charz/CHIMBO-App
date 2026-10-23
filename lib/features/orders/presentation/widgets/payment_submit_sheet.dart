@@ -93,8 +93,12 @@ class _PaymentSubmitSheetState extends ConsumerState<_PaymentSubmitSheet> {
       // Field problems go under their field; anything else (already sent, time over …) on top.
       setState(() {
         _isSending = false;
-        _payerError = error.fields['payment_payer_account'];
-        _referenceError = error.fields['payment_reference'];
+        _payerError = error.fields.containsKey('payment_payer_account')
+            ? l10n.fieldErrorMessage(error, 'payment_payer_account')
+            : null;
+        _referenceError = error.fields.containsKey('payment_reference')
+            ? l10n.fieldErrorMessage(error, 'payment_reference')
+            : null;
         _formError = _payerError == null && _referenceError == null
             ? l10n.errorMessage(error)
             : null;

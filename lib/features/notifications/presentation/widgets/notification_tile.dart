@@ -66,7 +66,7 @@ class NotificationTile extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            notification.title,
+                            notification.titleFor(context.l10n.localeName),
                             style: textTheme.titleSmall?.copyWith(
                               fontWeight: isUnread ? FontWeight.w700 : null,
                             ),
@@ -85,7 +85,10 @@ class NotificationTile extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: AppSpacing.xs),
-                    Text(notification.body, style: textTheme.bodyMedium),
+                    Text(
+                      notification.bodyFor(context.l10n.localeName),
+                      style: textTheme.bodyMedium,
+                    ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       AppDates.formatDayTime(

@@ -12,7 +12,11 @@ abstract final class ApiErrorCode {
   // Server codes the app reacts to.
   static const String validation = 'VALIDATION_ERROR';
   static const String unauthenticated = 'UNAUTHENTICATED';
+  static const String forbidden = 'FORBIDDEN';
+  static const String rateLimited = 'RATE_LIMITED';
   static const String otpInvalid = 'OTP_INVALID';
+  static const String otpExpired = 'OTP_EXPIRED';
+  static const String otpTooManyAttempts = 'OTP_TOO_MANY_ATTEMPTS';
   static const String pinInvalid = 'PIN_INVALID';
   static const String pinLocked = 'PIN_LOCKED';
   static const String notFound = 'NOT_FOUND';

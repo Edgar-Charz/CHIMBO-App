@@ -110,12 +110,21 @@ class _PinSetupFormState extends State<PinSetupForm> {
   void _showError(ApiException error) {
     final fields = error.fields;
     final message = context.l10n.errorMessage(error);
-    if (fields['current_pin'] case final field?) {
-      _restartAt(_PinStep.current, field);
-    } else if (fields['user_pin'] case final field?) {
-      _restartAt(_PinStep.create, field);
-    } else if (fields['user_pin_confirmation'] case final field?) {
-      _restartAt(_PinStep.confirm, field);
+    if (fields.containsKey('current_pin')) {
+      _restartAt(
+        _PinStep.current,
+        context.l10n.fieldErrorMessage(error, 'current_pin'),
+      );
+    } else if (fields.containsKey('user_pin')) {
+      _restartAt(
+        _PinStep.create,
+        context.l10n.fieldErrorMessage(error, 'user_pin'),
+      );
+    } else if (fields.containsKey('user_pin_confirmation')) {
+      _restartAt(
+        _PinStep.confirm,
+        context.l10n.fieldErrorMessage(error, 'user_pin_confirmation'),
+      );
     } else if (widget.askCurrentPin &&
         (error.code == ApiErrorCode.pinInvalid ||
             error.code == ApiErrorCode.pinLocked)) {

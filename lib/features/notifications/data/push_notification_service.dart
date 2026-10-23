@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chimbo/core/config/firebase_ready_provider.dart';
+import 'package:chimbo/core/l10n/locale_provider.dart';
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/core/network/network_providers.dart';
 import 'package:chimbo/core/router/app_routes.dart';
+import 'package:chimbo/features/notifications/data/models/app_notification.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,13 @@ final pushNotificationServiceProvider = Provider<PushNotificationService>((
   final service = PushNotificationService(
     apiClient: ref.watch(apiClientProvider),
     firebaseReady: ref.watch(firebaseReadyProvider),
+    readLanguageCode: () => ref.read(appLocaleProvider).languageCode,
   );
+  ref.listen(appLocaleProvider, (previous, next) {
+    if (previous?.languageCode != next.languageCode) {
+      unawaited(service.refreshDeviceLanguage());
+    }
+  });
   ref.onDispose(service.dispose);
   return service;
 });
@@ -28,10 +36,12 @@ class PushNotificationService {
   PushNotificationService({
     required this.apiClient,
     required this.firebaseReady,
+    required this.readLanguageCode,
   });
 
   final ApiClient apiClient;
   final bool firebaseReady;
+  final String Function() readLanguageCode;
   StreamSubscription<RemoteMessage>? _messageSubscription;
   StreamSubscription<RemoteMessage>? _openedSubscription;
   StreamSubscription<String>? _registrationSubscription;
@@ -97,6 +107,14 @@ class PushNotificationService {
     }
   }
 
+  /// Updates the server preference so system-tray pushes use the selected language.
+  Future<void> refreshDeviceLanguage() async {
+    final deviceToken = _currentDeviceToken;
+    if (!_hasSession || deviceToken == null) return;
+    _registeredForCurrentSession = false;
+    await _registerDevice(deviceToken);
+  }
+
   void dispose() {
     unawaited(_messageSubscription?.cancel());
     unawaited(_openedSubscription?.cancel());
@@ -146,10 +164,7 @@ class PushNotificationService {
     } catch (error) {
       debugPrint('Push registration error: $error');
       unawaited(
-        apiClient.get(
-          '/support',
-          query: {'push_error': error.toString()},
-        ),
+        apiClient.get('/support', query: {'push_error': error.toString()}),
       );
     }
   }
@@ -170,7 +185,11 @@ class PushNotificationService {
     try {
       await apiClient.post(
         '/devices',
-        body: {'device_token': deviceToken, 'device_platform': platform},
+        body: {
+          'device_token': deviceToken,
+          'device_platform': platform,
+          'device_language': readLanguageCode(),
+        },
       );
       _registeredForCurrentSession = true;
     } catch (_) {
@@ -184,15 +203,22 @@ class PushNotificationService {
 
   void _onForegroundMessage(RemoteMessage message) {
     _onNotificationChanged?.call();
-    final title = message.notification?.title ?? 'CHIMBO';
-    final body = message.notification?.body ?? '';
+    final languageCode = readLanguageCode();
+    final data = Map<String, dynamic>.from(message.data);
+    final title = AppNotification.localizedPushText(
+      data: data,
+      languageCode: languageCode,
+      field: 'title',
+      fallback: message.notification?.title ?? 'CHIMBO',
+    );
+    final body = AppNotification.localizedPushText(
+      data: data,
+      languageCode: languageCode,
+      field: 'body',
+      fallback: message.notification?.body ?? '',
+    );
     if (title.isNotEmpty || body.isNotEmpty) {
-      unawaited(
-        _showForegroundSystemNotification(
-          title: title,
-          body: body,
-        ),
-      );
+      unawaited(_showForegroundSystemNotification(title: title, body: body));
     }
   }
 
@@ -244,7 +270,8 @@ class PushNotificationService {
     final body = (message.notification?.body ?? data['body'] ?? '')
         .toString()
         .toLowerCase();
-    final isWishlist = target == 'wishlist' ||
+    final isWishlist =
+        target == 'wishlist' ||
         target == 'vipendwa' ||
         title.contains('vipendwa') ||
         body.contains('vipendwa');

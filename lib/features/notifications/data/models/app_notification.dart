@@ -32,6 +32,7 @@ class AppNotification {
     this.categoryId,
     this.collection,
     this.target,
+    this.translations = const {},
   });
 
   factory AppNotification.fromJson(Map<String, dynamic> json) {
@@ -73,6 +74,7 @@ class AppNotification {
           : null,
       collection: data?['collection']?.toString(),
       target: data?['target']?.toString() ?? data?['screen']?.toString(),
+      translations: _readTranslations(data),
     );
   }
 
@@ -97,6 +99,28 @@ class AppNotification {
 
   /// Explicit navigation target (e.g. 'wishlist').
   final String? target;
+
+  /// Optional server-provided copies keyed by language code, kept in notification_data.
+  final Map<String, Map<String, String>> translations;
+
+  String titleFor(String languageCode) =>
+      translations[languageCode]?['title'] ?? title;
+
+  String bodyFor(String languageCode) =>
+      translations[languageCode]?['body'] ?? body;
+
+  /// Reads localized notification copy from either an API item or an FCM data payload.
+  static String localizedPushText({
+    required Map<String, dynamic> data,
+    required String languageCode,
+    required String field,
+    required String fallback,
+  }) {
+    final rawData = data['notification_data'];
+    final notificationData = _decodeData(rawData);
+    final translations = _readTranslations(notificationData ?? data);
+    return translations[languageCode]?[field] ?? fallback;
+  }
 
   /// Whether this notification relates to the customer's saved favourites (Vipendwa).
   bool get isWishlist =>
@@ -125,7 +149,54 @@ class AppNotification {
       categoryId: categoryId ?? this.categoryId,
       collection: collection ?? this.collection,
       target: target ?? this.target,
+      translations: translations,
     );
   }
-}
 
+  static Map<String, dynamic>? _decodeData(Object? rawData) {
+    if (rawData is Map<String, dynamic>) return rawData;
+    if (rawData is Map) return Map<String, dynamic>.from(rawData);
+    if (rawData is! String || rawData.isEmpty) return null;
+    try {
+      final decoded = jsonDecode(rawData);
+      if (decoded is Map<String, dynamic>) return decoded;
+      if (decoded is Map) return Map<String, dynamic>.from(decoded);
+    } on FormatException {
+      return null;
+    }
+    return null;
+  }
+
+  static Map<String, Map<String, String>> _readTranslations(
+    Map<String, dynamic>? data,
+  ) {
+    if (data == null) return const {};
+    final translations = <String, Map<String, String>>{};
+    final rawTranslations =
+        data['translations'] ?? data['notification_translations'];
+    if (rawTranslations is Map) {
+      for (final entry in rawTranslations.entries) {
+        if (entry.value is! Map) continue;
+        final copy = Map<String, dynamic>.from(entry.value as Map);
+        final title = copy['title']?.toString();
+        final body = copy['body']?.toString();
+        translations[entry.key.toString()] = {
+          if (title != null && title.isNotEmpty) 'title': title,
+          if (body != null && body.isNotEmpty) 'body': body,
+        };
+      }
+    }
+    for (final languageCode in ['en', 'sw']) {
+      final title = data['notification_title_$languageCode']?.toString();
+      final body = data['notification_body_$languageCode']?.toString();
+      if (title != null || body != null) {
+        translations[languageCode] = {
+          ...?translations[languageCode],
+          if (title != null && title.isNotEmpty) 'title': title,
+          if (body != null && body.isNotEmpty) 'body': body,
+        };
+      }
+    }
+    return translations;
+  }
+}
