@@ -1574,4 +1574,33 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get summarySavings => 'Unaokoa';
+
+  @override
+  String get visualSearchTitle => 'Tafuta kwa picha';
+
+  @override
+  String get visualSearchTakePhoto => 'Piga picha ya bidhaa';
+
+  @override
+  String get visualSearchChooseGallery => 'Chagua kutoka galari';
+
+  @override
+  String get visualSearchAnalyzing => 'Inatambua bidhaa...';
+
+  @override
+  String get visualSearchEmptyTitle => 'Hakuna bidhaa zilizopatikana';
+
+  @override
+  String get visualSearchEmptySubtitle =>
+      'Hatukupata bidhaa inayolingana na picha hii kwenye soko letu.';
+
+  @override
+  String get visualSearchRetry => 'Piga picha nyingine';
+
+  @override
+  String get visualSearchTooltip => 'Tafuta kwa picha';
+
+  @override
+  String get visualSearchUnavailable =>
+      'Utafutaji wa picha haupatikani kwa sasa. Tafadhali jaribu tena baadaye.';
 }

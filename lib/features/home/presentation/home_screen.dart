@@ -151,6 +151,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   child: HomeSearchBar(
                     onTap: () => context.go(AppRoutes.discover),
+                    onCameraTap: () =>
+                        context.go(AppRoutes.discoverWithCamera()),
                   ),
                 ),
               ),
@@ -177,7 +179,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       photoUrl: photoUrl,
                       now: DateTime.now(),
                       onSearchTap: () => context.go(AppRoutes.discover),
+                      onCameraTap: () =>
+                          context.go(AppRoutes.discoverWithCamera()),
                     ),
+
                     const SizedBox(height: AppSpacing.md),
                     const HomeOrderAttention(),
                     _isRetryingHome

@@ -4,6 +4,7 @@ import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
 import 'package:chimbo/features/catalog/data/models/product_page.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
+import 'package:chimbo/features/catalog/data/models/visual_search_result.dart';
 import 'package:chimbo/features/home/data/home_data.dart';
 
 /// The catalog from the CHIMBO API (docs/API_REFERENCE.md, "Catalog"). Public: no login needed.
@@ -46,5 +47,16 @@ class ApiCatalogRepository implements CatalogRepository {
   Future<ProductDetails> getProduct(int productId) async {
     final response = await _apiClient.get('/products/$productId');
     return ProductDetails.fromJson(response.dataAsMap);
+  }
+
+  /// `POST /products/search-by-image`: analyzes [filePath] and finds matching products.
+  @override
+  Future<VisualSearchResult> searchByImage(String filePath) async {
+    final response = await _apiClient.upload(
+      '/products/search-by-image',
+      field: 'image',
+      filePath: filePath,
+    );
+    return VisualSearchResult.fromJson(response.dataAsMap);
   }
 }

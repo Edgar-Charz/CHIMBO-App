@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:chimbo/core/l10n/l10n.dart';
+import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
+import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/core/widgets/count_icon_badge.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
@@ -19,6 +21,7 @@ import 'package:chimbo/features/catalog/presentation/widgets/listing_controls.da
 import 'package:chimbo/features/catalog/presentation/widgets/listing_sheets.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_grid.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/visual_search_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -31,11 +34,13 @@ class ProductListScreen extends ConsumerStatefulWidget {
     this.categoryId,
     this.collection,
     this.forceProductList = false,
+    this.openCamera = false,
   });
 
   final int? categoryId;
   final ProductCollection? collection;
   final bool forceProductList;
+  final bool openCamera;
 
   @override
   ConsumerState<ProductListScreen> createState() => _ProductListScreenState();
@@ -47,6 +52,20 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
 
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchTimer;
+  bool _didOpenInitialCamera = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.openCamera && !_didOpenInitialCamera) {
+      _didOpenInitialCamera = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          unawaited(_startVisualSearch());
+        }
+      });
+    }
+  }
 
   ProductListScope get _scope =>
       (categoryId: widget.categoryId, collection: widget.collection);
@@ -99,6 +118,66 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     }
   }
 
+  Future<void> _startVisualSearch() async {
+    final filePath = await pickProductImage(context);
+    if (filePath == null || !mounted) {
+      return;
+    }
+
+    final toast = AppToast.of(context);
+    final l10n = context.l10n;
+    var isDialogShowing = true;
+
+    unawaited(
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => PopScope(
+          canPop: false,
+          child: AlertDialog(
+            content: Row(
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(
+                  child: Text(
+                    l10n.visualSearchAnalyzing,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ).then((_) => isDialogShowing = false),
+    );
+
+    try {
+      final result = await ref
+          .read(productListControllerProvider(_scope).notifier)
+          .searchByImage(filePath);
+      if (mounted) {
+        if (result.isAiActive == false) {
+          toast.error(l10n.visualSearchUnavailable);
+        } else {
+          _searchController.text = result.detectedQuery;
+        }
+      }
+    } on ApiException catch (error) {
+      if (mounted) {
+        toast.error(l10n.errorMessage(error));
+      }
+    } catch (_) {
+      if (mounted) {
+        toast.error(l10n.errorUnknown);
+      }
+    } finally {
+      if (isDialogShowing && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -111,10 +190,14 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
         category?.children ??
         ref.watch(categoriesProvider).value ??
         const <Category>[];
+    final products = ref.watch(productListControllerProvider(_scope));
+    final isVisual = products.value?.isVisualSearch ?? false;
     final showCategorySections =
         widget.categoryId != null &&
         widget.collection == null &&
-        !widget.forceProductList;
+        !widget.forceProductList &&
+        !isVisual;
+
     final categorySectionsScope = showCategorySections
         ? (
             categoryId: query.categoryId ?? widget.categoryId!,
@@ -128,7 +211,6 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     final categorySections = categorySectionsScope == null
         ? null
         : ref.watch(categoryProductSectionsProvider(categorySectionsScope));
-    final products = ref.watch(productListControllerProvider(_scope));
 
     return Scaffold(
       appBar: AppBar(
@@ -161,8 +243,10 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                   ? l10n.searchProductsHint
                   : l10n.searchInCategoryHint(category.name),
               onChanged: _onSearchChanged,
+              onCameraTap: _startVisualSearch,
             ),
           ),
+
           Expanded(
             child: NotificationListener<ScrollNotification>(
               onNotification: _onScroll,
@@ -347,11 +431,19 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                         if (state.items.isEmpty)
                           SliverFillRemaining(
                             hasScrollBody: false,
-                            child: EmptyState(
-                              icon: Icons.search_off_rounded,
-                              title: l10n.productsEmptyTitle,
-                              message: l10n.productsEmptyMessage,
-                            ),
+                            child: state.isVisualSearch
+                                ? EmptyState(
+                                    icon: Icons.search_off_rounded,
+                                    title: l10n.visualSearchEmptyTitle,
+                                    message: l10n.visualSearchEmptySubtitle,
+                                    actionLabel: l10n.visualSearchRetry,
+                                    onAction: _startVisualSearch,
+                                  )
+                                : EmptyState(
+                                    icon: Icons.search_off_rounded,
+                                    title: l10n.productsEmptyTitle,
+                                    message: l10n.productsEmptyMessage,
+                                  ),
                           )
                         else
                           SliverPadding(

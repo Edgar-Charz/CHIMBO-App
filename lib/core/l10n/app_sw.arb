@@ -933,5 +933,14 @@
     }
   },
   "cartCannotCheckout": "Rekebisha bidhaa zilizowekwa alama nyekundu ili kuendelea.",
-  "summarySavings": "Unaokoa"
+  "summarySavings": "Unaokoa",
+  "visualSearchTitle": "Tafuta kwa picha",
+  "visualSearchTakePhoto": "Piga picha ya bidhaa",
+  "visualSearchChooseGallery": "Chagua kutoka galari",
+  "visualSearchAnalyzing": "Inatambua bidhaa...",
+  "visualSearchEmptyTitle": "Hakuna bidhaa zilizopatikana",
+  "visualSearchEmptySubtitle": "Hatukupata bidhaa inayolingana na picha hii kwenye soko letu.",
+  "visualSearchRetry": "Piga picha nyingine",
+  "visualSearchTooltip": "Tafuta kwa picha",
+  "visualSearchUnavailable": "Utafutaji wa picha haupatikani kwa sasa. Tafadhali jaribu tena baadaye."
 }

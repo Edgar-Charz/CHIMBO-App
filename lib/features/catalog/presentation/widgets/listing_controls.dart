@@ -12,11 +12,13 @@ class CatalogSearchField extends StatelessWidget {
     required this.controller,
     required this.hint,
     required this.onChanged,
+    this.onCameraTap,
   });
 
   final TextEditingController controller;
   final String hint;
   final ValueChanged<String> onChanged;
+  final VoidCallback? onCameraTap;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,10 @@ class CatalogSearchField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: const Icon(Icons.search_rounded),
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.camera_alt_outlined, color: AppColors.primary),
+          onPressed: onCameraTap,
+        ),
       ),
     );
   }

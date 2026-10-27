@@ -111,11 +111,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: AppRoutes.discover,
                 // Home's quick actions open Gundua with `?collection=deals` etc.
                 builder: (context, state) => ProductListScreen(
-                  key: ValueKey(state.uri.queryParameters['collection']),
+                  key: ValueKey(
+                    '${state.uri.queryParameters['collection']}_${state.uri.queryParameters['camera']}',
+                  ),
                   collection: ProductCollection.fromApi(
                     state.uri.queryParameters['collection'],
                   ),
+                  openCamera: state.uri.queryParameters['camera'] == '1',
                 ),
+
                 routes: [
                   GoRoute(
                     path: _childPath(AppRoutes.categoryPattern, levels: 2),

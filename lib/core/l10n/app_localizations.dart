@@ -2875,6 +2875,60 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Unaokoa'**
   String get summarySavings;
+
+  /// No description provided for @visualSearchTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tafuta kwa picha'**
+  String get visualSearchTitle;
+
+  /// No description provided for @visualSearchTakePhoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Piga picha ya bidhaa'**
+  String get visualSearchTakePhoto;
+
+  /// No description provided for @visualSearchChooseGallery.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chagua kutoka galari'**
+  String get visualSearchChooseGallery;
+
+  /// No description provided for @visualSearchAnalyzing.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inatambua bidhaa...'**
+  String get visualSearchAnalyzing;
+
+  /// No description provided for @visualSearchEmptyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna bidhaa zilizopatikana'**
+  String get visualSearchEmptyTitle;
+
+  /// No description provided for @visualSearchEmptySubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hatukupata bidhaa inayolingana na picha hii kwenye soko letu.'**
+  String get visualSearchEmptySubtitle;
+
+  /// No description provided for @visualSearchRetry.
+  ///
+  /// In sw, this message translates to:
+  /// **'Piga picha nyingine'**
+  String get visualSearchRetry;
+
+  /// No description provided for @visualSearchTooltip.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tafuta kwa picha'**
+  String get visualSearchTooltip;
+
+  /// No description provided for @visualSearchUnavailable.
+  ///
+  /// In sw, this message translates to:
+  /// **'Utafutaji wa picha haupatikani kwa sasa. Tafadhali jaribu tena baadaye.'**
+  String get visualSearchUnavailable;
 }
 
 class _AppLocalizationsDelegate

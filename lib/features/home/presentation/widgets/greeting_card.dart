@@ -13,6 +13,7 @@ class GreetingCard extends StatelessWidget {
     required this.photoUrl,
     required this.now,
     required this.onSearchTap,
+    this.onCameraTap,
   });
 
   static const int _afternoonStartHour = 12;
@@ -26,6 +27,7 @@ class GreetingCard extends StatelessWidget {
   /// Passed in (not read inside), so the greeting is easy to test.
   final DateTime now;
   final VoidCallback onSearchTap;
+  final VoidCallback? onCameraTap;
 
   String _greeting(AppLocalizations l10n) {
     if (now.hour < _afternoonStartHour) {
@@ -85,7 +87,7 @@ class GreetingCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             BrandSlogan(style: textTheme.bodySmall),
             const SizedBox(height: AppSpacing.sm),
-            HomeSearchBar(onTap: onSearchTap),
+            HomeSearchBar(onTap: onSearchTap, onCameraTap: onCameraTap),
           ],
         ),
       ),
@@ -95,9 +97,10 @@ class GreetingCard extends StatelessWidget {
 
 /// Looks like a search field; opens Gundua, where the real search is.
 class HomeSearchBar extends StatelessWidget {
-  const HomeSearchBar({super.key, required this.onTap});
+  const HomeSearchBar({super.key, required this.onTap, this.onCameraTap});
 
   final VoidCallback onTap;
+  final VoidCallback? onCameraTap;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +116,12 @@ class HomeSearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.large),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.xs,
+            AppSpacing.xs,
+            AppSpacing.xs,
+          ),
           child: Row(
             children: [
               const Icon(Icons.search_rounded, color: AppColors.textSecondary),
@@ -126,6 +134,14 @@ class HomeSearchBar extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium
                       ?.copyWith(color: AppColors.textSecondary),
                 ),
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.camera_alt_outlined,
+                  color: AppColors.primary,
+                ),
+                onPressed: onCameraTap,
+                tooltip: context.l10n.visualSearchTooltip,
               ),
             ],
           ),

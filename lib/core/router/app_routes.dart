@@ -40,6 +40,9 @@ abstract final class AppRoutes {
   /// Gundua listing of one category (inside the Gundua tab, as in the design).
   static String category(int categoryId) => '/discover/category/$categoryId';
 
+  /// Gundua opened directly with the camera / visual search flow active.
+  static String discoverWithCamera() => '$discover?camera=1';
+
   /// A category-scoped collection listing, opened by a category section's "View all" action.
   static String categoryListing(int categoryId, {String? collection}) =>
       '/discover/category/$categoryId?listing=1'

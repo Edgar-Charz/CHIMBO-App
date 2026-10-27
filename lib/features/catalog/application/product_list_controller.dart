@@ -1,6 +1,7 @@
 import 'package:chimbo/features/catalog/data/catalog_repository.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
+import 'package:chimbo/features/catalog/data/models/visual_search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Which listing a screen shows: a category, a Home collection, or everything (Gundua).
@@ -53,24 +54,28 @@ class ProductListState {
     required this.page,
     required this.hasMore,
     this.isLoadingMore = false,
+    this.isVisualSearch = false,
   });
 
   final List<ProductSummary> items;
   final int page;
   final bool hasMore;
   final bool isLoadingMore;
+  final bool isVisualSearch;
 
   ProductListState copyWith({
     List<ProductSummary>? items,
     int? page,
     bool? hasMore,
     bool? isLoadingMore,
+    bool? isVisualSearch,
   }) {
     return ProductListState(
       items: items ?? this.items,
       page: page ?? this.page,
       hasMore: hasMore ?? this.hasMore,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      isVisualSearch: isVisualSearch ?? this.isVisualSearch,
     );
   }
 }
@@ -93,6 +98,22 @@ class ProductListController extends AsyncNotifier<ProductListState> {
       page: firstPage.page,
       hasMore: firstPage.hasMore,
     );
+  }
+
+  /// Performs visual search using [filePath] and updates [state] with the detected products.
+  Future<VisualSearchResult> searchByImage(String filePath) async {
+    final result = await _repository.searchByImage(filePath);
+    if (result.isAiActive != false) {
+      state = AsyncData(
+        ProductListState(
+          items: result.items,
+          page: 1,
+          hasMore: false,
+          isVisualSearch: true,
+        ),
+      );
+    }
+    return result;
   }
 
   /// Adds the next page; does nothing while a page is loading or when all are loaded.

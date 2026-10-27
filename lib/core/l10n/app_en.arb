@@ -539,7 +539,14 @@
   "cartProblemNotEnoughStock": "Not enough stock — {count} left",
   "cartProblemBelowMoq": "Below the MOQ ({moq})",
   "cartFixLowerTo": "Lower to {count}",
-  "cartFixRaiseTo": "Raise to {count}",
-  "cartCannotCheckout": "Fix the items marked in red to continue.",
-  "summarySavings": "You save"
+  "summarySavings": "You save",
+  "visualSearchTitle": "Search by image",
+  "visualSearchTakePhoto": "Take a photo of product",
+  "visualSearchChooseGallery": "Choose from gallery",
+  "visualSearchAnalyzing": "Identifying product...",
+  "visualSearchEmptyTitle": "No products found",
+  "visualSearchEmptySubtitle": "We did not find any product matching this photo in our market.",
+  "visualSearchRetry": "Take another photo",
+  "visualSearchTooltip": "Search by image",
+  "visualSearchUnavailable": "Image search is temporarily unavailable. Please try again later."
 }

@@ -1562,12 +1562,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String cartFixRaiseTo(int count) {
-    return 'Raise to $count';
+    return 'Ongeza hadi $count';
   }
 
   @override
-  String get cartCannotCheckout => 'Fix the items marked in red to continue.';
+  String get cartCannotCheckout =>
+      'Rekebisha bidhaa zilizowekwa alama nyekundu ili kuendelea.';
 
   @override
   String get summarySavings => 'You save';
+
+  @override
+  String get visualSearchTitle => 'Search by image';
+
+  @override
+  String get visualSearchTakePhoto => 'Take a photo of product';
+
+  @override
+  String get visualSearchChooseGallery => 'Choose from gallery';
+
+  @override
+  String get visualSearchAnalyzing => 'Identifying product...';
+
+  @override
+  String get visualSearchEmptyTitle => 'No products found';
+
+  @override
+  String get visualSearchEmptySubtitle =>
+      'We did not find any product matching this photo in our market.';
+
+  @override
+  String get visualSearchRetry => 'Take another photo';
+
+  @override
+  String get visualSearchTooltip => 'Search by image';
+
+  @override
+  String get visualSearchUnavailable =>
+      'Image search is temporarily unavailable. Please try again later.';
 }
