@@ -204,6 +204,8 @@
   "businessTitle": "Tuambie Kuhusu Biashara Yako",
   "businessSubtitle": "Taarifa chache tu, kisha unaanza.",
   "fullNameLabel": "Jina kamili",
+  "emailLabel": "Barua pepe",
+  "emailInvalid": "Weka anwani sahihi ya barua pepe.",
   "fullNameRequired": "Andika jina lako kamili.",
   "businessNameLabel": "Jina la biashara / duka",
   "regionLabel": "Mkoa",
@@ -211,6 +213,7 @@
   "regionRequired": "Chagua mkoa wako.",
   "districtLabel": "Wilaya",
   "locationsLoadFailed": "Imeshindikana kupakia orodha. Gusa kujaribu tena.",
+  "locationLoading": "Inapakia maeneo...",
   "locationSearchHint": "Tafuta kwa jina...",
   "locationNoResults": "Hakuna eneo linalolingana na utafutaji wako.",
   "actionEnterChimbo": "Ingia CHIMBO",
@@ -232,7 +235,7 @@
   "menuPayments": "Malipo yangu",
   "menuPaymentsHint": "Historia ya malipo na njia tunazokubali",
   "myPaymentsTabHistory": "Historia",
-  "myPaymentsTabMethods": "Njia za malipo",
+  "myPaymentsTabMethods": "Mahali pa kulipia",
   "myPaymentsEmpty": "Bado hujafanya malipo. Malipo ya oda zako yataonekana hapa.",
   "acceptedMethodsTitle": "Njia za malipo tunazokubali",
   "acceptedMethodsCash": "Lipa kwa pesa taslimu unapopokea mzigo.",
@@ -404,9 +407,8 @@
     }
   },
   "filterSheetTitle": "Chuja bidhaa",
-  "filterSheetSubtitle": "Chagua bei na kiwango cha juu cha MOQ.",
-  "priceFilterDescription": "Weka kiwango cha chini na cha juu cha bei ya bidhaa.",
-  "moqFilterDescription": "Onyesha bidhaa zenye MOQ isiyozidi kiasi unachoweka.",
+  "priceFilterDescription": "Weka bei ya chini na ya juu.",
+  "moqFilterDescription": "Weka kiwango cha juu cha MOQ.",
   "sortAction": "Panga",
   "sortSheetTitle": "Panga bidhaa",
   "sortSheetSubtitle": "Chagua jinsi bidhaa zitakavyoonyeshwa.",
@@ -494,11 +496,11 @@
       }
     }
   },
-  "nextTierHint": "Ongeza pcs {count} upate {price} kila moja",
+  "nextTierHint": "Ongeza {count} upate {price} kila moja",
   "@nextTierHint": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "String"
       },
       "price": {
         "type": "String"
@@ -507,6 +509,7 @@
   },
   "actionAskSeller": "Uliza Muuzaji",
   "descriptionTitle": "Maelezo",
+  "relatedProductsTitle": "Bidhaa zinazofanana",
   "actionFavourite": "Penda",
   "actionShare": "Shiriki",
   "actionZoom": "Kuza picha",
@@ -526,19 +529,19 @@
   "cartEmptyTitle": "Kikapu chako ni tupu",
   "cartEmptyMessage": "Ongeza bidhaa uanze kuagiza kwa bei za jumla.",
   "actionStartShopping": "Anza kununua",
-  "cartNudge": "Ongeza pcs {count} za {product} upate {price} kila moja.",
-  "cartNudgeAction": "Ongeza {count} pcs",
+  "cartNudge": "Ongeza {count} za {product} upate {price} kila moja.",
+  "cartNudgeAction": "Ongeza {count}",
   "@cartNudgeAction": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
   "@cartNudge": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "String"
       },
       "product": {
         "type": "String"
@@ -666,6 +669,7 @@
   "deliveryFree": "Bure",
   "pickupFreeLabel": "Bure (dukani)",
   "pickupPointTitle": "Kuchukua dukani",
+  "pickupPointUnavailable": "Anwani au muda wa kuchukua haupatikani. Jaribu tena kabla ya kuthibitisha oda.",
   "pickupPointHint": "Tutakujulisha oda ikiwa tayari. Njoo na namba ya oda #{number}.",
   "@pickupPointHint": {
     "placeholders": {
@@ -783,6 +787,8 @@
     }
   },
   "orderNumber": "#{number}",
+  "orderPlacedOn": "Imewekwa {date}",
+  "orderTrackingProgress": "Maendeleo ya Oda",
   "@orderNumber": {
     "placeholders": {
       "number": {
@@ -796,6 +802,9 @@
   "addressFormTitle": "Anwani Mpya",
   "editAddressFormTitle": "Hariri Anwani",
   "addressesEmpty": "Hakuna anwani bado",
+  "addressSaved": "Anwani imehifadhiwa.",
+  "addressDefaultSaved": "Anwani imewekwa kuwa anwani ya msingi.",
+  "addressDeleted": "Anwani imefutwa.",
   "defaultAddressLabel": "Chaguo-msingi",
   "addressActions": "Vitendo vya anwani",
   "actionEditAddress": "Hariri",
@@ -942,5 +951,6 @@
   "visualSearchEmptySubtitle": "Hatukupata bidhaa inayolingana na picha hii kwenye soko letu.",
   "visualSearchRetry": "Piga picha nyingine",
   "visualSearchTooltip": "Tafuta kwa picha",
-  "visualSearchUnavailable": "Utafutaji wa picha haupatikani kwa sasa. Tafadhali jaribu tena baadaye."
+  "visualSearchUnavailable": "Utafutaji wa picha haupatikani kwa sasa. Tafadhali jaribu tena baadaye.",
+  "loadingLongWait": "Tafadhali subiri kidogo..."
 }

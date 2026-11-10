@@ -1,5 +1,4 @@
 import 'package:chimbo/features/support/data/models/legal_page.dart';
-
 /// Every route path in one place, so screens never hard-code URLs.
 abstract final class AppRoutes {
   static const String splash = '/splash';

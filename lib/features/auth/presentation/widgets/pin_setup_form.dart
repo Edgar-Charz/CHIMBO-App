@@ -144,81 +144,133 @@ class _PinSetupFormState extends State<PinSetupForm> {
       _PinStep.confirm => l10n.pinStepConfirm,
     };
     final stepNumber = _step.index + (widget.askCurrentPin ? 1 : 0);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (widget.showProgress) ...[
-          Text(
-            l10n.pinStepProgress(stepNumber, 3),
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppSpacing.xs),
-            child: LinearProgressIndicator(
-              value: stepNumber / 3,
-              minHeight: AppSpacing.xs,
-              backgroundColor: AppColors.border,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-        ],
-        if (widget.introText case final introText?) ...[
-          Text(
-            introText,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-        ],
+    final formContent = <Widget>[
+      if (widget.showProgress) ...[
         Text(
-          prompt,
+          l10n.pinStepProgress(stepNumber, 3),
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        const SizedBox(height: AppSpacing.md),
-        Center(
-          child: Container(
-            width: 40,
-            height: 40,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.primaryLight,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.lock_outline_rounded,
-              color: AppColors.primary,
-              size: 20,
-            ),
+        const SizedBox(height: AppSpacing.sm),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppSpacing.xs),
+          child: LinearProgressIndicator(
+            value: stepNumber / 3,
+            minHeight: AppSpacing.xs,
+            backgroundColor: AppColors.border,
           ),
         ),
-        const SizedBox(height: AppSpacing.md),
-        PinPad(
-          pin: _value,
-          errorText: _errorText,
-          enabled: !_isSubmitting,
-          onChanged: _onChanged,
+        const SizedBox(height: AppSpacing.lg),
+      ],
+      if (widget.introText case final introText?) ...[
+        Text(
+          introText,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
-        const SizedBox(height: AppSpacing.md),
-        AppButton(
-          label: _step == _PinStep.confirm
-              ? widget.submitLabel
-              : l10n.actionContinue,
-          variant: AppButtonVariant.accent,
-          isLoading: _isSubmitting,
-          onPressed: _value.length >= AuthRules.pinMinLength ? _next : null,
+        const SizedBox(height: AppSpacing.xl),
+      ],
+      Text(
+        prompt,
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      const SizedBox(height: AppSpacing.md),
+      Center(
+        child: Container(
+          width: widget.askCurrentPin ? 64 : 40,
+          height: widget.askCurrentPin ? 64 : 40,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: AppColors.primaryLight,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.lock_outline_rounded,
+            color: AppColors.primary,
+            size: widget.askCurrentPin ? 32 : 20,
+          ),
         ),
-        if (_step == _PinStep.confirm)
-          TextButton(
+      ),
+      const SizedBox(height: AppSpacing.md),
+      PinPad(
+        pin: _value,
+        errorText: _errorText,
+        enabled: !_isSubmitting,
+        rowSpacing: widget.askCurrentPin ? AppSpacing.lg : AppSpacing.md,
+        onChanged: _onChanged,
+      ),
+      const SizedBox(height: AppSpacing.md),
+    ];
+    final actionButton = AppButton(
+      label: _step == _PinStep.confirm
+          ? widget.submitLabel
+          : l10n.actionContinue,
+      variant: AppButtonVariant.accent,
+      isLoading: _isSubmitting,
+      onPressed: _value.length >= AuthRules.pinMinLength ? _next : null,
+    );
+    final restartAction = _step == _PinStep.confirm
+        ? TextButton(
             onPressed: _isSubmitting
                 ? null
                 : () => _restartAt(_PinStep.create, null),
             style: TextButton.styleFrom(foregroundColor: AppColors.primary),
             child: Text(l10n.pinStartOver),
+          )
+        : null;
+
+    if (widget.askCurrentPin) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - AppSpacing.md,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: formContent,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
-      ],
+          DecoratedBox(
+            decoration: const BoxDecoration(
+              color: AppColors.surface,
+              border: Border(top: BorderSide(color: AppColors.border)),
+            ),
+            child: SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.sm,
+                  AppSpacing.lg,
+                  AppSpacing.md,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [actionButton, ?restartAction],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [...formContent, actionButton, ?restartAction],
     );
   }
 }

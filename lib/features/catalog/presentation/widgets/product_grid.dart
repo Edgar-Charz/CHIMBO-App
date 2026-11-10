@@ -12,7 +12,7 @@ class SliverProductGrid extends StatelessWidget {
   const SliverProductGrid({super.key, required this.products})
     : isSkeleton = false;
 
-  /// Grey card shapes while the first page loads (blueprint §6.4).
+  /// Grey card shapes while the first page loads (blueprint ?6.4).
   const SliverProductGrid.skeleton({super.key})
     : products = const [],
       isSkeleton = true;

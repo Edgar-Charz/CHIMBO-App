@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 /// The app's standard text input. Borders, colours and padding come from the theme.
 class AppTextField extends StatelessWidget {
   const AppTextField({

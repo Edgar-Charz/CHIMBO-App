@@ -11,7 +11,6 @@ import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// "Uliagiza Hivi Karibuni" as picture-only tiles, like the "buy again" rows of modern shop
 /// apps: customers recognise what they bought by its picture. Tap = product page; the small
 /// (+) re-adds it through the quick-add sheet.
@@ -38,6 +37,7 @@ class RecentlyOrderedRail extends ConsumerWidget {
           title: title,
           actionLabel: actionLabel,
           onAction: onViewAll,
+          isCompact: true,
         ),
         SizedBox(
           height: AppSizes.recentOrderTile,

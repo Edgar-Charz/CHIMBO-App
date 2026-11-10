@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/network/api_response.dart';
 import 'package:dio/dio.dart';
-
 /// The only class that talks HTTP. Repositories call it; widgets never do.
 ///
 /// Every method returns the unwrapped [ApiResponse] or throws [ApiException].

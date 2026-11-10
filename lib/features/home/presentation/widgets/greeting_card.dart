@@ -4,7 +4,6 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/brand_slogan.dart';
 import 'package:chimbo/core/widgets/person_avatar.dart';
 import 'package:flutter/material.dart';
-
 /// "Habari za asubuhi, Joyce! 👋", the slogan and the search box (design PDF p.3).
 class GreetingCard extends StatelessWidget {
   const GreetingCard({
@@ -118,9 +117,9 @@ class HomeSearchBar extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.md,
+            0,
             AppSpacing.xs,
-            AppSpacing.xs,
-            AppSpacing.xs,
+            0,
           ),
           child: Row(
             children: [

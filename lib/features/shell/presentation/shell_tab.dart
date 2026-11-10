@@ -1,6 +1,5 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-
 /// The 5 bottom-navigation tabs, in display order (must match the router's branches).
 enum ShellTab {
   home(Icons.home_outlined, Icons.home_rounded),

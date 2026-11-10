@@ -4,6 +4,7 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/phone.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/features/support/application/support_providers.dart';
@@ -11,7 +12,6 @@ import 'package:chimbo/features/support/data/models/support_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 /// Wasifu → Msaada: when support answers, a call button, a WhatsApp button and the common
 /// questions (tap one to read its answer).
 class HelpScreen extends ConsumerWidget {
@@ -28,7 +28,7 @@ class HelpScreen extends ConsumerWidget {
           error: error,
           onRetry: () => ref.invalidate(supportContactsProvider),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ChimboLoader(),
       ),
     );
   }

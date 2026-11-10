@@ -4,6 +4,7 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/quantity_stepper.dart';
 import 'package:chimbo/features/cart/presentation/add_to_cart.dart';
@@ -12,9 +13,11 @@ import 'package:chimbo/features/catalog/application/product_actions.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
 import 'package:chimbo/features/catalog/data/product_links.dart';
 import 'package:chimbo/features/catalog/data/tier_pricing.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/catalog_labels.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/offer_widgets.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_gallery.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_info_strip.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/related_products_rail.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/tier_table.dart';
 import 'package:chimbo/features/support/application/support_providers.dart';
 import 'package:chimbo/features/support/data/models/support_contacts.dart';
@@ -42,10 +45,7 @@ class ProductDetailsScreen extends ConsumerWidget {
               onRetry: () => ref.invalidate(productDetailsProvider(productId)),
             ),
           ),
-          loading: () => Scaffold(
-            appBar: AppBar(),
-            body: const Center(child: CircularProgressIndicator()),
-          ),
+          loading: () => Scaffold(appBar: AppBar(), body: const ChimboLoader()),
         );
   }
 }
@@ -80,7 +80,7 @@ class _ProductViewState extends ConsumerState<_ProductView> {
   Future<void> _shareProduct() async {
     final product = widget.details.summary;
     final message =
-        '${product.name} — ${Money.format(product.price)} kwenye CHIMBO\n'
+        '${product.name} â€” ${Money.format(product.price)} kwenye CHIMBO\n'
         '${ProductLinks.webUrl(product)}';
     await ref.read(productShareProvider)(message);
   }
@@ -128,7 +128,10 @@ class _ProductViewState extends ConsumerState<_ProductView> {
       ),
       body: ListView(
         children: [
-          ProductGallery(photos: details.photos),
+          ProductGallery(
+            photos: details.photos,
+            heroTag: 'product-image-${details.summary.id}',
+          ),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
@@ -161,10 +164,15 @@ class _ProductViewState extends ConsumerState<_ProductView> {
                   ProductDeliveryOptions(details: details),
                 ],
                 const SizedBox(height: AppSpacing.lg),
-                TierTable(pricing: _pricing, quantity: _quantity),
+                TierTable(
+                  pricing: _pricing,
+                  quantity: _quantity,
+                  unitLabel: details.summary.unitLabel,
+                ),
                 const SizedBox(height: AppSpacing.lg),
                 _QuantityCard(
                   pricing: _pricing,
+                  unitLabel: details.summary.unitLabel,
                   quantity: _quantity,
                   maxQuantity: details.stockQuantity,
                   onChanged: (quantity) => setState(() => _quantity = quantity),
@@ -181,6 +189,7 @@ class _ProductViewState extends ConsumerState<_ProductView> {
               ],
             ),
           ),
+          RelatedProductsRail(productId: details.summary.id),
         ],
       ),
       bottomNavigationBar: SafeArea(
@@ -199,6 +208,11 @@ class _ProductViewState extends ConsumerState<_ProductView> {
                   label: l10n.actionAskSeller,
                   icon: Icons.chat_bubble_outline_rounded,
                   variant: AppButtonVariant.outlined,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xs,
+                  ),
+                  labelStyle: Theme.of(context).textTheme.labelLarge
+                      ?.copyWith(fontSize: 13),
                   onPressed: () => _askSeller(supportState),
                 ),
               ),
@@ -209,6 +223,12 @@ class _ProductViewState extends ConsumerState<_ProductView> {
                       : l10n.actionOutOfStock,
                   icon: Icons.shopping_cart_outlined,
                   variant: AppButtonVariant.accent,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xs,
+                  ),
+                  labelStyle: Theme.of(context).textTheme.labelLarge
+                      ?.copyWith(fontSize: 13, color: AppColors.surface),
+                  foregroundColor: AppColors.surface,
                   isLoading: _isAdding,
                   // Disabled (null) when sold out.
                   onPressed: details.summary.isInStock ? _addToCart : null,
@@ -271,16 +291,18 @@ class _NameAndSeller extends StatelessWidget {
   }
 }
 
-/// "Kiasi [− 8 +]", then "Unaokoa TZS 4,000" and the next-tier hint.
+/// "Kiasi [âˆ’ 8 +]", then "Unaokoa TZS 4,000" and the next-tier hint.
 class _QuantityCard extends StatelessWidget {
   const _QuantityCard({
     required this.pricing,
+    required this.unitLabel,
     required this.quantity,
     required this.maxQuantity,
     required this.onChanged,
   });
 
   final TierPricing pricing;
+  final String unitLabel;
   final int quantity;
   final int maxQuantity;
   final ValueChanged<int> onChanged;
@@ -316,27 +338,81 @@ class _QuantityCard extends StatelessWidget {
                 ),
               ],
             ),
-            if (savings > 0) ...[
-              const Divider(height: AppSpacing.xl),
-              _IconLine(
-                icon: Icons.savings_outlined,
-                color: AppColors.primary,
-                text: l10n.savingsLabel(Money.format(savings)),
-                style: textTheme.titleSmall,
-              ),
-            ],
-            if (hint != null) ...[
-              const SizedBox(height: AppSpacing.sm),
-              _IconLine(
-                icon: Icons.trending_down_rounded,
-                color: AppColors.accent,
-                text: l10n.nextTierHint(
-                  hint.extraQuantity,
-                  Money.format(hint.tier.unitPrice),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.summaryItemsTotal,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
                 ),
-                style: textTheme.bodySmall,
+                AnimatedSwitcher(
+                  duration: AppDurations.fast,
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.18),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  ),
+                  child: Text(
+                    Money.format(pricing.totalFor(quantity)),
+                    key: ValueKey(pricing.totalFor(quantity)),
+                    style: textTheme.titleSmall?.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            AnimatedSize(
+              duration: AppDurations.fast,
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (savings > 0) ...[
+                    const Divider(height: AppSpacing.xl),
+                    AnimatedSwitcher(
+                      duration: AppDurations.fast,
+                      child: _IconLine(
+                        key: ValueKey(savings),
+                        icon: Icons.savings_outlined,
+                        color: AppColors.primary,
+                        text: l10n.savingsLabel(Money.format(savings)),
+                        style: textTheme.titleSmall,
+                      ),
+                    ),
+                  ],
+                  if (hint != null) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    AnimatedSwitcher(
+                      duration: AppDurations.fast,
+                      child: _IconLine(
+                        key: ValueKey(
+                          '${hint.extraQuantity}-${hint.tier.unitPrice}',
+                        ),
+                        icon: Icons.trending_down_rounded,
+                        color: AppColors.accent,
+                        text: l10n.nextTierHint(
+                          unitLabel.formatQuantity(hint.extraQuantity),
+                          Money.format(hint.tier.unitPrice),
+                        ),
+                        style: textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ],
               ),
-            ],
+            ),
           ],
         ),
       ),
@@ -346,6 +422,7 @@ class _QuantityCard extends StatelessWidget {
 
 class _IconLine extends StatelessWidget {
   const _IconLine({
+    super.key,
     required this.icon,
     required this.color,
     required this.text,

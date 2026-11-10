@@ -1,6 +1,5 @@
 import 'package:chimbo/core/widgets/image_placeholder.dart';
 import 'package:flutter/material.dart';
-
 /// A fixed-size frame for a design picture. By default the picture fills the frame
 /// ([BoxFit.cover]), so any image with the recommended framing fits without stretching;
 /// [BoxFit.contain] shows the whole picture instead (logos).

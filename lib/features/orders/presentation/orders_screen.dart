@@ -1,6 +1,7 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/orders/application/orders_providers.dart';
@@ -10,7 +11,6 @@ import 'package:chimbo/features/orders/presentation/widgets/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// Oda Zangu (design PDF p.9): Zinazoendelea · Zimefika · Zote.
 class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});
@@ -75,7 +75,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
           ),
           const SizedBox(height: AppSpacing.md),
           Expanded(
-            child: RefreshIndicator(
+            child: ChimboRefreshIndicator(
               onRefresh: () => ref.refresh(ordersProvider(_group).future),
               child: orders.when(
                 data: (page) => page.orders.isEmpty
@@ -121,7 +121,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                   error: error,
                   onRetry: () => ref.invalidate(ordersProvider(_group)),
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const ChimboLoader(),
               ),
             ),
           ),

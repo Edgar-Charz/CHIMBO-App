@@ -7,7 +7,6 @@ import 'package:chimbo/features/auth/data/models/otp_request_result.dart';
 import 'package:chimbo/features/auth/data/models/pin_input.dart';
 import 'package:chimbo/features/notifications/data/push_notification_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Holds the login state for the whole app. Screens call these methods; the router watches the
 /// state and moves to the right screen by itself (phone → PIN or SMS code → Tengeneza PIN →
 /// business details → Home, or back to the phone screen after logout).

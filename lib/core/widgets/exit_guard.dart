@@ -3,7 +3,6 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 /// Wraps a screen at the bottom of the navigation stack so one Android back (button or swipe)
 /// doesn't close the app: the first shows "Bonyeza nyuma tena ili kutoka.", a second one
 /// while that message is showing closes it.

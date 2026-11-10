@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 /// An icon with a count on it (cart lines, unread notifications); the number is hidden at 0.
 class CountIconBadge extends StatelessWidget {
   const CountIconBadge({

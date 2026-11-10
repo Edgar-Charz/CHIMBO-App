@@ -1,4 +1,5 @@
 import 'package:chimbo/core/l10n/l10n.dart';
+import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/phone.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
@@ -98,6 +99,8 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
+    final toast = AppToast.of(context);
+    final successMessage = context.l10n.addressSaved;
     setState(() => _isSaving = true);
     try {
       final controller = ref.read(addressesControllerProvider.notifier);
@@ -114,8 +117,9 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
           ? await controller.add(input)
           : await controller.editAddress(existingAddress.id, input);
       if (mounted) {
-        // The screen that opened the form decides what to do with the new address.
+        // Preserve the returned address for checkout or profile navigation.
         context.pop(address);
+        toast.success(successMessage);
       }
     } catch (error) {
       if (mounted) {
@@ -181,13 +185,21 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
                 controller: _landmarkController,
                 textCapitalization: TextCapitalization.sentences,
               ),
-              const SizedBox(height: AppSpacing.sm),
-              AppButton(
-                label: l10n.actionSaveAddress,
-                isLoading: _isSaving,
-                onPressed: _save,
-              ),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: AppColors.surface,
+            border: Border(top: BorderSide(color: AppColors.border)),
+          ),
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: AppButton(
+            label: l10n.actionSaveAddress,
+            isLoading: _isSaving,
+            onPressed: _save,
           ),
         ),
       ),

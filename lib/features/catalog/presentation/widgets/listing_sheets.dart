@@ -47,7 +47,7 @@ Future<ListingFilters?> showFilterSheet(
   );
 }
 
-class _SortOption extends StatelessWidget {
+class _SortOption extends StatefulWidget {
   const _SortOption({
     required this.sort,
     required this.selected,
@@ -58,7 +58,14 @@ class _SortOption extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  IconData get _icon => switch (sort) {
+  @override
+  State<_SortOption> createState() => _SortOptionState();
+}
+
+class _SortOptionState extends State<_SortOption> {
+  bool _isPressed = false;
+
+  IconData get _icon => switch (widget.sort) {
     ProductSort.popular => Icons.local_fire_department_outlined,
     ProductSort.newest => Icons.new_releases_outlined,
     ProductSort.priceLowToHigh => Icons.arrow_downward_rounded,
@@ -67,66 +74,94 @@ class _SortOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final selected = widget.selected;
+    final radius = BorderRadius.circular(AppRadius.large);
     final iconColor = selected ? AppColors.primary : AppColors.textSecondary;
-    return Material(
-      color: selected ? AppColors.primaryLight : AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        side: BorderSide(
-          color: selected ? AppColors.primary : AppColors.border,
-          width: selected ? 1.5 : 1,
-        ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
+    return AnimatedScale(
+      scale: _isPressed ? 0.985 : 1,
+      duration: AppDurations.fast,
+      curve: Curves.easeOutCubic,
+      child: Material(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: radius,
+          side: BorderSide(
+            color: selected ? AppColors.primary : AppColors.border,
+            width: selected ? 1.5 : 1,
           ),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: selected ? AppColors.surface : AppColors.neutralLight,
-                  borderRadius: BorderRadius.circular(AppRadius.medium),
-                ),
-                child: Icon(_icon, color: iconColor),
+        ),
+        child: InkWell(
+          onTap: widget.onTap,
+          onHighlightChanged: (highlighted) {
+            setState(() => _isPressed = highlighted);
+          },
+          borderRadius: radius,
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: radius,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: selected
+                    ? const [AppColors.primaryLight, AppColors.surface]
+                    : const [AppColors.surface, AppColors.background],
               ),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Text(
-                  sort.label(context.l10n),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: selected ? AppColors.primary : AppColors.textPrimary,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: selected
+                          ? AppColors.surface
+                          : AppColors.neutralLight,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
+                    ),
+                    child: Icon(_icon, color: iconColor),
                   ),
-                ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Text(
+                      widget.sort.label(context.l10n),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: selected
+                            ? AppColors.primary
+                            : AppColors.textPrimary,
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: selected ? AppColors.primary : Colors.transparent,
+                      shape: BoxShape.circle,
+                      border: selected
+                          ? null
+                          : const Border.fromBorderSide(
+                              BorderSide(color: AppColors.border, width: 1.5),
+                            ),
+                    ),
+                    child: selected
+                        ? const Icon(
+                            Icons.check_rounded,
+                            size: AppSizes.iconSmall,
+                            color: AppColors.onPrimary,
+                          )
+                        : null,
+                  ),
+                ],
               ),
-              Container(
-                width: 26,
-                height: 26,
-                decoration: BoxDecoration(
-                  color: selected ? AppColors.primary : Colors.transparent,
-                  shape: BoxShape.circle,
-                  border: selected
-                      ? null
-                      : const Border.fromBorderSide(
-                          BorderSide(color: AppColors.border, width: 1.5),
-                        ),
-                ),
-                child: selected
-                    ? const Icon(
-                        Icons.check_rounded,
-                        size: AppSizes.iconSmall,
-                        color: AppColors.onPrimary,
-                      )
-                    : null,
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -148,16 +183,16 @@ class _SortSheet extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+          padding: const EdgeInsets.only(bottom: AppSpacing.md),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.lg,
-                  AppSpacing.sm,
-                  AppSpacing.sm,
                   AppSpacing.md,
+                  AppSpacing.xs,
+                  AppSpacing.sm,
+                  AppSpacing.sm,
                 ),
                 child: Row(
                   children: [
@@ -165,8 +200,12 @@ class _SortSheet extends StatelessWidget {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: AppColors.primaryLight,
                         borderRadius: BorderRadius.circular(AppRadius.medium),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [AppColors.primaryLight, AppColors.surface],
+                        ),
                       ),
                       child: const Icon(
                         Icons.swap_vert_rounded,
@@ -192,16 +231,11 @@ class _SortSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      tooltip: l10n.actionCancel,
-                      icon: const Icon(Icons.close_rounded),
-                    ),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -312,10 +346,10 @@ class _FilterSheetState extends State<_FilterSheet> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.sm,
-                AppSpacing.sm,
                 AppSpacing.md,
+                0,
+                AppSpacing.sm,
+                AppSpacing.sm,
               ),
               child: Row(
                 children: [
@@ -340,19 +374,8 @@ class _FilterSheetState extends State<_FilterSheet> {
                           l10n.filterSheetTitle,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          l10n.filterSheetSubtitle,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: AppColors.textSecondary),
-                        ),
                       ],
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    tooltip: l10n.actionCancel,
-                    icon: const Icon(Icons.close_rounded),
                   ),
                 ],
               ),
@@ -360,10 +383,10 @@ class _FilterSheetState extends State<_FilterSheet> {
             Flexible(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.lg,
+                  AppSpacing.md,
                   0,
-                  AppSpacing.lg,
-                  AppSpacing.lg,
+                  AppSpacing.md,
+                  AppSpacing.md,
                 ),
                 child: Form(
                   key: _formKey,
@@ -413,7 +436,7 @@ class _FilterSheetState extends State<_FilterSheet> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.sm),
                       _FilterSectionCard(
                         icon: Icons.inventory_2_outlined,
                         title: l10n.moqFilter,
@@ -442,10 +465,10 @@ class _FilterSheetState extends State<_FilterSheet> {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.lg,
                     AppSpacing.md,
-                    AppSpacing.lg,
                     AppSpacing.sm,
+                    AppSpacing.md,
+                    AppSpacing.xs,
                   ),
                   child: Row(
                     children: [
@@ -490,16 +513,18 @@ class _FilterSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Card(
-      margin: EdgeInsets.zero,
-      elevation: 0,
-      color: AppColors.surface,
-      shape: RoundedRectangleBorder(
+    return Container(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadius.large),
-        side: const BorderSide(color: AppColors.border),
+        border: Border.all(color: AppColors.border),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.surface, AppColors.primaryLight],
+        ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -507,8 +532,8 @@ class _FilterSectionCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 38,
+                  height: 38,
                   decoration: BoxDecoration(
                     color: AppColors.primaryLight,
                     borderRadius: BorderRadius.circular(AppRadius.medium),
@@ -533,7 +558,7 @@ class _FilterSectionCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.sm),
             child,
           ],
         ),

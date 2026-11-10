@@ -2,7 +2,6 @@ import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/checkout/data/checkout_repository.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
-
 /// Checkout from the CHIMBO API (docs/API_REFERENCE.md, "Checkout").
 class ApiCheckoutRepository implements CheckoutRepository {
   const ApiCheckoutRepository(this._apiClient);

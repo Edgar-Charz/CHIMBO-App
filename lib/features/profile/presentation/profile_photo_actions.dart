@@ -6,7 +6,6 @@ import 'package:chimbo/features/profile/presentation/widgets/profile_photo_sheet
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
 const double _photoMaxSide = 1080;
 const int _photoQuality = 85;
 

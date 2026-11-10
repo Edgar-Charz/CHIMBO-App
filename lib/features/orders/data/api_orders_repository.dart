@@ -5,7 +5,6 @@ import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_list_page.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
-
 /// Orders and tracking from the CHIMBO API (docs/API_REFERENCE.md, "Orders").
 class ApiOrdersRepository implements OrdersRepository {
   const ApiOrdersRepository(this._apiClient);

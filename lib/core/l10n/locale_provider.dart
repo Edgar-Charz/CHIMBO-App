@@ -1,7 +1,6 @@
 import 'package:chimbo/core/storage/preferences_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 abstract final class AppLocales {
   static const Locale swahili = Locale('sw');
   static const Locale english = Locale('en');

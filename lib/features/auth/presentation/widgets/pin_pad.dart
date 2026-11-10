@@ -14,6 +14,7 @@ class PinPad extends StatelessWidget {
     required this.onChanged,
     this.errorText,
     this.enabled = true,
+    this.rowSpacing = AppSpacing.md,
   });
 
   static const List<String> _digits = [
@@ -26,6 +27,7 @@ class PinPad extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final String? errorText;
   final bool enabled;
+  final double rowSpacing;
 
   void _add(String digit) {
     if (pin.length < AuthRules.pinMaxLength) {
@@ -45,18 +47,49 @@ class PinPad extends StatelessWidget {
     return Column(
       children: [
         _PinDots(filled: pin.length, hasError: error != null),
-        if (error != null) ...[
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            error,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall
-                ?.copyWith(color: AppColors.danger),
-          ),
-        ],
+        AnimatedSize(
+          duration: AppDurations.fast,
+          curve: Curves.easeOutCubic,
+          child: error == null
+              ? const SizedBox.shrink()
+              : Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: Container(
+                    key: ValueKey(error),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.sm,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.dangerLight,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.error_outline_rounded,
+                          color: AppColors.danger,
+                          size: AppSizes.iconSmall,
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Expanded(
+                          child: Text(
+                            error,
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: AppColors.danger),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+        ),
         const SizedBox(height: AppSpacing.md),
         for (var row = 0; row < _digits.length; row += 3)
           _KeyRow(
+            spacing: rowSpacing,
             children: [
               for (final digit in _digits.sublist(row, row + 3))
                 _DigitKey(
@@ -66,6 +99,7 @@ class PinPad extends StatelessWidget {
             ],
           ),
         _KeyRow(
+          spacing: rowSpacing,
           children: [
             const SizedBox.square(dimension: AppSizes.pinKey),
             _DigitKey(digit: '0', onTap: enabled ? () => _add('0') : null),
@@ -125,14 +159,15 @@ class _PinDots extends StatelessWidget {
 }
 
 class _KeyRow extends StatelessWidget {
-  const _KeyRow({required this.children});
+  const _KeyRow({required this.children, required this.spacing});
 
   final List<Widget> children;
+  final double spacing;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: EdgeInsets.only(bottom: spacing),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: children,
@@ -153,9 +188,14 @@ class _DigitKey extends StatelessWidget {
       dimension: AppSizes.pinKey,
       child: Material(
         color: AppColors.surface,
-        shape: const CircleBorder(side: BorderSide(color: AppColors.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.large),
+          side: const BorderSide(color: AppColors.border),
+        ),
         child: InkWell(
-          customBorder: const CircleBorder(),
+          customBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.large),
+          ),
           onTap: onTap,
           child: Center(
             child: Text(

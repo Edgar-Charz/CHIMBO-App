@@ -2,7 +2,6 @@ import 'package:chimbo/features/addresses/data/address_repository.dart';
 import 'package:chimbo/features/addresses/data/models/address.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// The customer's saved delivery addresses.
 class AddressesController extends AsyncNotifier<List<Address>> {
   @override

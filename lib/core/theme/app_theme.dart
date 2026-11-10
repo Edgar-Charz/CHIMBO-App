@@ -3,7 +3,6 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/theme/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 /// Builds the app's [ThemeData] from the brand tokens, so widgets rarely need explicit styles.
 abstract final class AppTheme {
   /// System bars for full-screen pages without an AppBar (splash, onboarding): the cream

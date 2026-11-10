@@ -19,7 +19,7 @@ enum MenuTone {
 }
 
 /// One white card row: coloured icon, title, short explanation, chevron.
-class ProfileMenuTile extends StatelessWidget {
+class ProfileMenuTile extends StatefulWidget {
   const ProfileMenuTile({
     super.key,
     required this.icon,
@@ -36,38 +36,58 @@ class ProfileMenuTile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<ProfileMenuTile> createState() => _ProfileMenuTileState();
+}
+
+class _ProfileMenuTileState extends State<ProfileMenuTile> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        side: const BorderSide(color: AppColors.border),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: ListTile(
-        onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.xs,
+    return AnimatedScale(
+      scale: _isPressed ? 0.99 : 1,
+      duration: AppDurations.fast,
+      curve: Curves.easeOutCubic,
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.large),
+          side: const BorderSide(color: AppColors.border),
         ),
-        leading: Container(
-          width: AppSizes.menuIconBox,
-          height: AppSizes.menuIconBox,
-          decoration: BoxDecoration(
-            color: tone.background,
-            borderRadius: BorderRadius.circular(AppRadius.medium),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: widget.onTap,
+          onHighlightChanged: (isHighlighted) {
+            setState(() => _isPressed = isHighlighted);
+          },
+          borderRadius: BorderRadius.circular(AppRadius.large),
+          splashColor: AppColors.primaryLight,
+          highlightColor: AppColors.primaryLight.withValues(alpha: 0.55),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.xs,
+            ),
+            leading: Container(
+              width: AppSizes.menuIconBox,
+              height: AppSizes.menuIconBox,
+              decoration: BoxDecoration(
+                color: widget.tone.background,
+                borderRadius: BorderRadius.circular(AppRadius.medium),
+              ),
+              child: Icon(widget.icon, color: widget.tone.foreground),
+            ),
+            title: Text(
+              widget.title,
+              style: textTheme.titleSmall?.copyWith(color: AppColors.primary),
+            ),
+            subtitle: Text(widget.subtitle, style: textTheme.bodySmall),
+            trailing: const Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.textSecondary,
+            ),
           ),
-          child: Icon(icon, color: tone.foreground),
-        ),
-        title: Text(
-          title,
-          style: textTheme.titleSmall?.copyWith(color: AppColors.primary),
-        ),
-        subtitle: Text(subtitle, style: textTheme.bodySmall),
-        trailing: const Icon(
-          Icons.chevron_right_rounded,
-          color: AppColors.textSecondary,
         ),
       ),
     );

@@ -4,7 +4,6 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/features/addresses/data/models/address.dart';
 import 'package:chimbo/features/addresses/presentation/address_details.dart';
 import 'package:flutter/material.dart';
-
 /// What the customer picked in the sheet.
 sealed class AddressPick {
   const AddressPick();

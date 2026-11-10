@@ -2,7 +2,6 @@ import 'package:chimbo/features/catalog/data/models/price_tier.dart';
 import 'package:chimbo/features/catalog/data/models/product_photo.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
-
 /// Everything the product page shows (`GET /products/{id}`).
 class ProductDetails {
   const ProductDetails({

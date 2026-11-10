@@ -8,7 +8,6 @@ import 'package:chimbo/core/widgets/separated_text.dart';
 import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
 import 'package:chimbo/features/app_images/presentation/widgets/replaceable_image_slot.dart';
 import 'package:flutter/material.dart';
-
 /// The CHIMBO logo: mark, "CHI" (green) + "MBO" (orange) wordmark and the three-part tagline.
 /// The mark is the logo uploaded in the admin when there is one (Settings → Logo & pictures),
 /// else the bundled one.

@@ -1,7 +1,6 @@
 import 'package:chimbo/core/storage/preferences_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 /// Remembers whether this phone has already seen the onboarding slides.
 class OnboardingRepository {
   const OnboardingRepository(this._preferences);

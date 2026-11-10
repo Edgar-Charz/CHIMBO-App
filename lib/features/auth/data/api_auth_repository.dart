@@ -8,7 +8,6 @@ import 'package:chimbo/features/auth/data/models/business_profile_input.dart';
 import 'package:chimbo/features/auth/data/models/login_start.dart';
 import 'package:chimbo/features/auth/data/models/otp_request_result.dart';
 import 'package:chimbo/features/auth/data/models/pin_input.dart';
-
 /// Phone → PIN login against the CHIMBO API (docs/API_REFERENCE.md, "Customer login").
 /// The token is kept in secure storage; `ApiClient` sends it as `Authorization: Bearer`.
 class ApiAuthRepository implements AuthRepository {
@@ -66,6 +65,10 @@ class ApiAuthRepository implements AuthRepository {
 
   @override
   Future<AuthSession> completeProfile(BusinessProfileInput input) async {
+    final email = input.userEmail?.trim() ?? '';
+    if (email.isNotEmpty) {
+      await _apiClient.patch('/me', body: {'user_email': email});
+    }
     final response = await _apiClient.post(
       '/auth/profile',
       body: input.toJson(),

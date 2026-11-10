@@ -44,8 +44,11 @@ abstract final class AppSizes {
   static const double railCardWidth = 150;
   static const double productCardNameMinHeight = 32;
   static const double quickActionIcon = 56;
+  static const double homeCategoryCard = 190;
   static const double categoryCardImage = 110;
-  static const double bannerImageWidth = 112;
+  static const double bannerHeight = 124;
+  static const double bannerImageWidth = 120;
+  static const double bannerButtonHeight = 36;
   static const double galleryThumbnail = 64;
   static const double loadMoreThreshold = 400;
   static const double cartLineImage = 88;
@@ -58,8 +61,8 @@ abstract final class AppSizes {
   static const double toastElevation = 6;
   static const double recentOrderTile = 104;
   static const double cardElevation = 2;
-  static const double pinKey = 56;
-  static const double pinDot = 14;
+  static const double pinKey = 64;
+  static const double pinDot = 18;
 
   /// Height of chips and filter pills in listings (still comfortable to tap).
   static const double compactControl = 36;
@@ -67,9 +70,11 @@ abstract final class AppSizes {
 
 /// Animation lengths, so motion feels the same across the app.
 abstract final class AppDurations {
+  static const Duration cartPrice = Duration(milliseconds: 120);
   static const Duration fast = Duration(milliseconds: 200);
   static const Duration medium = Duration(milliseconds: 350);
   static const Duration slow = Duration(milliseconds: 700);
+  static const Duration bannerCarousel = Duration(seconds: 5);
 
   /// A second back within this time closes the app (as long as the toast shows).
   static const Duration exitConfirmWindow = Duration(seconds: 3);

@@ -3,7 +3,6 @@ import 'package:chimbo/core/widgets/app_network_image.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:flutter/material.dart';
-
 /// Small pictures of an order's items.
 class OrderThumbnails extends StatelessWidget {
   const OrderThumbnails({super.key, required this.items});

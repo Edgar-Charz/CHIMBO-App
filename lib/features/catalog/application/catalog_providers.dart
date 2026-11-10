@@ -133,6 +133,13 @@ final productDetailsProvider = FutureProvider.autoDispose
           ref.watch(catalogRepositoryProvider).getProduct(productId),
     );
 
+/// Same-category suggestions for one product detail page.
+final relatedProductsProvider = FutureProvider.autoDispose
+    .family<List<ProductSummary>, int>(
+      (ref, productId) =>
+          ref.watch(catalogRepositoryProvider).getRelatedProducts(productId),
+    );
+
 /// A time-limited offer just ended on a card: Home and the product lists load again, so they
 /// show the prices the server now charges.
 extension ReloadCatalogPrices on WidgetRef {

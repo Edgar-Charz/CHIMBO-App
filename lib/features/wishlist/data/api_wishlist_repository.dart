@@ -1,7 +1,6 @@
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/wishlist/data/wishlist_repository.dart';
-
 /// Saved products from the CHIMBO API (docs/API_REFERENCE.md, "Wishlist"). Needs a login.
 class ApiWishlistRepository implements WishlistRepository {
   const ApiWishlistRepository(this._apiClient);

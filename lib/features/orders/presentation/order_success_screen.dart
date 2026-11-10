@@ -6,6 +6,7 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/theme/app_theme.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
@@ -20,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// "Oda Imepokelewa!" (design PDF p.8): a short check-mark celebration, the order number,
 /// total and delivery estimate, then Fuatilia Oda or Rudi Nyumbani.
 class OrderSuccessScreen extends ConsumerWidget {
@@ -50,7 +50,7 @@ class OrderSuccessScreen extends ConsumerWidget {
                 error: error,
                 onRetry: () => ref.invalidate(orderProvider(orderId)),
               ),
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const ChimboLoader(),
             ),
           ),
         ),

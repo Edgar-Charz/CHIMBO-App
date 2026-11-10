@@ -4,6 +4,9 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/money.dart';
+import 'package:chimbo/core/widgets/app_network_image.dart';
+import 'package:chimbo/features/cart/data/models/cart.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:flutter/material.dart';
@@ -148,29 +151,41 @@ class _Step extends StatelessWidget {
         Row(
           children: [
             Expanded(child: _HalfLine(color: lineBefore)),
-            CircleAvatar(
-              radius: AppSizes.stepCircle / 2,
-              backgroundColor: isReached ? color : AppColors.surface,
-              child: Text(
-                '$number',
-                style: textTheme.labelLarge?.copyWith(
+            AnimatedContainer(
+              duration: AppDurations.fast,
+              curve: Curves.easeOutCubic,
+              width: AppSizes.stepCircle,
+              height: AppSizes.stepCircle,
+              decoration: BoxDecoration(
+                color: isReached ? color : AppColors.surface,
+                shape: BoxShape.circle,
+                border: isReached ? null : Border.all(color: AppColors.border),
+              ),
+              alignment: Alignment.center,
+              child: AnimatedDefaultTextStyle(
+                duration: AppDurations.fast,
+                style: (textTheme.labelLarge ?? const TextStyle()).copyWith(
                   color: isReached
                       ? AppColors.onPrimary
                       : AppColors.textSecondary,
                 ),
+                child: Text('$number'),
               ),
             ),
             Expanded(child: _HalfLine(color: lineAfter)),
           ],
         ),
         const SizedBox(height: AppSpacing.xs),
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: textTheme.labelMedium?.copyWith(
+        AnimatedDefaultTextStyle(
+          duration: AppDurations.fast,
+          style: textTheme.labelMedium!.copyWith(
             color: isReached ? color : AppColors.textSecondary,
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
@@ -186,7 +201,9 @@ class _HalfLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: AppDurations.fast,
+      curve: Curves.easeOutCubic,
       height: AppSizes.borderWidth * 2,
       color: color ?? Colors.transparent,
     );
@@ -214,36 +231,108 @@ class ChoiceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final lead = leading;
     final end = trailing;
-    return Card(
-      elevation: 0,
+    return AnimatedContainer(
+      duration: AppDurations.fast,
+      curve: Curves.easeOutCubic,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      shape: RoundedRectangleBorder(
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.primaryLight.withValues(alpha: 0.28)
+            : AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.medium),
-        side: BorderSide(
+        border: Border.all(
           color: isSelected ? AppColors.primary : AppColors.border,
         ),
       ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.medium),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Row(
-            children: [
-              Icon(
-                isSelected
-                    ? Icons.radio_button_checked_rounded
-                    : Icons.radio_button_off_rounded,
-                color: isSelected ? AppColors.primary : AppColors.border,
-              ),
-              const SizedBox(width: AppSpacing.md),
-              if (lead != null) ...[lead, const SizedBox(width: AppSpacing.sm)],
-              Expanded(child: Text(title)),
-              ?end,
-            ],
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              children: [
+                AnimatedSwitcher(
+                  duration: AppDurations.fast,
+                  transitionBuilder: (child, animation) =>
+                      ScaleTransition(scale: animation, child: child),
+                  child: Icon(
+                    key: ValueKey(isSelected),
+                    isSelected
+                        ? Icons.radio_button_checked_rounded
+                        : Icons.radio_button_off_rounded,
+                    color: isSelected
+                        ? AppColors.primary
+                        : AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                if (lead != null) ...[
+                  lead,
+                  const SizedBox(width: AppSpacing.sm),
+                ],
+                Expanded(child: Text(title)),
+                ?end,
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+/// One server-priced cart line in the final order review.
+class CheckoutOrderLine extends StatelessWidget {
+  const CheckoutOrderLine({super.key, required this.line});
+
+  final CartLine line;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Row(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadius.small),
+          child: SizedBox.square(
+            dimension: AppSizes.orderThumbnail,
+            child: AppNetworkImage(
+              url: line.product.imageUrl,
+              placeholderIcon: ProductCard.placeholderIcon,
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                line.product.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.bodyMedium,
+              ),
+              Text(
+                context.l10n.orderItemLine(
+                  line.quantity,
+                  Money.format(line.unitPrice),
+                ),
+                style: textTheme.bodySmall?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          Money.format(line.lineTotal),
+          style: textTheme.bodyMedium,
+        ),
+      ],
     );
   }
 }

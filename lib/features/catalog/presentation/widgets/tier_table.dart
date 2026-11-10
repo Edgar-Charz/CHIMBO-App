@@ -3,15 +3,22 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/features/catalog/data/tier_pricing.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/catalog_labels.dart';
 import 'package:flutter/material.dart';
 
-/// "Nunua zaidi, lipa kidogo": every tier as "6–23 pcs  TZS 5,000"; the tier the chosen
+/// "Nunua zaidi, lipa kidogo": every tier uses the product's selling unit; the tier the chosen
 /// quantity falls in is highlighted in orange.
 class TierTable extends StatelessWidget {
-  const TierTable({super.key, required this.pricing, required this.quantity});
+  const TierTable({
+    super.key,
+    required this.pricing,
+    required this.quantity,
+    this.unitLabel = 'pc',
+  });
 
   final TierPricing pricing;
   final int quantity;
+  final String unitLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +43,9 @@ class TierTable extends StatelessWidget {
           for (final (index, tier) in pricing.tiers.indexed)
             _TierRow(
               range: switch (pricing.maxQuantityOfTier(index)) {
-                final max? => l10n.tierRange(tier.minQuantity, max),
-                null => l10n.tierFrom(tier.minQuantity),
+                final max? =>
+                  '${tier.minQuantity}–$max ${unitLabel.pluralized}',
+                null => '${tier.minQuantity}+ ${unitLabel.pluralized}',
               },
               price: Money.format(tier.unitPrice),
               priceBeforeOffer: switch (tier.priceBeforeOffer) {
@@ -73,7 +81,9 @@ class _TierRow extends StatelessWidget {
       color: isActive ? AppColors.accent : AppColors.textPrimary,
       fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
     );
-    return Container(
+    return AnimatedContainer(
+      duration: AppDurations.fast,
+      curve: Curves.easeOutCubic,
       color: isActive ? AppColors.accentLight.withValues(alpha: 0.5) : null,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
@@ -81,7 +91,14 @@ class _TierRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(child: Text(range, style: style)),
+          Expanded(
+            child: AnimatedDefaultTextStyle(
+              duration: AppDurations.fast,
+              curve: Curves.easeOutCubic,
+              style: style ?? const TextStyle(),
+              child: Text(range),
+            ),
+          ),
           if (priceBeforeOffer case final before?) ...[
             Text(
               before,
@@ -93,7 +110,12 @@ class _TierRow extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.sm),
           ],
-          Text(price, style: style),
+          AnimatedDefaultTextStyle(
+            duration: AppDurations.fast,
+            curve: Curves.easeOutCubic,
+            style: style ?? const TextStyle(),
+            child: Text(price),
+          ),
         ],
       ),
     );

@@ -11,7 +11,6 @@ import 'package:chimbo/features/debug/presentation/open_debug_tools_button.dart'
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Mipangilio: app language and account deletion.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});

@@ -8,7 +8,6 @@ import 'package:chimbo/features/orders/presentation/widgets/order_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// Keeps the customer's most actionable active order visible near the top of Home.
 class HomeOrderAttention extends ConsumerWidget {
   const HomeOrderAttention({super.key});

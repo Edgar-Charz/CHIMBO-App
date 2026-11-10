@@ -5,7 +5,6 @@ import 'package:chimbo/core/time/server_clock.dart';
 import 'package:chimbo/features/catalog/application/offer_ticker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// "Ofa −15%": the red pill for a time-limited offer (cards, product page, cart and order lines).
 class OfferLabel extends StatelessWidget {
   const OfferLabel({super.key, required this.percent});

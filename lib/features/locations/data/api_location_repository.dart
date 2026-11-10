@@ -2,7 +2,6 @@ import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/locations/data/location_repository.dart';
 import 'package:chimbo/features/locations/data/models/district.dart';
 import 'package:chimbo/features/locations/data/models/region.dart';
-
 /// Regions and districts from the CHIMBO API (docs/API_REFERENCE.md, "Locations").
 class ApiLocationRepository implements LocationRepository {
   const ApiLocationRepository(this._apiClient);

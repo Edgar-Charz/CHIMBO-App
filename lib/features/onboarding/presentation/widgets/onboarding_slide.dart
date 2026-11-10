@@ -1,7 +1,6 @@
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
-
 /// Shared layout of each onboarding slide, with artwork kept at its designed 4:5 ratio.
 class OnboardingSlide extends StatelessWidget {
   const OnboardingSlide({

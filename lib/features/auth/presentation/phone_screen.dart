@@ -20,7 +20,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// "Karibu CHIMBO": the phone number, for everyone. The server says what comes next: the PIN
 /// (registered), or an SMS code (new number, or no PIN yet) — registration step 1.
 class PhoneScreen extends ConsumerStatefulWidget {

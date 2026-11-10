@@ -2,7 +2,6 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
-
 /// Slide position dots; the current one stretches and turns orange.
 class PageDots extends StatelessWidget {
   const PageDots({super.key, required this.count, required this.currentIndex});

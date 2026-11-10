@@ -76,4 +76,14 @@ void main() {
       expect(find.text('Imewasili'), findsNothing);
     });
   }
+
+  testWidgets('timeline animates as the order advances', (tester) async {
+    await _pumpTimeline(tester, _orderEndedAs(OrderStatus.confirmed));
+    await _pumpTimeline(tester, _orderEndedAs(OrderStatus.packed));
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Imepakiwa'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

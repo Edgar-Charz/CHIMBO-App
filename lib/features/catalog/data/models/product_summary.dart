@@ -34,6 +34,7 @@ class ProductSummary {
     required this.sellerName,
     required this.isSellerVerified,
     required this.isInStock,
+    this.unitLabel = 'pc',
     this.imageUrl,
     this.badge,
     this.compareAtPrice,
@@ -52,6 +53,7 @@ class ProductSummary {
       sellerName: json['seller_name'] as String,
       isSellerVerified: json['seller_is_verified'] as bool,
       isInStock: json['product_in_stock'] as bool,
+      unitLabel: json['product_unit_label'] as String? ?? 'pc',
       imageUrl: json['product_image_url'] as String?,
       badge: ProductBadge.fromApi(json['product_badge'] as String?),
       compareAtPrice: json['product_compare_at_price'] as int?,
@@ -87,6 +89,9 @@ class ProductSummary {
   /// False when less than one MOQ is left: the card says "Imeisha" and can't be added.
   final bool isInStock;
 
+  /// Selling unit used for the price and tier ranges (for example, pc, set, or pack).
+  final String unitLabel;
+
   /// Null until the product has a photo (a placeholder is shown).
   final String? imageUrl;
   final ProductBadge? badge;
@@ -115,6 +120,7 @@ class ProductSummary {
     'seller_name': sellerName,
     'seller_is_verified': isSellerVerified,
     'product_in_stock': isInStock,
+    'product_unit_label': unitLabel,
     'product_image_url': imageUrl,
     'product_badge': badge?.apiValue,
     'product_offer': offer?.toJson(),

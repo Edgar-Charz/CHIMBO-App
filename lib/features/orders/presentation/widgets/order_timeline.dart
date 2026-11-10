@@ -19,10 +19,15 @@ class OrderTimeline extends StatelessWidget {
     final reachedAt = {
       for (final event in order.events) event.status: event.at,
     };
-    // A cancelled or expired order shows the steps it reached, then how it ended.
-    final steps = order.status.isStopped
-        ? [...reachedAt.keys]
-        : order.timelineSteps;
+    final paymentExpired =
+        order.status == OrderStatus.pendingPayment &&
+        order.payment.deadlinePassed;
+    final isExpired = order.status == OrderStatus.expired || paymentExpired;
+    final steps = switch ((isExpired, order.status.isStopped)) {
+      (true, _) => _expiredSteps(reachedAt.keys),
+      (false, true) => [...reachedAt.keys],
+      _ => order.timelineSteps,
+    };
 
     return Column(
       children: [
@@ -30,16 +35,43 @@ class OrderTimeline extends StatelessWidget {
           _TimelineStep(
             status: status,
             label: order.statusLabel(l10n, status),
-            date: switch (reachedAt[status]) {
-              final at? => AppDates.formatDayTime(at, l10n.localeName),
-              null => null,
-            },
-            isCurrent: status == order.status,
-            isReached: reachedAt.containsKey(status),
+            date: _stepDate(status, reachedAt, isExpired, l10n.localeName),
+            isCurrent: isExpired
+                ? status == OrderStatus.expired
+                : status == order.status,
+            isReached:
+                reachedAt.containsKey(status) ||
+                (isExpired && status == OrderStatus.pendingPayment),
             isLast: index == steps.length - 1,
           ),
       ],
     );
+  }
+
+  List<OrderStatus> _expiredSteps(Iterable<OrderStatus> reachedStatuses) {
+    final steps = reachedStatuses
+        .where((status) => status != OrderStatus.expired)
+        .toList();
+    if (!steps.contains(OrderStatus.pendingPayment)) {
+      steps.insert(0, OrderStatus.pendingPayment);
+    }
+    steps.add(OrderStatus.expired);
+    return steps;
+  }
+
+  String? _stepDate(
+    OrderStatus status,
+    Map<OrderStatus, DateTime> reachedAt,
+    bool isExpired,
+    String localeName,
+  ) {
+    final date = switch (status) {
+      OrderStatus.expired => reachedAt[status] ?? order.expiresAt,
+      OrderStatus.pendingPayment when isExpired =>
+        reachedAt[status] ?? order.placedAt,
+      _ => reachedAt[status],
+    };
+    return date == null ? null : AppDates.formatDayTime(date, localeName);
   }
 }
 
@@ -75,18 +107,31 @@ class _TimelineStep extends StatelessWidget {
         children: [
           Column(
             children: [
-              CircleAvatar(
-                radius: AppSizes.timelineDot / 2,
-                backgroundColor: color,
-                child: Icon(
-                  status.icon,
-                  size: AppSizes.iconMedium,
-                  color: AppColors.onPrimary,
+              AnimatedContainer(
+                duration: AppDurations.fast,
+                curve: Curves.easeOutCubic,
+                width: AppSizes.timelineDot,
+                height: AppSizes.timelineDot,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                child: AnimatedSwitcher(
+                  duration: AppDurations.fast,
+                  transitionBuilder: (child, animation) => ScaleTransition(
+                    scale: animation,
+                    child: FadeTransition(opacity: animation, child: child),
+                  ),
+                  child: Icon(
+                    key: ValueKey(status),
+                    status.icon,
+                    size: AppSizes.iconMedium,
+                    color: AppColors.onPrimary,
+                  ),
                 ),
               ),
               if (!isLast)
                 Expanded(
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: AppDurations.fast,
+                    curve: Curves.easeOutCubic,
                     width: AppSizes.borderWidth * 2,
                     color: isReached ? AppColors.primary : AppColors.border,
                   ),
@@ -100,21 +145,37 @@ class _TimelineStep extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    label,
-                    style: textTheme.titleSmall?.copyWith(
+                  AnimatedDefaultTextStyle(
+                    duration: AppDurations.fast,
+                    style: (textTheme.titleSmall ?? const TextStyle()).copyWith(
                       color: isReached
                           ? (isCurrent ? status.color : AppColors.textPrimary)
                           : AppColors.textSecondary,
                     ),
+                    child: Text(label),
                   ),
-                  if (when != null)
-                    Text(
-                      when,
-                      style: textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
+                  AnimatedSwitcher(
+                    duration: AppDurations.fast,
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0, 0.15),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
                       ),
                     ),
+                    child: when == null
+                        ? const SizedBox.shrink(key: ValueKey('no-step-date'))
+                        : Text(
+                            when,
+                            key: ValueKey(when),
+                            style: textTheme.bodySmall?.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                  ),
                 ],
               ),
             ),

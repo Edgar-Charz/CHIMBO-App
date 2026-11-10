@@ -3,7 +3,6 @@ import 'package:chimbo/features/auth/data/models/business_profile_input.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
 import 'package:chimbo/features/profile/data/profile_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// The logged-in customer's profile, as loading / error / data (`AsyncValue`).
 class ProfileController extends AsyncNotifier<Profile> {
   @override

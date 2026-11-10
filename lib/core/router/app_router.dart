@@ -36,7 +36,6 @@ import 'package:chimbo/features/wishlist/presentation/wishlist_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// App navigation. The 5 bottom tabs live in a [StatefulShellRoute], so each tab keeps its own
 /// history and scroll position when the user switches tabs.
 ///

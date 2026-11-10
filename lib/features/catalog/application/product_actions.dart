@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 typedef ProductShare = Future<void> Function(String text);
 typedef ExternalUrlLauncher = Future<bool> Function(Uri uri);
 

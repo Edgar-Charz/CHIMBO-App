@@ -1,6 +1,5 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
-
 /// The phone's name for the server's list of logged-in devices ("Tecno Spark 10"), sent as
 /// `auth_token_device_name` when logging in.
 abstract final class DeviceName {

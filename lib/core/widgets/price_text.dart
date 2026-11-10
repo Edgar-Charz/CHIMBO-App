@@ -1,7 +1,6 @@
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:flutter/material.dart';
-
 /// Shows an amount as `TZS 5,500`. [highlight] marks the best (lowest) tier price in orange.
 class PriceText extends StatelessWidget {
   const PriceText(this.amount, {super.key, this.highlight = false, this.style});

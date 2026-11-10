@@ -1,7 +1,6 @@
 import 'package:chimbo/features/addresses/data/models/address.dart';
 import 'package:chimbo/features/checkout/data/models/checkout_options.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
-
 /// The order status machine (blueprint §11.3).
 enum OrderStatus {
   pendingPayment('pending_payment'),

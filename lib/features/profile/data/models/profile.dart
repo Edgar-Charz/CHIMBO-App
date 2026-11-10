@@ -1,6 +1,5 @@
 import 'package:chimbo/features/auth/data/models/app_user.dart';
 import 'package:chimbo/features/profile/data/models/business_profile.dart';
-
 /// What Wasifu shows (`GET /me`): the customer and their shop. JSON = the API's profile object:
 /// the `user_*` keys at the top level plus `business` (null until registration step 3).
 class Profile {

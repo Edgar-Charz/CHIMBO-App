@@ -2,7 +2,6 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
-
 /// [ − 8 + ]: never goes below [min] (the MOQ) or above [max] (stock).
 class QuantityStepper extends StatelessWidget {
   const QuantityStepper({

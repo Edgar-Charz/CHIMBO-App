@@ -4,7 +4,6 @@ import 'package:chimbo/features/app_images/application/app_images_controller.dar
 import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Shows a cached server illustration when available, using the bundled asset as its fallback.
 class ReplaceableImageSlot extends ConsumerWidget {
   const ReplaceableImageSlot({

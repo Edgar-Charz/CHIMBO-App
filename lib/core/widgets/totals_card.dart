@@ -2,7 +2,6 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:flutter/material.dart';
-
 /// "Bidhaa (4)  TZS 94,400 / Usafirishaji  TZS 5,000 / Jumla  TZS 99,400".
 /// Amounts are whole TZS from the server; this widget only shows them. A row's amount is null
 /// when it isn't known yet (upcountry transport before staff price it): [unknownAmountLabel].

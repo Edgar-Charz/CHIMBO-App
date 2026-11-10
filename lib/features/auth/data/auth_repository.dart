@@ -7,7 +7,6 @@ import 'package:chimbo/features/auth/data/models/login_start.dart';
 import 'package:chimbo/features/auth/data/models/otp_request_result.dart';
 import 'package:chimbo/features/auth/data/models/pin_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Phone → PIN login, with SMS codes for new numbers and "Umesahau PIN?" (blueprint §12.5).
 /// Every method throws `ApiException` on failure.
 abstract interface class AuthRepository {

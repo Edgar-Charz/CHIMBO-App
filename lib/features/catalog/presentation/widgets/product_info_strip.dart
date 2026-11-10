@@ -2,6 +2,7 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/catalog_labels.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,9 @@ class ProductInfoStrip extends StatelessWidget {
             _InfoItem(
               icon: Icons.inventory_outlined,
               label: l10n.moqFilter,
-              value: l10n.piecesCount(details.summary.moq),
+              value: details.summary.unitLabel.formatQuantity(
+                details.summary.moq,
+              ),
             ),
             _InfoItem(
               icon: Icons.warehouse_outlined,
@@ -39,8 +42,8 @@ class ProductInfoStrip extends StatelessWidget {
               value: !details.summary.isInStock
                   ? l10n.outOfStock
                   : stock >= _stockDisplayCap
-                  ? l10n.stockAtLeast(_stockDisplayCap)
-                  : l10n.piecesCount(stock),
+                  ? '$_stockDisplayCap+ ${details.summary.unitLabel.pluralized}'
+                  : details.summary.unitLabel.formatQuantity(stock),
               valueColor: details.summary.isInStock ? null : AppColors.danger,
             ),
             _InfoItem(

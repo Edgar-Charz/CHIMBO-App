@@ -16,7 +16,6 @@ import 'package:chimbo/features/auth/presentation/widgets/auth_step_layout.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// What the phone screen hands to the OTP screen.
 class OtpScreenArgs {
   const OtpScreenArgs({

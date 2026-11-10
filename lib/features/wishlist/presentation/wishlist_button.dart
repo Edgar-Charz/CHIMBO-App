@@ -1,3 +1,5 @@
+import 'dart:ui' show ImageFilter;
+
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
@@ -6,7 +8,6 @@ import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/features/wishlist/application/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// The heart: outline when not saved, red and filled (with a small pop) when saved.
 /// [onImage] draws it in a white circle so it shows on any photo.
 class WishlistButton extends ConsumerWidget {
@@ -53,13 +54,13 @@ class WishlistButton extends ConsumerWidget {
         size: onImage ? AppSizes.iconMedium : null,
       ),
     );
-    return IconButton(
+    final button = IconButton(
       onPressed: () => _toggle(context, ref),
       tooltip: isSaved ? l10n.actionUnfavourite : l10n.actionFavourite,
       visualDensity: onImage ? VisualDensity.compact : null,
       style: onImage
           ? IconButton.styleFrom(
-              backgroundColor: AppColors.surface.withValues(alpha: 0.96),
+              backgroundColor: Colors.transparent,
               minimumSize: const Size(40, 40),
               maximumSize: const Size(40, 40),
               padding: EdgeInsets.zero,
@@ -67,6 +68,25 @@ class WishlistButton extends ConsumerWidget {
             )
           : null,
       icon: heart,
+    );
+    if (!onImage) {
+      return button;
+    }
+
+    return ClipOval(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.surface.withValues(alpha: 0.68),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: AppColors.surface.withValues(alpha: 0.76),
+            ),
+          ),
+          child: SizedBox.square(dimension: 40, child: button),
+        ),
+      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
-
 /// The result returned by `POST /products/search-by-image`.
 class VisualSearchResult {
   const VisualSearchResult({

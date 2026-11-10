@@ -5,6 +5,7 @@ import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/notifications/application/notifications_controller.dart';
@@ -87,7 +88,7 @@ class NotificationsScreen extends ConsumerWidget {
         ],
       ),
       body: list.when(
-        data: (state) => RefreshIndicator(
+        data: (state) => ChimboRefreshIndicator(
           onRefresh: () => ref.refresh(notificationsControllerProvider.future),
           child: state.items.isEmpty
               ? CustomScrollView(
@@ -109,13 +110,17 @@ class NotificationsScreen extends ConsumerWidget {
                     children: [
                       for (final notification in state.items)
                         NotificationTile(
+                          key: ValueKey(notification.id),
                           notification: notification,
                           onTap: () => _open(context, ref, notification),
                         ),
                       if (state.isLoadingMore)
                         const Padding(
                           padding: EdgeInsets.all(AppSpacing.lg),
-                          child: Center(child: CircularProgressIndicator()),
+                          child: ChimboLoader(
+                            compact: true,
+                            showMessage: false,
+                          ),
                         ),
                     ],
                   ),
@@ -125,7 +130,7 @@ class NotificationsScreen extends ConsumerWidget {
           error: error,
           onRetry: () => ref.invalidate(notificationsControllerProvider),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ChimboLoader(),
       ),
     );
   }

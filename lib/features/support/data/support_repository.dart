@@ -3,7 +3,6 @@ import 'package:chimbo/features/support/data/api_support_repository.dart';
 import 'package:chimbo/features/support/data/models/legal_page.dart';
 import 'package:chimbo/features/support/data/models/support_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Msaada and the legal pages (public, no login needed). Every method throws `ApiException`.
 abstract interface class SupportRepository {
   /// `GET /support`.

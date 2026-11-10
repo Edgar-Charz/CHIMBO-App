@@ -1,7 +1,6 @@
 import 'package:chimbo/core/l10n/app_localizations.dart';
 import 'package:chimbo/core/network/api_exception.dart';
 import 'package:flutter/widgets.dart';
-
 export 'package:chimbo/core/l10n/app_localizations.dart';
 
 extension L10nContext on BuildContext {

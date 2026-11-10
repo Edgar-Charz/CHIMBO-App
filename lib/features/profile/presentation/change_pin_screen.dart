@@ -1,5 +1,4 @@
 import 'package:chimbo/core/l10n/l10n.dart';
-import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/auth/data/models/pin_input.dart';
@@ -27,34 +26,12 @@ class ChangePinScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.menuChangePin)),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            const padding = AppSpacing.lg * 2;
-            final contentHeight = constraints.maxHeight > padding
-                ? constraints.maxHeight - padding
-                : 0.0;
-
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: contentHeight),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    PinSetupForm(
-                      askCurrentPin: true,
-                      showProgress: true,
-                      introText: l10n.changePinNotice,
-                      submitLabel: l10n.menuChangePin,
-                      onSubmit: changePin,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+      body: PinSetupForm(
+        askCurrentPin: true,
+        showProgress: true,
+        introText: l10n.changePinNotice,
+        submitLabel: l10n.menuChangePin,
+        onSubmit: changePin,
       ),
     );
   }

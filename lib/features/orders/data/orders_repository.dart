@@ -7,7 +7,6 @@ import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_list_page.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// What "Thibitisha Oda" sends (`POST /orders`).
 class PlaceOrderInput {
   const PlaceOrderInput({

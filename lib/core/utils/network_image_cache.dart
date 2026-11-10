@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chimbo/core/config/env.dart';
 import 'package:flutter/material.dart';
-
 /// Warms a resized cached-image variant before its widget is built.
 Future<void> precacheAppNetworkImage(
   BuildContext context,

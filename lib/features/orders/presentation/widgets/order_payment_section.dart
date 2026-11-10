@@ -12,7 +12,6 @@ import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/presentation/widgets/change_payment_method_sheet.dart';
 import 'package:chimbo/features/orders/presentation/widgets/payment_submit_sheet.dart';
 import 'package:flutter/material.dart';
-
 /// Paying a mobile money / bank order (staff check it by hand):
 /// - upcountry, transport price not confirmed yet → "Tunapima mzigo wako" (no paying yet);
 /// - waiting for payment → where to pay and "Nimelipa" (after a rejection, staff's note first);

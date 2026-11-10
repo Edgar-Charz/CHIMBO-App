@@ -4,6 +4,7 @@ import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
 import 'package:chimbo/features/catalog/data/models/product_page.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
+import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/catalog/data/models/visual_search_result.dart';
 import 'package:chimbo/features/home/data/home_data.dart';
 
@@ -47,6 +48,15 @@ class ApiCatalogRepository implements CatalogRepository {
   Future<ProductDetails> getProduct(int productId) async {
     final response = await _apiClient.get('/products/$productId');
     return ProductDetails.fromJson(response.dataAsMap);
+  }
+
+  /// `GET /products/{id}/related`: up to ten products from the same category.
+  @override
+  Future<List<ProductSummary>> getRelatedProducts(int productId) async {
+    final response = await _apiClient.get('/products/$productId/related');
+    return response.dataAsList
+        .map((json) => ProductSummary.fromJson(json! as Map<String, dynamic>))
+        .toList();
   }
 
   /// `POST /products/search-by-image`: analyzes [filePath] and finds matching products.

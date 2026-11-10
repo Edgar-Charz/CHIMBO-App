@@ -806,6 +806,18 @@ abstract class AppLocalizations {
   /// **'Jina kamili'**
   String get fullNameLabel;
 
+  /// No description provided for @emailLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Barua pepe'**
+  String get emailLabel;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka anwani sahihi ya barua pepe.'**
+  String get emailInvalid;
+
   /// No description provided for @fullNameRequired.
   ///
   /// In sw, this message translates to:
@@ -847,6 +859,12 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Imeshindikana kupakia orodha. Gusa kujaribu tena.'**
   String get locationsLoadFailed;
+
+  /// No description provided for @locationLoading.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapakia maeneo...'**
+  String get locationLoading;
 
   /// No description provided for @locationSearchHint.
   ///
@@ -977,7 +995,7 @@ abstract class AppLocalizations {
   /// No description provided for @myPaymentsTabMethods.
   ///
   /// In sw, this message translates to:
-  /// **'Njia za malipo'**
+  /// **'Mahali pa kulipia'**
   String get myPaymentsTabMethods;
 
   /// No description provided for @myPaymentsEmpty.
@@ -1466,22 +1484,16 @@ abstract class AppLocalizations {
   /// **'Chuja bidhaa'**
   String get filterSheetTitle;
 
-  /// No description provided for @filterSheetSubtitle.
-  ///
-  /// In sw, this message translates to:
-  /// **'Chagua bei na kiwango cha juu cha MOQ.'**
-  String get filterSheetSubtitle;
-
   /// No description provided for @priceFilterDescription.
   ///
   /// In sw, this message translates to:
-  /// **'Weka kiwango cha chini na cha juu cha bei ya bidhaa.'**
+  /// **'Weka bei ya chini na ya juu.'**
   String get priceFilterDescription;
 
   /// No description provided for @moqFilterDescription.
   ///
   /// In sw, this message translates to:
-  /// **'Onyesha bidhaa zenye MOQ isiyozidi kiasi unachoweka.'**
+  /// **'Weka kiwango cha juu cha MOQ.'**
   String get moqFilterDescription;
 
   /// No description provided for @sortAction.
@@ -1721,8 +1733,8 @@ abstract class AppLocalizations {
   /// No description provided for @nextTierHint.
   ///
   /// In sw, this message translates to:
-  /// **'Ongeza pcs {count} upate {price} kila moja'**
-  String nextTierHint(int count, String price);
+  /// **'Ongeza {count} upate {price} kila moja'**
+  String nextTierHint(String count, String price);
 
   /// No description provided for @actionAskSeller.
   ///
@@ -1735,6 +1747,12 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Maelezo'**
   String get descriptionTitle;
+
+  /// No description provided for @relatedProductsTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bidhaa zinazofanana'**
+  String get relatedProductsTitle;
 
   /// No description provided for @actionFavourite.
   ///
@@ -1811,14 +1829,14 @@ abstract class AppLocalizations {
   /// No description provided for @cartNudge.
   ///
   /// In sw, this message translates to:
-  /// **'Ongeza pcs {count} za {product} upate {price} kila moja.'**
-  String cartNudge(int count, String product, String price);
+  /// **'Ongeza {count} za {product} upate {price} kila moja.'**
+  String cartNudge(String count, String product, String price);
 
   /// No description provided for @cartNudgeAction.
   ///
   /// In sw, this message translates to:
-  /// **'Ongeza {count} pcs'**
-  String cartNudgeAction(int count);
+  /// **'Ongeza {count}'**
+  String cartNudgeAction(String count);
 
   /// No description provided for @wholesalePriceTag.
   ///
@@ -2120,6 +2138,12 @@ abstract class AppLocalizations {
   /// **'Kuchukua dukani'**
   String get pickupPointTitle;
 
+  /// No description provided for @pickupPointUnavailable.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anwani au muda wa kuchukua haupatikani. Jaribu tena kabla ya kuthibitisha oda.'**
+  String get pickupPointUnavailable;
+
   /// No description provided for @pickupPointHint.
   ///
   /// In sw, this message translates to:
@@ -2390,6 +2414,18 @@ abstract class AppLocalizations {
   /// **'#{number}'**
   String orderNumber(String number);
 
+  /// No description provided for @orderPlacedOn.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imewekwa {date}'**
+  String orderPlacedOn(Object date);
+
+  /// No description provided for @orderTrackingProgress.
+  ///
+  /// In sw, this message translates to:
+  /// **'Maendeleo ya Oda'**
+  String get orderTrackingProgress;
+
   /// No description provided for @actionTrackOrder.
   ///
   /// In sw, this message translates to:
@@ -2425,6 +2461,24 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Hakuna anwani bado'**
   String get addressesEmpty;
+
+  /// No description provided for @addressSaved.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anwani imehifadhiwa.'**
+  String get addressSaved;
+
+  /// No description provided for @addressDefaultSaved.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anwani imewekwa kuwa anwani ya msingi.'**
+  String get addressDefaultSaved;
+
+  /// No description provided for @addressDeleted.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anwani imefutwa.'**
+  String get addressDeleted;
 
   /// No description provided for @defaultAddressLabel.
   ///
@@ -2929,6 +2983,12 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Utafutaji wa picha haupatikani kwa sasa. Tafadhali jaribu tena baadaye.'**
   String get visualSearchUnavailable;
+
+  /// No description provided for @loadingLongWait.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tafadhali subiri kidogo...'**
+  String get loadingLongWait;
 }
 
 class _AppLocalizationsDelegate

@@ -1,6 +1,21 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
 
+extension ProductUnitLabelDisplay on String {
+  String get pluralized => switch (this) {
+    'pc' => 'pcs',
+    'pack' => 'packs',
+    'set' => 'sets',
+    'box' => 'boxes',
+    'dozen' => 'dozens',
+    'carton' => 'cartons',
+    _ => this,
+  };
+
+  String formatQuantity(int count) =>
+      '$count ${count == 1 ? this : pluralized}';
+}
+
 /// Kiswahili names for the listing options, so the data enums stay free of UI text.
 extension ProductSortLabel on ProductSort {
   String label(AppLocalizations l10n) => switch (this) {

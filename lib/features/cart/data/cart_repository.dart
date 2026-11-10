@@ -2,7 +2,6 @@ import 'package:chimbo/core/network/network_providers.dart';
 import 'package:chimbo/features/cart/data/api_cart_repository.dart';
 import 'package:chimbo/features/cart/data/models/cart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// The customer's cart (blueprint §12.2 "cart"). Every change returns the full priced cart.
 abstract interface class CartRepository {
   /// `GET /cart`.

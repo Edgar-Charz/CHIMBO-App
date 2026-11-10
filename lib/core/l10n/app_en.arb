@@ -139,6 +139,8 @@
   "businessTitle": "Tell Us About Your Business",
   "businessSubtitle": "Just a few details, then you're in.",
   "fullNameLabel": "Full name",
+  "emailLabel": "Email address",
+  "emailInvalid": "Enter a valid email address.",
   "fullNameRequired": "Enter your full name.",
   "businessNameLabel": "Business / shop name",
   "regionLabel": "Region",
@@ -146,6 +148,7 @@
   "regionRequired": "Choose your region.",
   "districtLabel": "District",
   "locationsLoadFailed": "Couldn't load the list. Tap to try again.",
+  "locationLoading": "Loading locations...",
   "locationSearchHint": "Search by name...",
   "locationNoResults": "No matching locations found.",
   "actionEnterChimbo": "Enter CHIMBO",
@@ -167,7 +170,7 @@
   "menuPayments": "My payments",
   "menuPaymentsHint": "Payment history and accepted methods",
   "myPaymentsTabHistory": "History",
-  "myPaymentsTabMethods": "Payment methods",
+  "myPaymentsTabMethods": "Where to pay",
   "myPaymentsEmpty": "No payments yet. Payments for your orders will appear here.",
   "acceptedMethodsTitle": "Payment methods we accept",
   "acceptedMethodsCash": "Pay in cash when you receive your order.",
@@ -280,9 +283,8 @@
     }
   },
   "filterSheetTitle": "Filter products",
-  "filterSheetSubtitle": "Choose a price range and maximum MOQ.",
-  "priceFilterDescription": "Set the minimum and maximum price for a product.",
-  "moqFilterDescription": "Show products with an MOQ no higher than your limit.",
+  "priceFilterDescription": "Set a minimum and maximum price.",
+  "moqFilterDescription": "Set a maximum MOQ.",
   "sortAction": "Sort",
   "sortSheetTitle": "Sort products",
   "sortSheetSubtitle": "Choose how products are ordered.",
@@ -322,9 +324,10 @@
   "tierFrom": "{min}+ pcs",
   "quantityLabel": "Quantity",
   "savingsLabel": "You save {amount}",
-  "nextTierHint": "Add {count} pcs to pay {price} each",
+  "nextTierHint": "Add {count} to pay {price} each",
   "actionAskSeller": "Ask Seller",
   "descriptionTitle": "Description",
+  "relatedProductsTitle": "Similar products",
   "actionFavourite": "Favourite",
   "actionShare": "Share",
   "actionZoom": "Zoom",
@@ -337,12 +340,19 @@
   "cartEmptyTitle": "Your cart is empty",
   "cartEmptyMessage": "Add products to start ordering at wholesale prices.",
   "actionStartShopping": "Start shopping",
-  "cartNudge": "Add {count} pcs of {product} to pay {price} each.",
-  "cartNudgeAction": "Add {count} pcs",
+  "cartNudge": "Add {count} of {product} to pay {price} each.",
+  "@cartNudge": {
+    "placeholders": {
+      "count": { "type": "String" },
+      "product": { "type": "String" },
+      "price": { "type": "String" }
+    }
+  },
+  "cartNudgeAction": "Add {count}",
   "@cartNudgeAction": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -406,6 +416,7 @@
   "deliveryFree": "Free",
   "pickupFreeLabel": "Free (at the shop)",
   "pickupPointTitle": "Collect at the shop",
+  "pickupPointUnavailable": "Pickup address or hours are unavailable. Try again before confirming the order.",
   "pickupPointHint": "We'll tell you when the order is ready. Bring order number #{number}.",
   "statusReadyForPickup": "Ready for pickup",
   "statusPickedUp": "Picked up",
@@ -451,12 +462,17 @@
   "orderReceivedTitle": "Order received!",
   "orderReceivedMessage": "Thank you, {name}. We've started preparing your order.",
   "orderNumber": "#{number}",
+  "orderPlacedOn": "Placed {date}",
+  "orderTrackingProgress": "Order progress",
   "actionTrackOrder": "Track order",
   "actionPayNow": "Pay now",
   "actionBackHome": "Back to Home",
   "addressFormTitle": "New address",
   "editAddressFormTitle": "Edit address",
   "addressesEmpty": "No addresses yet",
+  "addressSaved": "Address saved.",
+  "addressDefaultSaved": "Default address updated.",
+  "addressDeleted": "Address deleted.",
   "defaultAddressLabel": "Default",
   "addressActions": "Address actions",
   "actionEditAddress": "Edit",
@@ -548,5 +564,6 @@
   "visualSearchEmptySubtitle": "We did not find any product matching this photo in our market.",
   "visualSearchRetry": "Take another photo",
   "visualSearchTooltip": "Search by image",
-  "visualSearchUnavailable": "Image search is temporarily unavailable. Please try again later."
+  "visualSearchUnavailable": "Image search is temporarily unavailable. Please try again later.",
+  "loadingLongWait": "Please wait a little longer..."
 }

@@ -16,10 +16,15 @@ const int _galleryZoomCacheSize = 1200;
 /// Swipeable product photos with a zoom button and thumbnails (design PDF p.6).
 /// Without photos it shows the placeholder alone.
 class ProductGallery extends StatefulWidget {
-  const ProductGallery({super.key, required this.photos});
+  const ProductGallery({
+    super.key,
+    required this.photos,
+    required this.heroTag,
+  });
 
   /// Medium for the big photo, thumb for the strip, large for zoom.
   final List<ProductPhoto> photos;
+  final String heroTag;
 
   @override
   State<ProductGallery> createState() => _ProductGalleryState();
@@ -114,20 +119,26 @@ class _ProductGalleryState extends State<ProductGallery> {
                   itemCount: photos.length,
                   onPageChanged: (index) =>
                       setState(() => _currentIndex = index),
-                  itemBuilder: (context, index) => AppNetworkImage(
-                    url: photos[index].mediumUrl,
-                    previewUrl: photos[index].thumbUrl,
-                    placeholderIcon: ProductCard.placeholderIcon,
-                    fit: BoxFit.contain,
-                    memCacheWidth: _galleryMediumCacheSize,
-                    memCacheHeight: _galleryMediumCacheSize,
-                    maxWidthDiskCache: _galleryMediumCacheSize,
-                    maxHeightDiskCache: _galleryMediumCacheSize,
-                    previewMemCacheWidth: _galleryThumbnailCacheSize,
-                    previewMemCacheHeight: _galleryThumbnailCacheSize,
-                    previewMaxWidthDiskCache: _galleryThumbnailCacheSize,
-                    previewMaxHeightDiskCache: _galleryThumbnailCacheSize,
-                  ),
+                  itemBuilder: (context, index) {
+                    final photo = photos[index];
+                    final image = AppNetworkImage(
+                      url: photo.mediumUrl,
+                      previewUrl: photo.thumbUrl,
+                      placeholderIcon: ProductCard.placeholderIcon,
+                      fit: BoxFit.contain,
+                      memCacheWidth: _galleryMediumCacheSize,
+                      memCacheHeight: _galleryMediumCacheSize,
+                      maxWidthDiskCache: _galleryMediumCacheSize,
+                      maxHeightDiskCache: _galleryMediumCacheSize,
+                      previewMemCacheWidth: _galleryThumbnailCacheSize,
+                      previewMemCacheHeight: _galleryThumbnailCacheSize,
+                      previewMaxWidthDiskCache: _galleryThumbnailCacheSize,
+                      previewMaxHeightDiskCache: _galleryThumbnailCacheSize,
+                    );
+                    return index == 0
+                        ? Hero(tag: widget.heroTag, child: image)
+                        : image;
+                  },
                 ),
               if (photos.isNotEmpty)
                 Positioned(
@@ -137,6 +148,38 @@ class _ProductGalleryState extends State<ProductGallery> {
                     onPressed: _openZoom,
                     tooltip: context.l10n.actionZoom,
                     icon: const Icon(Icons.zoom_in_rounded),
+                  ),
+                ),
+              if (photos.length > 1)
+                Positioned(
+                  left: AppSpacing.lg,
+                  bottom: AppSpacing.lg + AppSpacing.xs,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.78),
+                      borderRadius: BorderRadius.circular(AppRadius.large),
+                      border: Border.all(
+                        color: AppColors.surface.withValues(alpha: 0.28),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.xs,
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: AppDurations.fast,
+                        child: Text(
+                          '${_currentIndex + 1} / ${photos.length}',
+                          key: ValueKey(_currentIndex),
+                          style: Theme.of(context).textTheme.labelMedium
+                              ?.copyWith(
+                                color: AppColors.onPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
             ],
@@ -182,7 +225,9 @@ class _Thumbnails extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
         itemBuilder: (context, index) => GestureDetector(
           onTap: () => onTap(index),
-          child: Container(
+          child: AnimatedContainer(
+            duration: AppDurations.fast,
+            curve: Curves.easeOutCubic,
             width: AppSizes.galleryThumbnail,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-
 /// Error codes created by the app itself (the server's codes are listed in blueprint §12.1).
 abstract final class ApiErrorCode {
   static const String network = 'NETWORK_ERROR';

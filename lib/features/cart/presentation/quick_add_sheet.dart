@@ -3,6 +3,7 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/quantity_stepper.dart';
 import 'package:chimbo/features/cart/presentation/add_to_cart.dart';
@@ -10,6 +11,7 @@ import 'package:chimbo/features/catalog/application/catalog_providers.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/catalog/data/tier_pricing.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/catalog_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,6 +25,13 @@ Future<void> showQuickAddSheet(
     context: context,
     showDragHandle: true,
     isScrollControlled: true,
+    backgroundColor: AppColors.primaryLight,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(AppRadius.large),
+      ),
+    ),
+    clipBehavior: Clip.antiAlias,
     builder: (context) =>
         _QuickAddSheet(product: product, currentQuantity: currentQuantity),
   );
@@ -37,22 +46,31 @@ class _QuickAddSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final details = ref.watch(productDetailsProvider(product.id));
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          0,
-          AppSpacing.lg,
-          AppSpacing.lg,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.surface, AppColors.primaryLight],
         ),
-        child: details.when(
-          data: (value) =>
-              _QuickAddForm(details: value, currentQuantity: currentQuantity),
-          error: (error, _) => ErrorState(
-            error: error,
-            onRetry: () => ref.invalidate(productDetailsProvider(product.id)),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
           ),
-          loading: () => _QuickAddPreview(product: product),
+          child: details.when(
+            data: (value) =>
+                _QuickAddForm(details: value, currentQuantity: currentQuantity),
+            error: (error, _) => ErrorState(
+              error: error,
+              onRetry: () => ref.invalidate(productDetailsProvider(product.id)),
+            ),
+            loading: () => _QuickAddPreview(product: product),
+          ),
         ),
       ),
     );
@@ -86,11 +104,12 @@ class _QuickAddPreview extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
-              Expanded(child: Text(l10n.productMoq(product.moq))),
-              const SizedBox.square(
-                dimension: AppSizes.iconSmall,
-                child: CircularProgressIndicator(strokeWidth: 2),
+              Expanded(
+                child: Text(
+                  'MOQ ${product.unitLabel.formatQuantity(product.moq)}',
+                ),
               ),
+              const ChimboLoader(compact: true, showMessage: false),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -153,13 +172,10 @@ class _QuickAddFormState extends ConsumerState<_QuickAddForm> {
       children: [
         Text(summary.name, style: textTheme.titleMedium),
         Text(
-          l10n.cartTierLabel(
-            _pricing.tierFor(_quantity).minQuantity,
-            Money.format(_pricing.unitPriceFor(_quantity)),
-          ),
+          '${summary.unitLabel.formatQuantity(_pricing.tierFor(_quantity).minQuantity)} @ ${Money.format(_pricing.unitPriceFor(_quantity))}',
           style: textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.md),
         Row(
           children: [
             Expanded(
@@ -174,16 +190,54 @@ class _QuickAddFormState extends ConsumerState<_QuickAddForm> {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
-        Text(
-          l10n.quickAddTotal(Money.format(_pricing.totalFor(_quantity))),
-          style: textTheme.titleMedium,
-        ),
-        if (savings > 0)
-          Text(
-            l10n.savingsLabel(Money.format(savings)),
-            style: textTheme.bodyMedium?.copyWith(color: AppColors.primary),
+        Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppRadius.medium),
+            border: Border.all(color: AppColors.accentLight),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColors.surface, AppColors.accentLight],
+            ),
           ),
-        const SizedBox(height: AppSpacing.lg),
+          child: AnimatedSwitcher(
+            duration: AppDurations.fast,
+            switchInCurve: Curves.easeOutCubic,
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 0.06),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              ),
+            ),
+            child: Column(
+              key: ValueKey(_quantity),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.quickAddTotal(
+                    Money.format(_pricing.totalFor(_quantity)),
+                  ),
+                  style: textTheme.titleMedium,
+                ),
+                if (savings > 0) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l10n.savingsLabel(Money.format(savings)),
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
         AppButton(
           label: summary.isInStock
               ? widget.currentQuantity == null

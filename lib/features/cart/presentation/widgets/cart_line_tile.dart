@@ -6,6 +6,7 @@ import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_network_image.dart';
 import 'package:chimbo/core/widgets/quantity_stepper.dart';
 import 'package:chimbo/features/cart/data/models/cart.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/catalog_labels.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/offer_widgets.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -88,10 +89,7 @@ class CartLineTile extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        l10n.cartTierLabel(
-                          line.tierMinQuantity,
-                          Money.format(line.unitPrice),
-                        ),
+                        '${line.product.unitLabel.formatQuantity(line.tierMinQuantity)} @ ${Money.format(line.unitPrice)}',
                         style: textTheme.bodySmall?.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -119,10 +117,25 @@ class CartLineTile extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(
-                                  Money.format(line.lineTotal),
-                                  style: textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
+                                AnimatedSwitcher(
+                                  duration: AppDurations.cartPrice,
+                                  transitionBuilder: (child, animation) =>
+                                      FadeTransition(
+                                        opacity: animation,
+                                        child: SlideTransition(
+                                          position: Tween<Offset>(
+                                            begin: const Offset(0, 0.15),
+                                            end: Offset.zero,
+                                          ).animate(animation),
+                                          child: child,
+                                        ),
+                                      ),
+                                  child: Text(
+                                    Money.format(line.lineTotal),
+                                    key: ValueKey(line.lineTotal),
+                                    style: textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                                 if (line.problem == null && line.isMoqMet) ...[

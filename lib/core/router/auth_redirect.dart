@@ -1,6 +1,5 @@
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/features/auth/application/auth_state.dart';
-
 /// Which screen a customer in [status] may see. Returns the route to send them to instead, or
 /// null to let them through. Kept free of Flutter so the rules are easy to test.
 String? authRedirect(AuthStatus status, String location) {

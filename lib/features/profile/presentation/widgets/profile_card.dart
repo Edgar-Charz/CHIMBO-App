@@ -6,7 +6,6 @@ import 'package:chimbo/core/widgets/verified_badge.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
 import 'package:chimbo/features/profile/presentation/widgets/profile_photo_control.dart';
 import 'package:flutter/material.dart';
-
 /// Top of Wasifu: photo (tap to change), name, phone, location, shop name and "Hariri Wasifu".
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
@@ -29,6 +28,7 @@ class ProfileCard extends StatelessWidget {
       business?.districtName,
       business?.regionName,
     ].whereType<String>().join(', ');
+    final email = profile.user.email;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -91,6 +91,10 @@ class ProfileCard extends StatelessWidget {
                         TzPhone.format(profile.user.phone),
                         style: textTheme.bodyMedium,
                       ),
+                      if (email != null && email.isNotEmpty) ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        _IconLine(icon: Icons.email_outlined, text: email),
+                      ],
                       if (location.isNotEmpty) ...[
                         const SizedBox(height: AppSpacing.xs),
                         _IconLine(

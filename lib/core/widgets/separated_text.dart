@@ -1,6 +1,5 @@
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-
 /// Short phrases joined by orange dots: "Chagua • Lipa • Pokea".
 class SeparatedText extends StatelessWidget {
   const SeparatedText({

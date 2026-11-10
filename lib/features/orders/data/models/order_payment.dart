@@ -1,5 +1,4 @@
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
-
 /// Where staff are with a "Nimelipa" the customer sent (`latest_payment.payment_status`).
 enum PaymentAttemptStatus {
   submitted('submitted'),

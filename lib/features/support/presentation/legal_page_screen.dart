@@ -1,6 +1,7 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/dates.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/support/application/support_providers.dart';
 import 'package:chimbo/features/support/data/models/legal_page.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 /// "Vigezo na Masharti" or "Sera ya Faragha": the server's safe formatted text.
 /// Public, so it opens from the login screen too.
 class LegalPageScreen extends ConsumerWidget {
@@ -32,7 +32,7 @@ class LegalPageScreen extends ConsumerWidget {
           error: error,
           onRetry: () => ref.invalidate(legalPageProvider(type)),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ChimboLoader(),
       ),
     );
   }

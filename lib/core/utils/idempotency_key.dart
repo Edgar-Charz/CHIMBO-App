@@ -1,5 +1,4 @@
 import 'dart:math';
-
 /// A random 32-character hex key for the `Idempotency-Key` header: the server runs a request
 /// only once per key, so a retried "Thibitisha Oda" never creates a second order.
 String newIdempotencyKey({Random? random}) {

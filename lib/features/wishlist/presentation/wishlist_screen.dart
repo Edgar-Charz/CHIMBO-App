@@ -1,6 +1,7 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_grid.dart';
@@ -19,7 +20,7 @@ class WishlistScreen extends ConsumerWidget {
     final products = ref.watch(savedProductsProvider);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.menuWishlist)),
-      body: RefreshIndicator(
+      body: ChimboRefreshIndicator(
         onRefresh: () => ref.refresh(savedProductsProvider.future),
         child: CustomScrollView(
           slivers: [

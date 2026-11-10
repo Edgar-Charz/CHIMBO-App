@@ -9,8 +9,7 @@ import 'package:chimbo/features/locations/data/models/region.dart';
 import 'package:chimbo/features/locations/presentation/location_fields.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
 import 'package:flutter/material.dart';
-
-/// Jina kamili, jina la biashara (optional), Mkoa, Wilaya (optional) + the submit button.
+/// Customer name, optional email and shop details for registration and profile editing.
 /// Shared by registration step 3 and "Hariri Wasifu", so both check the same rules.
 class BusinessDetailsForm extends StatefulWidget {
   const BusinessDetailsForm({
@@ -36,6 +35,7 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final TextEditingController _fullNameController;
   late final TextEditingController _businessNameController;
+  late final TextEditingController _emailController;
   Region? _region;
   District? _district;
   bool _isSubmitting = false;
@@ -50,6 +50,7 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
     _businessNameController = TextEditingController(
       text: business?.businessName,
     );
+    _emailController = TextEditingController(text: widget.initial?.user.email);
     if (business != null) {
       _region = Region(id: business.regionId, name: business.regionName);
       final districtId = business.districtId;
@@ -68,6 +69,7 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
   void dispose() {
     _fullNameController.dispose();
     _businessNameController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -84,6 +86,7 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
           businessName: businessName.isEmpty ? null : businessName,
           regionId: _region!.id,
           districtId: _district?.id,
+          userEmail: _emailController.text.trim(),
         ),
       );
     } catch (error) {
@@ -115,6 +118,24 @@ class _BusinessDetailsFormState extends State<BusinessDetailsForm> {
             autofillHints: const [AutofillHints.name],
             validator: (value) =>
                 (value ?? '').trim().isEmpty ? l10n.fullNameRequired : null,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AppTextField(
+            label: l10n.emailLabel,
+            hint: l10n.optionalField,
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            autofillHints: const [AutofillHints.email],
+            enabled: !_isSubmitting,
+            validator: (value) {
+              final email = (value ?? '').trim();
+              if (email.isNotEmpty &&
+                  !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
+                return l10n.emailInvalid;
+              }
+              return null;
+            },
           ),
           const SizedBox(height: AppSpacing.md),
           AppTextField(

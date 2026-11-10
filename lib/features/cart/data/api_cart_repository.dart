@@ -2,7 +2,6 @@ import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/core/network/api_response.dart';
 import 'package:chimbo/features/cart/data/cart_repository.dart';
 import 'package:chimbo/features/cart/data/models/cart.dart';
-
 /// Kikapu from the CHIMBO API (docs/API_REFERENCE.md, "Cart"). Every call returns the whole
 /// cart priced by the server; the app never sends a price.
 class ApiCartRepository implements CartRepository {

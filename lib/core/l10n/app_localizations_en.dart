@@ -398,6 +398,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullNameLabel => 'Full name';
 
   @override
+  String get emailLabel => 'Email address';
+
+  @override
+  String get emailInvalid => 'Enter a valid email address.';
+
+  @override
   String get fullNameRequired => 'Enter your full name.';
 
   @override
@@ -418,6 +424,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get locationsLoadFailed =>
       'Couldn\'t load the list. Tap to try again.';
+
+  @override
+  String get locationLoading => 'Loading locations...';
 
   @override
   String get locationSearchHint => 'Search by name...';
@@ -483,7 +492,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myPaymentsTabHistory => 'History';
 
   @override
-  String get myPaymentsTabMethods => 'Payment methods';
+  String get myPaymentsTabMethods => 'Where to pay';
 
   @override
   String get myPaymentsEmpty =>
@@ -758,15 +767,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterSheetTitle => 'Filter products';
 
   @override
-  String get filterSheetSubtitle => 'Choose a price range and maximum MOQ.';
+  String get priceFilterDescription => 'Set a minimum and maximum price.';
 
   @override
-  String get priceFilterDescription =>
-      'Set the minimum and maximum price for a product.';
-
-  @override
-  String get moqFilterDescription =>
-      'Show products with an MOQ no higher than your limit.';
+  String get moqFilterDescription => 'Set a maximum MOQ.';
 
   @override
   String get sortAction => 'Sort';
@@ -904,8 +908,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String nextTierHint(int count, String price) {
-    return 'Add $count pcs to pay $price each';
+  String nextTierHint(String count, String price) {
+    return 'Add $count to pay $price each';
   }
 
   @override
@@ -913,6 +917,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get descriptionTitle => 'Description';
+
+  @override
+  String get relatedProductsTitle => 'Similar products';
 
   @override
   String get actionFavourite => 'Favourite';
@@ -960,13 +967,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionStartShopping => 'Start shopping';
 
   @override
-  String cartNudge(int count, String product, String price) {
-    return 'Add $count pcs of $product to pay $price each.';
+  String cartNudge(String count, String product, String price) {
+    return 'Add $count of $product to pay $price each.';
   }
 
   @override
-  String cartNudgeAction(int count) {
-    return 'Add $count pcs';
+  String cartNudgeAction(String count) {
+    return 'Add $count';
   }
 
   @override
@@ -1142,6 +1149,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pickupPointTitle => 'Collect at the shop';
 
   @override
+  String get pickupPointUnavailable =>
+      'Pickup address or hours are unavailable. Try again before confirming the order.';
+
+  @override
   String pickupPointHint(String number) {
     return 'We\'ll tell you when the order is ready. Bring order number #$number.';
   }
@@ -1304,6 +1315,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String orderPlacedOn(Object date) {
+    return 'Placed $date';
+  }
+
+  @override
+  String get orderTrackingProgress => 'Order progress';
+
+  @override
   String get actionTrackOrder => 'Track order';
 
   @override
@@ -1320,6 +1339,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addressesEmpty => 'No addresses yet';
+
+  @override
+  String get addressSaved => 'Address saved.';
+
+  @override
+  String get addressDefaultSaved => 'Default address updated.';
+
+  @override
+  String get addressDeleted => 'Address deleted.';
 
   @override
   String get defaultAddressLabel => 'Default';
@@ -1600,4 +1628,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get visualSearchUnavailable =>
       'Image search is temporarily unavailable. Please try again later.';
+
+  @override
+  String get loadingLongWait => 'Please wait a little longer...';
 }

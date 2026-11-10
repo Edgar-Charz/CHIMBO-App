@@ -3,7 +3,6 @@ import 'package:chimbo/core/widgets/section_header.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
-
 /// A titled, sideways-scrolling row of product cards ("Uliagiza Hivi Karibuni", …).
 class ProductRail extends StatelessWidget {
   const ProductRail({
@@ -28,13 +27,14 @@ class ProductRail extends StatelessWidget {
           title: title,
           actionLabel: actionLabel,
           onAction: onViewAll,
+          isCompact: true,
         ),
         // A rail holds a handful of cards, so building them all at once is fine; the row takes
         // the height of the tallest card.
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           // Room for the cards' shadows, which the scroll area would otherwise cut off.
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,

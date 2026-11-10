@@ -4,7 +4,6 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/phone.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 /// Tanzanian phone input: 🇹🇿 +255 prefix and the 9 local digits grouped as "712 345 678".
 ///
 /// Only Tanzania is served, so the prefix is a label, not a country picker.

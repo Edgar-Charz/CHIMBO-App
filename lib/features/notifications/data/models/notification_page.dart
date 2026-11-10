@@ -1,5 +1,4 @@
 import 'package:chimbo/features/notifications/data/models/app_notification.dart';
-
 /// One page of `GET /notifications` + its `meta`.
 class NotificationPage {
   const NotificationPage({

@@ -1,8 +1,10 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/router/app_routes.dart';
+import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/confirm_dialog.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
@@ -41,6 +43,7 @@ class _AddressesScreenState extends ConsumerState<AddressesScreen> {
           () => ref
               .read(addressesControllerProvider.notifier)
               .setDefault(address.id),
+          successMessage: context.l10n.addressDefaultSaved,
         );
       case _AddressAction.delete:
         await _confirmDelete(address);
@@ -49,6 +52,7 @@ class _AddressesScreenState extends ConsumerState<AddressesScreen> {
 
   Future<void> _confirmDelete(Address address) async {
     final l10n = context.l10n;
+    final successMessage = l10n.addressDeleted;
     final confirmed = await showConfirmDialog(
       context,
       title: l10n.deleteAddressConfirmTitle,
@@ -59,14 +63,22 @@ class _AddressesScreenState extends ConsumerState<AddressesScreen> {
     if (confirmed) {
       await _runMutation(
         () => ref.read(addressesControllerProvider.notifier).delete(address.id),
+        successMessage: successMessage,
       );
     }
   }
 
-  Future<void> _runMutation(Future<void> Function() mutation) async {
+  Future<void> _runMutation(
+    Future<void> Function() mutation, {
+    required String successMessage,
+  }) async {
+    final toast = AppToast.of(context);
     setState(() => _isMutating = true);
     try {
       await mutation();
+      if (mounted) {
+        toast.success(successMessage);
+      }
     } catch (error) {
       if (mounted) {
         AppToast.of(context).error(context.l10n.errorMessage(error));
@@ -90,7 +102,7 @@ class _AddressesScreenState extends ConsumerState<AddressesScreen> {
                 icon: Icons.location_on_outlined,
                 message: l10n.addressesEmpty,
               )
-            : RefreshIndicator(
+            : ChimboRefreshIndicator(
                 onRefresh: () async {
                   await ref
                       .refresh(addressesControllerProvider.future)
@@ -113,7 +125,7 @@ class _AddressesScreenState extends ConsumerState<AddressesScreen> {
           error: error,
           onRetry: () => ref.invalidate(addressesControllerProvider),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ChimboLoader(),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -146,6 +158,14 @@ class _AddressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Card(
+      color: address.isDefault ? AppColors.primaryLight : AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        side: BorderSide(
+          color: address.isDefault ? AppColors.primary : AppColors.border,
+          width: address.isDefault ? 1.5 : 1,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.only(left: AppSpacing.lg),
         child: Row(
@@ -159,9 +179,25 @@ class _AddressCard extends StatelessWidget {
                     AddressDetails(address: address),
                     if (address.isDefault) ...[
                       const SizedBox(height: AppSpacing.sm),
-                      Chip(
-                        visualDensity: VisualDensity.compact,
-                        label: Text(l10n.defaultAddressLabel),
+                      Tooltip(
+                        message: l10n.defaultAddressLabel,
+                        child: Semantics(
+                          label: l10n.defaultAddressLabel,
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: AppColors.primary),
+                            ),
+                            child: const Icon(
+                              Icons.check_rounded,
+                              color: AppColors.primary,
+                              size: AppSizes.iconSmall,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ],

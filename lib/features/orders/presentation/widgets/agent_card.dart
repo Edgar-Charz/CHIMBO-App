@@ -6,7 +6,6 @@ import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 /// The delivery agent with call and SMS buttons (they open the phone's own apps).
 class AgentCard extends StatelessWidget {
   const AgentCard({super.key, required this.agent});

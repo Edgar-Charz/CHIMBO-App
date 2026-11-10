@@ -9,7 +9,6 @@ import 'package:chimbo/features/checkout/application/checkout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// "Anwani ya Uwasilishaji" with Badilisha, or "Ongeza anwani" when there is none yet.
 class AddressSection extends ConsumerWidget {
   const AddressSection({super.key});

@@ -1,5 +1,4 @@
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
-
 /// One page of a product listing (`GET /products` + its `meta`).
 class ProductPage {
   const ProductPage({

@@ -1,5 +1,6 @@
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:flutter/material.dart';
 
 /// [primary] (green) navigates or confirms, [accent] (orange) buys, [outlined] is secondary,
@@ -16,6 +17,9 @@ class AppButton extends StatelessWidget {
     this.icon,
     this.isLoading = false,
     this.expand = true,
+    this.contentPadding,
+    this.labelStyle,
+    this.foregroundColor,
   });
 
   final String label;
@@ -31,6 +35,11 @@ class AppButton extends StatelessWidget {
   /// Fills the available width (the default for form and checkout buttons).
   final bool expand;
 
+  /// Optional content padding and label style for compact action bars.
+  final EdgeInsetsGeometry? contentPadding;
+  final TextStyle? labelStyle;
+  final Color? foregroundColor;
+
   @override
   Widget build(BuildContext context) {
     final handler = isLoading ? null : onPressed;
@@ -38,22 +47,33 @@ class AppButton extends StatelessWidget {
       label: label,
       icon: icon,
       isLoading: isLoading,
+      labelStyle: labelStyle,
     );
     final button = switch (variant) {
       AppButtonVariant.primary => FilledButton(
         onPressed: handler,
+        style: FilledButton.styleFrom(
+          padding: contentPadding,
+          textStyle: labelStyle,
+        ),
         child: content,
       ),
       AppButtonVariant.accent => FilledButton(
         onPressed: handler,
         style: FilledButton.styleFrom(
           backgroundColor: AppColors.accent,
-          foregroundColor: AppColors.onAccent,
+          foregroundColor: foregroundColor ?? AppColors.onAccent,
+          padding: contentPadding,
+          textStyle: labelStyle,
         ),
         child: content,
       ),
       AppButtonVariant.outlined => OutlinedButton(
         onPressed: handler,
+        style: OutlinedButton.styleFrom(
+          padding: contentPadding,
+          textStyle: labelStyle,
+        ),
         child: content,
       ),
       AppButtonVariant.danger => OutlinedButton(
@@ -61,6 +81,8 @@ class AppButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.danger,
           side: const BorderSide(color: AppColors.danger),
+          padding: contentPadding,
+          textStyle: labelStyle,
         ),
         child: content,
       ),
@@ -74,30 +96,35 @@ class _ButtonContent extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.isLoading,
+    required this.labelStyle,
   });
 
   final String label;
   final IconData? icon;
   final bool isLoading;
+  final TextStyle? labelStyle;
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const SizedBox.square(
-        dimension: AppSizes.buttonProgress,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
+      return const ChimboLoader(compact: true, showMessage: false);
     }
     final buttonIcon = icon;
     if (buttonIcon == null) {
-      return Text(label);
+      return Text(label, style: labelStyle);
     }
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(buttonIcon),
         const SizedBox(width: AppSpacing.sm),
-        Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
+        Flexible(
+          child: Text(
+            label,
+            overflow: TextOverflow.ellipsis,
+            style: labelStyle,
+          ),
+        ),
       ],
     );
   }

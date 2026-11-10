@@ -1,5 +1,4 @@
 import 'package:chimbo/features/auth/data/models/app_user.dart';
-
 /// A logged-in customer (`POST /auth/otp/verify`, `/auth/pin/login`, `GET /auth/me`, client
 /// "app"). The two flags pick the next screen: Tengeneza PIN, business details, or Home.
 class AuthSession {

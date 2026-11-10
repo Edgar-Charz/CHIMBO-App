@@ -6,6 +6,7 @@ import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_logo.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/count_icon_badge.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
@@ -157,7 +158,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
             Expanded(
-              child: RefreshIndicator(
+              child: ChimboRefreshIndicator(
                 onRefresh: () {
                   ref.invalidate(unreadNotificationsProvider);
                   ref.invalidate(ordersProvider(OrderGroup.active));
@@ -218,20 +219,7 @@ class _HomeRetryProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxl),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            context.l10n.homeRetryLoading,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      ),
-    );
+    return ChimboLoader(loadingMessage: context.l10n.homeRetryLoading);
   }
 }
 
@@ -337,18 +325,27 @@ class _HomeSections extends StatelessWidget {
         const SizedBox(height: AppSpacing.lg),
         _QuickActions(onReorderTap: onReorderTap),
         const SizedBox(height: AppSpacing.lg),
-        for (final banner in data.banners)
+        if (data.banners.length > 1)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: HomeBannerCarousel(
+              banners: data.banners,
+              onBannerTap: (banner) => _openBannerTarget(context, banner),
+            ),
+          ),
+        if (data.banners.length == 1)
           Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.md),
             child: WholesaleBanner(
-              banner: banner,
-              onShopNow: () => _openBannerTarget(context, banner),
+              banner: data.banners.first,
+              onShopNow: () =>
+                  _openBannerTarget(context, data.banners.first),
             ),
           ),
         if (data.banners.isEmpty)
           WholesaleBanner(onShopNow: () => context.go(AppRoutes.discover)),
         if (data.offers.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.md),
           ProductRail(
             title: l10n.timedOffersTitle,
             products: data.offers,
@@ -359,7 +356,7 @@ class _HomeSections extends StatelessWidget {
           ),
         ],
         if (data.deals.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.md),
           ProductRail(
             title: l10n.quickDeals,
             products: data.deals,
@@ -370,7 +367,7 @@ class _HomeSections extends StatelessWidget {
           ),
         ],
         if (data.newArrivals.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.md),
           ProductRail(
             title: l10n.quickNewArrivals,
             products: data.newArrivals,
@@ -381,7 +378,7 @@ class _HomeSections extends StatelessWidget {
           ),
         ],
         if (data.recentlyOrdered.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.md),
           RecentlyOrderedRail(
             key: recentlyOrderedKey,
             title: l10n.recentlyOrdered,
@@ -449,7 +446,7 @@ void _openBannerTarget(BuildContext context, HomeBanner banner) {
   }
 }
 
-/// Ofa · Bidhaa Mpya · Zinazouzwa Sana · Agiza Tena.
+/// Ofa Â· Bidhaa Mpya Â· Zinazouzwa Sana Â· Agiza Tena.
 class _QuickActions extends StatelessWidget {
   const _QuickActions({required this.onReorderTap});
 

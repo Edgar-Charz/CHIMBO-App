@@ -5,6 +5,7 @@ class BusinessProfileInput {
     required this.regionId,
     this.businessName,
     this.districtId,
+    this.userEmail,
   });
 
   final String fullName;
@@ -13,6 +14,7 @@ class BusinessProfileInput {
   /// Optional ("Si lazima").
   final String? businessName;
   final int? districtId;
+  final String? userEmail;
 
   /// Body of `POST /auth/profile` (docs/API_REFERENCE.md).
   Map<String, dynamic> toJson() => {

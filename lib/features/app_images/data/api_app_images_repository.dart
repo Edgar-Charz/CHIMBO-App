@@ -5,7 +5,6 @@ import 'package:chimbo/features/app_images/data/app_images_repository.dart';
 import 'package:chimbo/features/app_images/data/models/app_image.dart';
 import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 /// Loads admin-managed illustrations from the public `/app-images` endpoint.
 class ApiAppImagesRepository implements AppImagesRepository {
   const ApiAppImagesRepository(this._apiClient, this._preferences);

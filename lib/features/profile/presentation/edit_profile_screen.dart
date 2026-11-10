@@ -1,6 +1,7 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/auth/data/models/business_profile_input.dart';
 import 'package:chimbo/features/profile/application/profile_controller.dart';
@@ -10,7 +11,6 @@ import 'package:chimbo/features/profile/presentation/widgets/profile_photo_contr
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// "Hariri Wasifu" / "Taarifa za Biashara": the registration step 3 fields, pre-filled.
 class EditProfileScreen extends ConsumerWidget {
   const EditProfileScreen({super.key});
@@ -63,7 +63,7 @@ class EditProfileScreen extends ConsumerWidget {
           error: error,
           onRetry: () => ref.invalidate(profileControllerProvider),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ChimboLoader(),
       ),
     );
   }

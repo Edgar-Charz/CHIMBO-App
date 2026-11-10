@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// First screen: the logo fades in while the saved login is checked, then the app moves on.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});

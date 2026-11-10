@@ -6,7 +6,6 @@ import 'package:chimbo/core/widgets/count_icon_badge.dart';
 import 'package:chimbo/core/widgets/price_text.dart';
 import 'package:chimbo/core/widgets/verified_badge.dart';
 import 'package:flutter/material.dart';
-
 /// Every shared widget in one place, to check the look on a real phone.
 class UiKitPreview extends StatelessWidget {
   const UiKitPreview({super.key});

@@ -1,6 +1,5 @@
 import 'package:chimbo/core/config/env.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
-
 abstract final class ProductLinks {
   static String webUrl(ProductSummary product) {
     final websiteBaseUrl = Env.apiBaseUrl.replaceFirst(

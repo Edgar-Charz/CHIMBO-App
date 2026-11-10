@@ -1,7 +1,6 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-
 /// "Agiza. Amini. Pokea. Kuza Biashara." — the middle two words in orange, as in the design.
 class BrandSlogan extends StatelessWidget {
   const BrandSlogan({super.key, this.style, this.textAlign});

@@ -10,7 +10,6 @@ import 'package:chimbo/core/storage/token_storage.dart';
 import 'package:chimbo/core/time/server_clock.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Fires when the server refused this phone's login token (see [SessionExpiredInterceptor]).
 /// The auth controller listens and logs out; the network layer never needs to know about it.
 final sessionExpiredEventsProvider = Provider<StreamController<void>>((ref) {

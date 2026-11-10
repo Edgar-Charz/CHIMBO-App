@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
-
 enum _ToastKind {
   success(Icons.check_circle_rounded, AppColors.success),
   error(Icons.error_rounded, AppColors.danger),

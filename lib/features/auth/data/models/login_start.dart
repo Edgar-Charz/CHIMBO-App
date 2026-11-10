@@ -1,5 +1,4 @@
 import 'package:chimbo/features/auth/data/models/otp_request_result.dart';
-
 /// Which screen follows the phone number (`POST /auth/start` → `next_step`).
 enum LoginNextStep {
   /// New number, or an account without a PIN yet: the SMS code is already sent.

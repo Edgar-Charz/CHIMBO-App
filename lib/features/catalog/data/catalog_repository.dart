@@ -4,6 +4,7 @@ import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
 import 'package:chimbo/features/catalog/data/models/product_page.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
+import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/catalog/data/models/visual_search_result.dart';
 import 'package:chimbo/features/home/data/home_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +22,9 @@ abstract interface class CatalogRepository {
 
   /// `GET /products/{id}`.
   Future<ProductDetails> getProduct(int productId);
+
+  /// `GET /products/{id}/related`: products from the same category.
+  Future<List<ProductSummary>> getRelatedProducts(int productId);
 
   /// `POST /products/search-by-image`.
   Future<VisualSearchResult> searchByImage(String filePath);

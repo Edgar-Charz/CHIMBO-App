@@ -2,7 +2,6 @@ import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/auth/data/models/business_profile_input.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
 import 'package:chimbo/features/profile/data/profile_repository.dart';
-
 /// Wasifu from the CHIMBO API (docs/API_REFERENCE.md, "My account").
 class ApiProfileRepository implements ProfileRepository {
   const ApiProfileRepository(this._apiClient);
@@ -19,6 +18,10 @@ class ApiProfileRepository implements ProfileRepository {
   /// also edits later, per the API reference).
   @override
   Future<Profile> updateProfile(BusinessProfileInput input) async {
+    await _apiClient.patch(
+      '/me',
+      body: {'user_email': input.userEmail?.trim() ?? ''},
+    );
     final response = await _apiClient.post(
       '/auth/profile',
       body: input.toJson(),

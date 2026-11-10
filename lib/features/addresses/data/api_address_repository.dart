@@ -1,7 +1,6 @@
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/addresses/data/address_repository.dart';
 import 'package:chimbo/features/addresses/data/models/address.dart';
-
 /// Delivery addresses from the CHIMBO API (docs/API_REFERENCE.md, "Addresses").
 class ApiAddressRepository implements AddressRepository {
   const ApiAddressRepository(this._apiClient);

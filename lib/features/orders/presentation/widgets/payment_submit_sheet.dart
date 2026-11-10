@@ -13,7 +13,6 @@ import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// "Nimelipa": the number (or bank account) the money came from and the SMS confirmation code.
 /// Closes after sending; the order then shows "Tunakagua malipo yako".
 Future<void> showPaymentSubmitSheet(BuildContext context, Order order) {

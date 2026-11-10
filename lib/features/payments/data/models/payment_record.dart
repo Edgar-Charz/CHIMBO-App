@@ -1,5 +1,4 @@
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
-
 /// One payment in "Malipo yangu" (`GET /payments`): a "Nimelipa" the customer sent, a payment staff
 /// recorded for them, or cash collected on delivery.
 class PaymentRecord {

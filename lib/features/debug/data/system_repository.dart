@@ -2,7 +2,6 @@ import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/core/network/network_providers.dart';
 import 'package:chimbo/features/debug/data/health_status.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// System endpoints of the API (blueprint §12.2).
 class SystemRepository {
   const SystemRepository(this._apiClient);

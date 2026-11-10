@@ -1,6 +1,6 @@
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/network/api_exception.dart';
-import 'package:chimbo/core/theme/app_dimensions.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:flutter/material.dart';
 
@@ -45,22 +45,7 @@ class _ErrorStateState extends State<ErrorState> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     if (_isRetrying || widget.isLoading) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                l10n.actionRetryLoading,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
-          ),
-        ),
-      );
+      return const ChimboLoader();
     }
 
     final isOffline = switch (widget.error) {

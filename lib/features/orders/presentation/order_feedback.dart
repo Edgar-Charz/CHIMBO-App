@@ -7,7 +7,6 @@ import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// "Agiza Tena": items back in the cart, then open Kikapu. Items the server skipped (sold out,
 /// hidden …) are explained instead of the plain success message.
 Future<void> reorderAndOpenCart(

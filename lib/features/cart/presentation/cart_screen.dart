@@ -6,11 +6,13 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/cart/application/cart_controller.dart';
 import 'package:chimbo/features/cart/data/models/cart.dart';
 import 'package:chimbo/features/cart/presentation/widgets/cart_line_tile.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/catalog_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -75,7 +77,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ),
       body: cart.when(
         data: (value) => value.isEmpty
-            ? RefreshIndicator(
+            ? ChimboRefreshIndicator(
                 onRefresh: _refreshCart,
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -99,7 +101,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     _change(() => _cart.setQuantity(productId, quantity)),
                 onRemove: (productId) => _change(() => _cart.remove(productId)),
               ),
-        error: (error, _) => RefreshIndicator(
+        error: (error, _) => ChimboRefreshIndicator(
           onRefresh: _refreshCart,
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -112,7 +114,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ],
           ),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ChimboLoader(),
       ),
     );
   }
@@ -140,7 +142,7 @@ class _CartContent extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: RefreshIndicator(
+          child: ChimboRefreshIndicator(
             onRefresh: onRefresh,
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -151,16 +153,23 @@ class _CartContent extends StatelessWidget {
                 AppSpacing.md,
               ),
               children: [
-                if (nudge != null) ...[
-                  _NudgeBanner(
-                    line: nudge,
-                    onAddQuantity: () => onQuantityChanged(
-                      nudge.product.id,
-                      nudge.quantity + nudge.nextTierExtraQuantity!,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                ],
+                AnimatedSize(
+                  duration: AppDurations.medium,
+                  curve: Curves.easeOutCubic,
+                  alignment: Alignment.topCenter,
+                  child: nudge == null
+                      ? const SizedBox.shrink()
+                      : Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                          child: _NudgeBanner(
+                            line: nudge,
+                            onAddQuantity: () => onQuantityChanged(
+                              nudge.product.id,
+                              nudge.quantity + nudge.nextTierExtraQuantity!,
+                            ),
+                          ),
+                        ),
+                ),
                 for (final group in cart.groups) ...[
                   _GroupHeader(name: group.categoryName),
                   for (final line in group.lines)
@@ -249,11 +258,14 @@ class _CartTotals extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  l10n.summaryItemsWithPieces(cart.lineCount, cart.pieceCount),
+                  l10n.summaryItems(cart.lineCount),
                   style: textTheme.bodySmall,
                 ),
               ),
-              Text(Money.format(cart.subtotal), style: textTheme.bodySmall),
+              _AnimatedCartAmount(
+                amount: cart.subtotal,
+                style: textTheme.bodySmall,
+              ),
             ],
           ),
           if (cart.savings > 0) ...[
@@ -268,8 +280,9 @@ class _CartTotals extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
-                  '- ${Money.format(cart.savings)}',
+                _AnimatedCartAmount(
+                  amount: cart.savings,
+                  prefix: '- ',
                   style: textTheme.bodySmall?.copyWith(
                     color: AppColors.success,
                   ),
@@ -288,8 +301,8 @@ class _CartTotals extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                Money.format(cart.subtotal),
+              _AnimatedCartAmount(
+                amount: cart.subtotal,
                 style: textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -297,6 +310,40 @@ class _CartTotals extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _AnimatedCartAmount extends StatelessWidget {
+  const _AnimatedCartAmount({
+    required this.amount,
+    required this.style,
+    this.prefix = '',
+  });
+
+  final int amount;
+  final TextStyle? style;
+  final String prefix;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: AppDurations.cartPrice,
+      transitionBuilder: (child, animation) => FadeTransition(
+        opacity: animation,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.15),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
+        ),
+      ),
+      child: Text(
+        '$prefix${Money.format(amount)}',
+        key: ValueKey((amount, prefix)),
+        style: style,
       ),
     );
   }
@@ -335,7 +382,9 @@ class _NudgeBanner extends StatelessWidget {
                 Expanded(
                   child: Text(
                     context.l10n.cartNudge(
-                      line.nextTierExtraQuantity!,
+                      line.product.unitLabel.formatQuantity(
+                        line.nextTierExtraQuantity!,
+                      ),
                       line.product.name,
                       Money.format(line.nextTierUnitPrice!),
                     ),
@@ -358,7 +407,11 @@ class _NudgeBanner extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.add_rounded),
                   label: Text(
-                    context.l10n.cartNudgeAction(line.nextTierExtraQuantity!),
+                    context.l10n.cartNudgeAction(
+                      line.product.unitLabel.formatQuantity(
+                        line.nextTierExtraQuantity!,
+                      ),
+                    ),
                   ),
                 ),
               ),

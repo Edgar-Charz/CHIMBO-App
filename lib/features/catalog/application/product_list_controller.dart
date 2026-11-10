@@ -3,7 +3,6 @@ import 'package:chimbo/features/catalog/data/models/product_query.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/catalog/data/models/visual_search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Which listing a screen shows: a category, a Home collection, or everything (Gundua).
 typedef ProductListScope = ({int? categoryId, ProductCollection? collection});
 

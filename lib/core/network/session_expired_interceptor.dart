@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-
 /// The global 401 handler: when the server refuses a request that carried a login token
 /// (`401 UNAUTHENTICATED` — expired, logged out elsewhere, or revoked by a PIN change on
 /// another phone), it calls [_onSessionExpired]. The auth feature then logs out on this phone

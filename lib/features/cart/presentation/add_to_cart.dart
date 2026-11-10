@@ -6,7 +6,6 @@ import 'package:chimbo/features/cart/application/cart_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// Adds to the cart and tells the customer how it went: "Imeongezwa kikapuni · Ona Kikapu",
 /// or the server's reason (MOQ, stock). Returns true when added.
 Future<bool> addToCart(

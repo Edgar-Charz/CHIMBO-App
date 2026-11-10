@@ -10,7 +10,6 @@ import 'package:chimbo/features/notifications/application/notifications_controll
 import 'package:chimbo/features/notifications/data/push_notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Root widget: theme, language and navigation.
 class ChimboApp extends ConsumerStatefulWidget {
   const ChimboApp({super.key});

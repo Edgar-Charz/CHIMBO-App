@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-
 /// Date formatting in the user's language. The API sends ISO-8601 UTC; we show local time.
 abstract final class AppDates {
   static String formatDateTime(DateTime dateTime, String localeName) {

@@ -1,5 +1,4 @@
 import 'package:chimbo/core/network/api_exception.dart';
-
 /// A successful API reply: `{"success": true, "data": ..., "meta": {...}}`.
 class ApiResponse {
   const ApiResponse({required this.data, this.meta = const {}});

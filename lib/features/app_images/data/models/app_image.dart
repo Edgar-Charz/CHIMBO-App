@@ -1,5 +1,4 @@
 import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
-
 /// One admin-managed picture for a fixed app screen.
 class AppImage {
   const AppImage({

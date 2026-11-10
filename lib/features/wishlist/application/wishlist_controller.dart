@@ -2,7 +2,6 @@ import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/wishlist/data/wishlist_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Which products the customer has liked. Hearts update at once; if saving fails the heart
 /// goes back and the error reaches the caller.
 class WishlistController extends AsyncNotifier<Set<int>> {

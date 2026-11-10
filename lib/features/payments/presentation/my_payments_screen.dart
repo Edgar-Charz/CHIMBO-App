@@ -4,6 +4,7 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/dates.dart';
 import 'package:chimbo/core/utils/money.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
@@ -51,7 +52,7 @@ class _HistoryTab extends ConsumerWidget {
     return ref
         .watch(myPaymentsProvider)
         .when(
-          data: (payments) => RefreshIndicator(
+          data: (payments) => ChimboRefreshIndicator(
             onRefresh: () => ref.refresh(myPaymentsProvider.future),
             child: ListView(
               padding: const EdgeInsets.all(AppSpacing.lg),
@@ -73,7 +74,7 @@ class _HistoryTab extends ConsumerWidget {
             error: error,
             onRetry: () => ref.invalidate(myPaymentsProvider),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const ChimboLoader(),
         );
   }
 }
@@ -92,8 +93,26 @@ class _MethodsTab extends ConsumerWidget {
           data: (methods) => ListView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             children: [
-              Text(l10n.acceptedMethodsTitle, style: textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.sm),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.account_balance_wallet_outlined,
+                    color: AppColors.primary,
+                    size: AppSizes.iconMedium,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      l10n.acceptedMethodsTitle,
+                      style: textTheme.titleMedium?.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
               for (final method in methods) ...[
                 SectionCard(
                   title: method.name,
@@ -113,7 +132,7 @@ class _MethodsTab extends ConsumerWidget {
             error: error,
             onRetry: () => ref.invalidate(acceptedPaymentMethodsProvider),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const ChimboLoader(),
         );
   }
 }
@@ -143,19 +162,22 @@ class _PaymentCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: Text(
-                      payment.methodName,
-                      style: textTheme.titleSmall,
-                    ),
-                  ),
+                  _StatusChip(status: payment.status),
+                  const Spacer(),
                   Text(
                     Money.format(payment.amount),
                     style: textTheme.titleSmall?.copyWith(
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
+              ),
+              Text(
+                payment.methodName,
+                style: textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               Text(
                 l10n.paymentOrderLine(
@@ -168,12 +190,34 @@ class _PaymentCard extends StatelessWidget {
                 l10n.paymentReferenceLine(payment.reference),
                 style: textTheme.bodySmall,
               ),
-              _StatusChip(status: payment.status),
               if (payment.status == PaymentAttemptStatus.rejected &&
                   reviewNote != null)
-                Text(
-                  reviewNote,
-                  style: textTheme.bodySmall?.copyWith(color: AppColors.danger),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: AppColors.dangerLight,
+                    borderRadius: BorderRadius.circular(AppRadius.medium),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.info_outline_rounded,
+                        color: AppColors.danger,
+                        size: AppSizes.iconSmall,
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      Expanded(
+                        child: Text(
+                          reviewNote,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: AppColors.danger,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
             ],
           ),
@@ -191,21 +235,24 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final (label, color, background) = switch (status) {
+    final (label, color, background, icon) = switch (status) {
       PaymentAttemptStatus.submitted => (
         l10n.paymentStatusSubmitted,
         AppColors.accent,
         AppColors.accentLight,
+        Icons.schedule_rounded,
       ),
       PaymentAttemptStatus.confirmed => (
         l10n.paymentStatusConfirmed,
         AppColors.success,
         AppColors.primaryLight,
+        Icons.check_circle_rounded,
       ),
       PaymentAttemptStatus.rejected => (
         l10n.paymentStatusRejected,
         AppColors.danger,
         AppColors.dangerLight,
+        Icons.cancel_rounded,
       ),
     };
     return Container(
@@ -216,10 +263,19 @@ class _StatusChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: background,
         borderRadius: BorderRadius.circular(AppRadius.large),
+        border: Border.all(color: color.withValues(alpha: 0.28)),
       ),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: color),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: AppSizes.iconSmall),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium
+                ?.copyWith(color: color, fontWeight: FontWeight.w700),
+          ),
+        ],
       ),
     );
   }

@@ -3,12 +3,12 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/dates.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/debug/application/health_provider.dart';
 import 'package:chimbo/features/debug/data/health_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Calls `GET /health` and shows whether the app can reach the API and database.
 class HealthCard extends ConsumerWidget {
   const HealthCard({super.key});
@@ -30,7 +30,7 @@ class HealthCard extends ConsumerWidget {
             ),
             const Divider(height: AppSpacing.xl),
             health.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const ChimboLoader(),
               error: (error, _) =>
                   ErrorState(error: error, onRetry: checkAgain),
               data: (status) =>

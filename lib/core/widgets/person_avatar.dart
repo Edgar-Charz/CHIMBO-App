@@ -3,7 +3,6 @@ import 'package:chimbo/core/config/env.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
-
 /// A round profile photo; without one (or while it loads) a green circle with "JJ" for
 /// "Joyce Joseph".
 class PersonAvatar extends StatelessWidget {

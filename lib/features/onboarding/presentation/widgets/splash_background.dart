@@ -1,6 +1,5 @@
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-
 /// The splash decoration from the design: a warm glow behind the logo, a green corner, an
 /// orange corner and faint product outlines.
 class SplashBackground extends StatelessWidget {

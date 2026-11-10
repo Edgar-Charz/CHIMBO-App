@@ -29,8 +29,13 @@ class CatalogSearchField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: const Icon(Icons.search_rounded),
-        suffixIcon: IconButton(
-          icon: const Icon(Icons.camera_alt_outlined, color: AppColors.primary),
+        suffixIcon: IconButton.filledTonal(
+          tooltip: context.l10n.visualSearchTooltip,
+          style: IconButton.styleFrom(
+            backgroundColor: AppColors.primaryLight,
+            foregroundColor: AppColors.primary,
+          ),
+          icon: const Icon(Icons.camera_alt_outlined),
           onPressed: onCameraTap,
         ),
       ),
@@ -222,6 +227,13 @@ class _CompactChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChoiceChip(
       label: Text(label),
+      avatar: isSelected
+          ? const Icon(
+              Icons.check_rounded,
+              size: AppSizes.iconSmall,
+              color: AppColors.onPrimary,
+            )
+          : null,
       selected: isSelected,
       onSelected: (_) => onTap(),
       visualDensity: VisualDensity.compact,
@@ -260,15 +272,16 @@ class _ListingActionButton extends StatelessWidget {
           color: isActive ? AppColors.primary : AppColors.border,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderRadius: BorderRadius.circular(AppRadius.large),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        minimumSize: const Size(0, AppSizes.buttonHeight),
+        padding: EdgeInsets.zero,
+        minimumSize: const Size(0, AppSizes.compactControl),
         textStyle: Theme.of(context).textTheme.labelMedium
             ?.copyWith(fontWeight: FontWeight.w600),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         spacing: AppSpacing.xs,
         children: [
           Icon(
@@ -280,6 +293,11 @@ class _ListingActionButton extends StatelessWidget {
             child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
           ?trailing,
+          Icon(
+            Icons.keyboard_arrow_down_rounded,
+            size: AppSizes.iconMedium,
+            color: isActive ? AppColors.primary : AppColors.textSecondary,
+          ),
         ],
       ),
     );

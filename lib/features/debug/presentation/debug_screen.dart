@@ -7,7 +7,6 @@ import 'package:chimbo/features/debug/presentation/widgets/health_card.dart';
 import 'package:chimbo/features/debug/presentation/widgets/ui_kit_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Developer tools (debug builds only): API health, a UI kit preview and logout (to test the
 /// login flow again).
 class DebugScreen extends ConsumerWidget {

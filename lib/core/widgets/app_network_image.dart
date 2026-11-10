@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chimbo/core/config/env.dart';
 import 'package:chimbo/core/widgets/image_placeholder.dart';
 import 'package:flutter/material.dart';
-
 /// A server image cached on the phone, with a soft loading background by default.
 /// Shows [placeholderIcon] when there is no photo or loading fails.
 class AppNetworkImage extends StatelessWidget {

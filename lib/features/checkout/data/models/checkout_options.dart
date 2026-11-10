@@ -1,5 +1,4 @@
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
-
 /// Where an order's transport price stands (blueprint R-25): a fixed fee, the region's estimate
 /// waiting for staff to measure the load, or the price staff confirmed.
 enum DeliveryFeeStatus {

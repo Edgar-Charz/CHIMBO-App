@@ -2,7 +2,6 @@ import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/notifications/data/models/app_notification.dart';
 import 'package:chimbo/features/notifications/data/notifications_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// The number on the Home bell; 0 when logged out. Reloads when someone logs in, and after
 /// notifications are read.
 final unreadNotificationsProvider = FutureProvider<int>((ref) {

@@ -1,7 +1,6 @@
 import 'package:chimbo/core/config/env.dart';
 import 'package:chimbo/core/storage/token_storage.dart';
 import 'package:dio/dio.dart';
-
 /// Adds the headers every API request needs: the tunnel header, the user's language and, once
 /// logged in, the token.
 class ApiHeadersInterceptor extends Interceptor {

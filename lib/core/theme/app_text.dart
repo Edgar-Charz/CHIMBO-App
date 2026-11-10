@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 /// Typography: one geometric sans (Poppins, bundled in assets/fonts).
 abstract final class AppText {
   static const String fontFamily = 'Poppins';

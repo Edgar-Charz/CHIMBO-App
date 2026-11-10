@@ -3,7 +3,6 @@ import 'package:chimbo/features/auth/data/models/business_profile_input.dart';
 import 'package:chimbo/features/profile/data/api_profile_repository.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Wasifu data (blueprint §12.2 "Profile"). Every method throws `ApiException` on failure.
 abstract interface class ProfileRepository {
   /// `GET /me`.

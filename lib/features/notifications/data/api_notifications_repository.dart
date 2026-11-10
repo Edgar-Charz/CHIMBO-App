@@ -1,7 +1,6 @@
 import 'package:chimbo/core/network/api_client.dart';
 import 'package:chimbo/features/notifications/data/models/notification_page.dart';
 import 'package:chimbo/features/notifications/data/notifications_repository.dart';
-
 /// Notifications from the CHIMBO API (docs/API_REFERENCE.md, "Notifications").
 class ApiNotificationsRepository implements NotificationsRepository {
   const ApiNotificationsRepository(this._apiClient);

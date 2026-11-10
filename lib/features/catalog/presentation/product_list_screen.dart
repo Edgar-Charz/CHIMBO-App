@@ -6,6 +6,7 @@ import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/count_icon_badge.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
@@ -134,18 +135,19 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
         barrierDismissible: false,
         builder: (dialogContext) => PopScope(
           canPop: false,
-          child: AlertDialog(
-            content: Row(
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(width: AppSpacing.lg),
-                Expanded(
-                  child: Text(
-                    l10n.visualSearchAnalyzing,
-                    style: Theme.of(context).textTheme.bodyMedium,
+          child: Dialog(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            child: ChimboLoader(
+              loadingMessage: l10n.visualSearchAnalyzing,
+              showMessageImmediately: true,
+              indicatorSize: 22,
+              minimumOpacity: 0.92,
+              messageStyle: Theme.of(dialogContext).textTheme.titleSmall
+                  ?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
                   ),
-                ),
-              ],
             ),
           ),
         ),
@@ -250,7 +252,7 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
           Expanded(
             child: NotificationListener<ScrollNotification>(
               onNotification: _onScroll,
-              child: RefreshIndicator(
+              child: ChimboRefreshIndicator(
                 onRefresh: () async {
                   if (categorySectionsScope != null) {
                     ref.invalidate(
@@ -279,8 +281,20 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: InputChip(
-                                avatar: const Icon(Icons.filter_list_rounded),
                                 label: Text(widget.collection!.label(l10n)),
+                                labelStyle: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                                labelPadding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.xs,
+                                ),
+                                padding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                                deleteIcon: const Icon(
+                                  Icons.close_rounded,
+                                  size: AppSizes.iconSmall,
+                                ),
                                 onDeleted: () {
                                   if (widget.categoryId != null) {
                                     context.go(
@@ -611,7 +625,7 @@ class _LoadingMore extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.all(AppSpacing.lg),
-      child: Center(child: CircularProgressIndicator()),
+      child: ChimboLoader(compact: true, showMessage: false),
     );
   }
 }

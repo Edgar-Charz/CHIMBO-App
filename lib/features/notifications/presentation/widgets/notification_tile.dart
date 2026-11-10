@@ -22,87 +22,126 @@ class NotificationTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final style = _styleOf(notification.type);
     final isUnread = !notification.isRead;
-    return Card(
-      elevation: isUnread ? 1 : 0,
+    return AnimatedContainer(
+      duration: AppDurations.medium,
+      curve: Curves.easeOutCubic,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      color: isUnread ? AppColors.surface : AppColors.background,
-      shape: RoundedRectangleBorder(
+      decoration: BoxDecoration(
+        color: isUnread ? AppColors.surface : AppColors.background,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        side: BorderSide(
+        border: Border.all(
           color: isUnread
               ? AppColors.accent.withValues(alpha: 0.35)
               : AppColors.border,
           width: isUnread ? 1.5 : 1,
         ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: style.background,
-                  borderRadius: BorderRadius.circular(AppRadius.medium),
+        boxShadow: isUnread
+            ? [
+                const BoxShadow(
+                  color: AppColors.cardShadow,
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
                 ),
-                child: SizedBox.square(
-                  dimension: AppSizes.menuIconBox,
-                  child: Icon(
-                    style.icon,
-                    color: style.color,
-                    size: AppSizes.iconMedium,
+              ]
+            : const [],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppRadius.large),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: style.background,
+                    borderRadius: BorderRadius.circular(AppRadius.medium),
+                  ),
+                  child: SizedBox.square(
+                    dimension: AppSizes.menuIconBox,
+                    child: Icon(
+                      style.icon,
+                      color: style.color,
+                      size: AppSizes.iconMedium,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            notification.titleFor(context.l10n.localeName),
-                            style: textTheme.titleSmall?.copyWith(
-                              fontWeight: isUnread ? FontWeight.w700 : null,
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AnimatedDefaultTextStyle(
+                              duration: AppDurations.medium,
+                              curve: Curves.easeOutCubic,
+                              style: textTheme.titleSmall!.copyWith(
+                                fontWeight: isUnread
+                                    ? FontWeight.w700
+                                    : FontWeight.w400,
+                              ),
+                              child: Text(
+                                notification.titleFor(context.l10n.localeName),
+                              ),
                             ),
                           ),
-                        ),
-                        if (isUnread) ...[
                           const SizedBox(width: AppSpacing.xs),
-                          const DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: AppColors.accent,
-                              shape: BoxShape.circle,
-                            ),
-                            child: SizedBox.square(dimension: AppSizes.pageDot),
+                          AnimatedSwitcher(
+                            duration: AppDurations.fast,
+                            switchInCurve: Curves.easeOutCubic,
+                            switchOutCurve: Curves.easeInCubic,
+                            transitionBuilder: (child, animation) =>
+                                FadeTransition(
+                                  opacity: animation,
+                                  child: ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  ),
+                                ),
+                            child: isUnread
+                                ? const DecoratedBox(
+                                    key: ValueKey('unread-indicator'),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: SizedBox.square(
+                                      dimension: AppSizes.pageDot,
+                                    ),
+                                  )
+                                : const SizedBox.square(
+                                    key: ValueKey('read-indicator'),
+                                    dimension: AppSizes.pageDot,
+                                  ),
                           ),
                         ],
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      notification.bodyFor(context.l10n.localeName),
-                      style: textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      AppDates.formatDayTime(
-                        notification.createdAt,
-                        context.l10n.localeName,
                       ),
-                      style: textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        notification.bodyFor(context.l10n.localeName),
+                        style: textTheme.bodyMedium,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        AppDates.formatDayTime(
+                          notification.createdAt,
+                          context.l10n.localeName,
+                        ),
+                        style: textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

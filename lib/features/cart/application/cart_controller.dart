@@ -2,7 +2,6 @@ import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/cart/data/cart_repository.dart';
 import 'package:chimbo/features/cart/data/models/cart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// The cart for the whole app (badge, Kikapu, checkout). Each change stores the server's new
 /// cart; errors (MOQ, stock) reach the caller so the screen can explain them.
 class CartController extends AsyncNotifier<Cart> {

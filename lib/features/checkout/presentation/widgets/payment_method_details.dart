@@ -5,7 +5,6 @@ import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 /// A payment method's "pay to" details: the number with a copy button, the account name, the bank
 /// and the instructions. Used in an unpaid order's pay-to box and in "Malipo yangu".
 class PaymentMethodDetails extends StatelessWidget {

@@ -1,6 +1,5 @@
 import 'package:chimbo/features/auth/data/models/app_user.dart';
 import 'package:chimbo/features/auth/data/models/auth_session.dart';
-
 /// Where the customer is in the login journey; the router picks the screen from this.
 enum AuthStatus {
   /// Saved session not checked yet (only while the splash shows).

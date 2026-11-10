@@ -2,7 +2,6 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/price_text.dart';
 import 'package:flutter/material.dart';
-
 /// One step of the example price ladder.
 typedef ExampleTier = ({int minimumQuantity, int unitPrice});
 

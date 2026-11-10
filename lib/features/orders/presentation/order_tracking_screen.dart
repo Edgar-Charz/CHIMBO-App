@@ -6,7 +6,9 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/dates.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
+import 'package:chimbo/core/widgets/app_network_image.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/confirm_dialog.dart';
 import 'package:chimbo/core/widgets/empty_state.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
@@ -14,6 +16,7 @@ import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/core/widgets/totals_card.dart';
 import 'package:chimbo/features/addresses/presentation/address_details.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/offer_widgets.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
@@ -62,7 +65,7 @@ class OrderTrackingScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.actionTrackOrder)),
       body: order.when(
-        data: (value) => RefreshIndicator(
+        data: (value) => ChimboRefreshIndicator(
           onRefresh: () => ref.refresh(orderProvider(orderId).future),
           child: _TrackingContent(
             order: value,
@@ -93,7 +96,7 @@ class OrderTrackingScreen extends ConsumerWidget {
             onRetry: () => ref.invalidate(orderProvider(orderId)),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ChimboLoader(),
       ),
     );
   }
@@ -122,6 +125,13 @@ class _TrackingContent extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         Text(l10n.orderNumber(order.number), style: textTheme.titleLarge),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l10n.orderPlacedOn(
+            AppDates.formatDayTime(order.placedAt, l10n.localeName),
+          ),
+          style: textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+        ),
         const SizedBox(height: AppSpacing.md),
         _StatusBanner(order: order),
         const SizedBox(height: AppSpacing.lg),
@@ -130,10 +140,14 @@ class _TrackingContent extends StatelessWidget {
             order.payment.isUnderReview ||
             order.isAwaitingTransportPrice)
           const SizedBox(height: AppSpacing.lg),
-        OrderTimeline(order: order),
+        SectionCard(
+          title: l10n.orderTrackingProgress,
+          child: OrderTimeline(order: order),
+        ),
         if (!order.isPickup &&
             !order.status.isStopped &&
-            !order.payment.deadlinePassed)
+            !order.payment.deadlinePassed) ...[
+          const SizedBox(height: AppSpacing.md),
           SectionCard(
             title: deliveredAt == null
                 ? l10n.estimatedDeliveryTitle
@@ -146,6 +160,7 @@ class _TrackingContent extends StatelessWidget {
               style: textTheme.titleMedium,
             ),
           ),
+        ],
         if (agent != null && order.status.isActive) ...[
           const SizedBox(height: AppSpacing.md),
           AgentCard(agent: agent),
@@ -174,17 +189,34 @@ class _TrackingContent extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   dense: true,
                   title: Text(item.productName),
-                  // The offer's discount when ordered.
-                  leading: item.offerPercent > 0
-                      ? OfferLabel(percent: item.offerPercent)
-                      : null,
-                  subtitle: Text(
-                    l10n.orderItemLine(
-                      item.quantity,
-                      Money.format(item.unitPrice),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.small),
+                    child: SizedBox.square(
+                      dimension: AppSizes.orderThumbnail,
+                      child: AppNetworkImage(
+                        url: item.imageUrl,
+                        placeholderIcon: ProductCard.placeholderIcon,
+                      ),
                     ),
                   ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.orderItemLine(
+                          item.quantity,
+                          Money.format(item.unitPrice),
+                        ),
+                      ),
+                      if (item.offerPercent > 0) ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        OfferLabel(percent: item.offerPercent),
+                      ],
+                    ],
+                  ),
                   trailing: Text(Money.format(item.lineTotal)),
+                  titleAlignment: ListTileTitleAlignment.center,
+                  visualDensity: const VisualDensity(vertical: 1),
                 ),
               if (order.payment.method case final method?)
                 ListTile(
@@ -305,7 +337,9 @@ class _StatusBanner extends StatelessWidget {
         ? Icons.error_outline_rounded
         : status.icon;
     final textTheme = Theme.of(context).textTheme;
-    return DecoratedBox(
+    return AnimatedContainer(
+      duration: AppDurations.medium,
+      curve: Curves.easeOutCubic,
       decoration: BoxDecoration(
         color: statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppRadius.large),
@@ -319,17 +353,44 @@ class _StatusBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    order.bannerTitle(l10n),
-                    style: textTheme.headlineSmall?.copyWith(
-                      color: statusColor,
+                  AnimatedSwitcher(
+                    duration: AppDurations.fast,
+                    transitionBuilder: (child, animation) =>
+                        FadeTransition(opacity: animation, child: child),
+                    child: Text(
+                      order.bannerTitle(l10n),
+                      key: ValueKey(order.bannerTitle(l10n)),
+                      style: textTheme.headlineSmall?.copyWith(
+                        color: statusColor,
+                      ),
                     ),
                   ),
-                  Text(order.bannerMessage(l10n), style: textTheme.bodyMedium),
+                  AnimatedSwitcher(
+                    duration: AppDurations.fast,
+                    transitionBuilder: (child, animation) =>
+                        FadeTransition(opacity: animation, child: child),
+                    child: Text(
+                      order.bannerMessage(l10n),
+                      key: ValueKey(order.bannerMessage(l10n)),
+                      style: textTheme.bodyMedium,
+                    ),
+                  ),
                 ],
               ),
             ),
-            Icon(statusIcon, size: AppSizes.iconLarge, color: statusColor),
+            AnimatedSwitcher(
+              duration: AppDurations.fast,
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: animation,
+                child: FadeTransition(opacity: animation, child: child),
+              ),
+              child: Icon(
+                key: ValueKey(statusIcon),
+                statusIcon,
+                size: AppSizes.iconLarge,
+                color: statusColor,
+              ),
+            ),
           ],
         ),
       ),

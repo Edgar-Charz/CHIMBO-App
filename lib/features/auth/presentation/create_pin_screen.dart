@@ -6,7 +6,6 @@ import 'package:chimbo/features/auth/presentation/widgets/auth_step_layout.dart'
 import 'package:chimbo/features/auth/presentation/widgets/pin_setup_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// "Tengeneza PIN" (registration step 3, and accounts made before PIN login) or "Weka PIN
 /// Mpya" after "Umesahau PIN?". On success the router moves on by itself (business details or
 /// Home).

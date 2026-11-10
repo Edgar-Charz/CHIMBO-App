@@ -9,7 +9,6 @@ import 'package:chimbo/features/app_images/presentation/widgets/replaceable_imag
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-
 /// Shared frame of the login screens: small logo, back arrow, step dots (registration only),
 /// picture, title and subtitle, then the screen's own form in [children].
 class AuthStepLayout extends StatelessWidget {

@@ -2,7 +2,6 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
-
 /// Round gold "OKOA ZAIDI" seal on the wholesale slide.
 class SavingsSeal extends StatelessWidget {
   const SavingsSeal({super.key});

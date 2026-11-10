@@ -30,6 +30,10 @@ class OrderCard extends StatelessWidget {
     final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
     final status = order.status;
+    final isExpired =
+        status == OrderStatus.expired ||
+        (status == OrderStatus.pendingPayment && order.payment.deadlinePassed);
+    final statusColor = isExpired ? OrderStatus.expired.color : status.color;
     final locale = l10n.localeName;
     final deliveredAt = order.deliveredAt;
     void open() => context.push(AppRoutes.orderDetails(order.id));
@@ -65,10 +69,10 @@ class OrderCard extends StatelessWidget {
               ),
               Text(
                 order.statusLabel(l10n),
-                style: textTheme.titleSmall?.copyWith(color: status.color),
+                style: textTheme.titleSmall?.copyWith(color: statusColor),
               ),
               const SizedBox(height: AppSpacing.xs),
-              if (status.isActive)
+              if (status.isActive && !isExpired)
                 _LabelledValue(
                   label: l10n.estimatedDeliveryTitle,
                   value: AppDates.formatDate(order.estimatedDelivery, locale),

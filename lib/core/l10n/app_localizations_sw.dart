@@ -400,6 +400,12 @@ class AppLocalizationsSw extends AppLocalizations {
   String get fullNameLabel => 'Jina kamili';
 
   @override
+  String get emailLabel => 'Barua pepe';
+
+  @override
+  String get emailInvalid => 'Weka anwani sahihi ya barua pepe.';
+
+  @override
   String get fullNameRequired => 'Andika jina lako kamili.';
 
   @override
@@ -420,6 +426,9 @@ class AppLocalizationsSw extends AppLocalizations {
   @override
   String get locationsLoadFailed =>
       'Imeshindikana kupakia orodha. Gusa kujaribu tena.';
+
+  @override
+  String get locationLoading => 'Inapakia maeneo...';
 
   @override
   String get locationSearchHint => 'Tafuta kwa jina...';
@@ -486,7 +495,7 @@ class AppLocalizationsSw extends AppLocalizations {
   String get myPaymentsTabHistory => 'Historia';
 
   @override
-  String get myPaymentsTabMethods => 'Njia za malipo';
+  String get myPaymentsTabMethods => 'Mahali pa kulipia';
 
   @override
   String get myPaymentsEmpty =>
@@ -761,15 +770,10 @@ class AppLocalizationsSw extends AppLocalizations {
   String get filterSheetTitle => 'Chuja bidhaa';
 
   @override
-  String get filterSheetSubtitle => 'Chagua bei na kiwango cha juu cha MOQ.';
+  String get priceFilterDescription => 'Weka bei ya chini na ya juu.';
 
   @override
-  String get priceFilterDescription =>
-      'Weka kiwango cha chini na cha juu cha bei ya bidhaa.';
-
-  @override
-  String get moqFilterDescription =>
-      'Onyesha bidhaa zenye MOQ isiyozidi kiasi unachoweka.';
+  String get moqFilterDescription => 'Weka kiwango cha juu cha MOQ.';
 
   @override
   String get sortAction => 'Panga';
@@ -908,8 +912,8 @@ class AppLocalizationsSw extends AppLocalizations {
   }
 
   @override
-  String nextTierHint(int count, String price) {
-    return 'Ongeza pcs $count upate $price kila moja';
+  String nextTierHint(String count, String price) {
+    return 'Ongeza $count upate $price kila moja';
   }
 
   @override
@@ -917,6 +921,9 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get descriptionTitle => 'Maelezo';
+
+  @override
+  String get relatedProductsTitle => 'Bidhaa zinazofanana';
 
   @override
   String get actionFavourite => 'Penda';
@@ -964,13 +971,13 @@ class AppLocalizationsSw extends AppLocalizations {
   String get actionStartShopping => 'Anza kununua';
 
   @override
-  String cartNudge(int count, String product, String price) {
-    return 'Ongeza pcs $count za $product upate $price kila moja.';
+  String cartNudge(String count, String product, String price) {
+    return 'Ongeza $count za $product upate $price kila moja.';
   }
 
   @override
-  String cartNudgeAction(int count) {
-    return 'Ongeza $count pcs';
+  String cartNudgeAction(String count) {
+    return 'Ongeza $count';
   }
 
   @override
@@ -1146,6 +1153,10 @@ class AppLocalizationsSw extends AppLocalizations {
   String get pickupPointTitle => 'Kuchukua dukani';
 
   @override
+  String get pickupPointUnavailable =>
+      'Anwani au muda wa kuchukua haupatikani. Jaribu tena kabla ya kuthibitisha oda.';
+
+  @override
   String pickupPointHint(String number) {
     return 'Tutakujulisha oda ikiwa tayari. Njoo na namba ya oda #$number.';
   }
@@ -1307,6 +1318,14 @@ class AppLocalizationsSw extends AppLocalizations {
   }
 
   @override
+  String orderPlacedOn(Object date) {
+    return 'Imewekwa $date';
+  }
+
+  @override
+  String get orderTrackingProgress => 'Maendeleo ya Oda';
+
+  @override
   String get actionTrackOrder => 'Fuatilia Oda';
 
   @override
@@ -1323,6 +1342,15 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get addressesEmpty => 'Hakuna anwani bado';
+
+  @override
+  String get addressSaved => 'Anwani imehifadhiwa.';
+
+  @override
+  String get addressDefaultSaved => 'Anwani imewekwa kuwa anwani ya msingi.';
+
+  @override
+  String get addressDeleted => 'Anwani imefutwa.';
 
   @override
   String get defaultAddressLabel => 'Chaguo-msingi';
@@ -1603,4 +1631,7 @@ class AppLocalizationsSw extends AppLocalizations {
   @override
   String get visualSearchUnavailable =>
       'Utafutaji wa picha haupatikani kwa sasa. Tafadhali jaribu tena baadaye.';
+
+  @override
+  String get loadingLongWait => 'Tafadhali subiri kidogo...';
 }

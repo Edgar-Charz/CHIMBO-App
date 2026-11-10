@@ -87,15 +87,45 @@ class _OtpInputState extends State<OtpInput> {
             Positioned.fill(child: _hiddenField(context)),
           ],
         ),
-        if (errorText != null) ...[
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            errorText,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall
-                ?.copyWith(color: AppColors.danger),
-          ),
-        ],
+        AnimatedSize(
+          duration: AppDurations.fast,
+          curve: Curves.easeOutCubic,
+          child: errorText == null
+              ? const SizedBox.shrink()
+              : Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: Container(
+                    key: ValueKey(errorText),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.sm,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.dangerLight,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.error_outline_rounded,
+                          color: AppColors.danger,
+                          size: AppSizes.iconSmall,
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Expanded(
+                          child: Text(
+                            errorText,
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: AppColors.danger),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+        ),
       ],
     );
   }
@@ -148,7 +178,9 @@ class _DigitBox extends StatelessWidget {
         : isActive
         ? AppColors.primary
         : AppColors.border;
-    return Container(
+    return AnimatedContainer(
+      duration: AppDurations.fast,
+      curve: Curves.easeOutCubic,
       width: AppSizes.otpBoxWidth,
       height: AppSizes.otpBoxHeight,
       alignment: Alignment.center,

@@ -1,6 +1,5 @@
 import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
-
 /// An active Home banner maintained in the admin dashboard.
 class HomeBanner {
   const HomeBanner({

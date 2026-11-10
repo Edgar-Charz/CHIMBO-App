@@ -2,7 +2,6 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:flutter/material.dart';
-
 /// Kiswahili names, colours and icons for order statuses (blueprint §11.3).
 extension OrderStatusLabel on OrderStatus {
   String label(AppLocalizations l10n) => switch (this) {

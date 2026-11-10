@@ -8,7 +8,6 @@ import 'package:chimbo/features/auth/presentation/widgets/auth_step_layout.dart'
 import 'package:chimbo/features/profile/presentation/widgets/business_details_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Registration step 4 — "Tuambie Kuhusu Biashara Yako". On success the router opens Home.
 class BusinessInfoScreen extends ConsumerWidget {
   const BusinessInfoScreen({super.key});

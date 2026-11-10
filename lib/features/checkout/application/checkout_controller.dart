@@ -10,7 +10,6 @@ import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// The customer's choices across the checkout screens. Null = not chosen yet: the default
 /// address, the first delivery method that reaches it, the first payment method switched on.
 class CheckoutSelection {

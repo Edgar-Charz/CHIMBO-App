@@ -4,7 +4,6 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/person_avatar.dart';
 import 'package:chimbo/features/auth/data/models/app_user.dart';
 import 'package:flutter/material.dart';
-
 /// Profile photo with a camera badge; optionally shows a labelled edit action.
 class ProfilePhotoControl extends StatelessWidget {
   const ProfilePhotoControl({

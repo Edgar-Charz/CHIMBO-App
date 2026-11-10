@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// The phone's clock. A provider, so tests can move time by hand.
 final phoneClockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
 

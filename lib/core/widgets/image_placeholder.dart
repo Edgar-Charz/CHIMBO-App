@@ -1,6 +1,5 @@
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-
 /// Soft gradient with icons, shown where a picture will go (missing asset or product photo).
 class ImagePlaceholder extends StatelessWidget {
   const ImagePlaceholder({super.key, required this.icons});

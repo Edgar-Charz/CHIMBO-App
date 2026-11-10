@@ -2,6 +2,7 @@ import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_toast.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/checkout/application/checkout_controller.dart';
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
@@ -10,7 +11,6 @@ import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// "Badilisha njia ya malipo": every method switched on, the order's current one marked.
 /// Choosing another changes it at once; "Lipa ukipokea" also confirms the order.
 Future<void> showChangePaymentMethodSheet(BuildContext context, Order order) {
@@ -113,9 +113,9 @@ class _ChangePaymentMethodSheetState
                       onTap: () => _choose(method),
                       leading: PaymentMethodIconView(method: method),
                       trailing: method.code == _changingTo
-                          ? const SizedBox.square(
-                              dimension: AppSizes.buttonProgress,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                          ? const ChimboLoader(
+                              compact: true,
+                              showMessage: false,
                             )
                           : null,
                     ),
@@ -129,7 +129,7 @@ class _ChangePaymentMethodSheetState
                 loading: () => [
                   const Padding(
                     padding: EdgeInsets.all(AppSpacing.lg),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: ChimboLoader(compact: true, showMessage: false),
                   ),
                 ],
               ),

@@ -18,7 +18,6 @@ import 'package:chimbo/features/auth/presentation/widgets/pin_pad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// What the phone screen hands to the PIN screen.
 class PinLoginArgs {
   const PinLoginArgs({required this.phone, this.isLocked = false});

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-
 /// Reads the server's time from the HTTP `Date` header of API answers (errors included) and
 /// passes it on, so the app can count down to server times on a phone with a wrong clock.
 class ServerTimeInterceptor extends Interceptor {

@@ -1,7 +1,6 @@
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
-
 /// White rounded card with a title and an optional link on the right ("Badilisha").
 class SectionCard extends StatelessWidget {
   const SectionCard({

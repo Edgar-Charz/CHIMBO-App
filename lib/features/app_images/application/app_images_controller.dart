@@ -2,7 +2,6 @@ import 'package:chimbo/features/app_images/data/app_images_providers.dart';
 import 'package:chimbo/features/app_images/data/models/app_image.dart';
 import 'package:chimbo/features/app_images/data/models/app_image_slot.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Holds the cached picture URLs and refreshes them without blocking app startup.
 class AppImagesController extends Notifier<Map<AppImageSlot, AppImage>> {
   @override

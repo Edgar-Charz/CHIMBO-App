@@ -1,5 +1,4 @@
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
-
 /// Why a line can't be ordered right now (after stock or the MOQ changed); checkout is blocked
 /// until it's fixed.
 enum CartLineProblem {

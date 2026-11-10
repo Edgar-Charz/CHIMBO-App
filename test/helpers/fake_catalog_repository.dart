@@ -70,6 +70,20 @@ class FakeCatalogRepository implements CatalogRepository {
   }
 
   @override
+  Future<List<ProductSummary>> getRelatedProducts(int productId) async {
+    final product = _find(productId);
+    return devProducts
+        .where(
+          (candidate) =>
+              candidate.summary.id != productId &&
+              candidate.summary.categoryId == product.summary.categoryId,
+        )
+        .take(10)
+        .map((candidate) => candidate.summary)
+        .toList();
+  }
+
+  @override
   Future<VisualSearchResult> searchByImage(String filePath) async {
     if (filePath.contains('empty')) {
       return const VisualSearchResult(

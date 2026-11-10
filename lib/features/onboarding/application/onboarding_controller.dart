@@ -1,7 +1,6 @@
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/features/onboarding/data/onboarding_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 /// Decides where the app goes after the splash and after the last onboarding slide.
 class OnboardingController {
   const OnboardingController(this._repository);

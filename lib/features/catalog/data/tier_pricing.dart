@@ -1,5 +1,4 @@
 import 'package:chimbo/features/catalog/data/models/price_tier.dart';
-
 /// The next cheaper tier and how many more pieces reach it ("Ongeza pcs 16 …").
 typedef NextTierHint = ({int extraQuantity, PriceTier tier});
 

@@ -4,7 +4,6 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/confirm_dialog.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
-import 'package:chimbo/core/widgets/section_header.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/auth/data/models/app_user.dart';
 import 'package:chimbo/features/profile/application/profile_controller.dart';
@@ -204,7 +203,7 @@ class _ProfileContent extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.lg),
               for (final section in menuSections) ...[
-                SectionHeader(title: section.title),
+                _ProfileSectionHeading(title: section.title),
                 for (final tile in section.tiles) ...[
                   tile,
                   const SizedBox(height: AppSpacing.sm),
@@ -247,6 +246,41 @@ class _Header extends StatelessWidget {
           icon: const Icon(Icons.logout_rounded),
         ),
       ],
+    );
+  }
+}
+
+class _ProfileSectionHeading extends StatelessWidget {
+  const _ProfileSectionHeading({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Row(
+        children: [
+          Container(
+            width: 3,
+            height: 18,
+            decoration: BoxDecoration(
+              color: AppColors.accent,
+              borderRadius: BorderRadius.circular(AppRadius.small),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          const Expanded(child: Divider(height: 1, color: AppColors.border)),
+        ],
+      ),
     );
   }
 }

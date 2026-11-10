@@ -10,7 +10,6 @@ import 'package:chimbo/features/onboarding/presentation/widgets/onboarding_slide
 import 'package:chimbo/features/onboarding/presentation/widgets/savings_seal.dart';
 import 'package:chimbo/features/onboarding/presentation/widgets/tier_preview_card.dart';
 import 'package:flutter/material.dart';
-
 const BorderRadius _pictureRadius = BorderRadius.all(
   Radius.circular(AppRadius.large),
 );

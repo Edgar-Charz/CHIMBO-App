@@ -14,16 +14,20 @@ import 'package:chimbo/features/cart/presentation/quick_add_sheet.dart';
 import 'package:chimbo/features/catalog/application/catalog_providers.dart';
 import 'package:chimbo/features/catalog/data/models/product_offer.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
+import 'package:chimbo/features/catalog/presentation/widgets/catalog_labels.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/offer_widgets.dart';
 import 'package:chimbo/features/wishlist/presentation/wishlist_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+const double _pressedCardScale = 0.985;
+const Duration _cardPressDuration = Duration(milliseconds: 140);
+
 /// The one product card used everywhere (blueprint I-7): square picture with one badge and the
 /// heart, 2-line name, price (with a crossed-out old price when applicable), MOQ with the verified tick, and the
 /// round (+). The wholesale tiers are on the product page.
-class ProductCard extends ConsumerWidget {
+class ProductCard extends ConsumerStatefulWidget {
   const ProductCard({super.key, required this.product});
 
   static const IconData placeholderIcon = Icons.inventory_2_outlined;
@@ -44,88 +48,111 @@ class ProductCard extends ConsumerWidget {
 
   final ProductSummary product;
 
+  @override
+  ConsumerState<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends ConsumerState<ProductCard> {
+  bool _isHighlighted = false;
+
+  void _setHighlighted(bool highlighted) {
+    if (_isHighlighted != highlighted) {
+      setState(() => _isHighlighted = highlighted);
+    }
+  }
+
   void _open(BuildContext context) {
-    context.push(AppRoutes.productDetails(product.id));
+    context.push(AppRoutes.productDetails(widget.product.id));
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final cart = ref.watch(cartControllerProvider).value;
+    final product = widget.product;
     final cartLine = _findCartLine(cart, product.id);
 
     // Soft shadow instead of a border lifts the white card off the cream page.
-    return Card(
-      elevation: AppSizes.cardElevation,
-      shadowColor: AppColors.cardShadow,
-      surfaceTintColor: Colors.transparent,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          InkWell(
-            onTap: () => _open(context),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  AppNetworkImage(
-                    url: product.imageUrl,
-                    placeholderIcon: placeholderIcon,
-                    memCacheWidth: 480,
-                    memCacheHeight: 480,
-                    maxWidthDiskCache: 480,
-                    maxHeightDiskCache: 480,
-                  ),
-                  if (product.isInStock)
+    return AnimatedScale(
+      scale: _isHighlighted ? _pressedCardScale : 1,
+      duration: _cardPressDuration,
+      curve: Curves.easeOutCubic,
+      child: Card(
+        elevation: AppSizes.cardElevation,
+        shadowColor: AppColors.cardShadow,
+        surfaceTintColor: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.large),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            InkWell(
+              onTap: () => _open(context),
+              onHighlightChanged: _setHighlighted,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Hero(
+                      tag: 'product-image-${product.id}',
+                      child: AppNetworkImage(
+                        url: product.imageUrl,
+                        placeholderIcon: ProductCard.placeholderIcon,
+                        memCacheWidth: 480,
+                        memCacheHeight: 480,
+                        maxWidthDiskCache: 480,
+                        maxHeightDiskCache: 480,
+                      ),
+                    ),
                     Positioned(
                       left: AppSpacing.sm,
                       top: AppSpacing.sm,
-                      child: Align(child: _CardBadge(product: product)),
-                    )
-                  else
-                    const _SoldOutCover(),
-                  if (cartLine != null && product.isInStock)
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: AppSpacing.sm,
-                      child: Center(
-                        child: _InCartQuantityStepper(
-                          product: product,
-                          cartLine: cartLine,
+                      child: product.isInStock
+                          ? Align(child: _CardBadge(product: product))
+                          : const _SoldOutCover(),
+                    ),
+                    if (cartLine != null && product.isInStock)
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: AppSpacing.sm,
+                        child: Center(
+                          child: _InCartQuantityStepper(
+                            product: product,
+                            cartLine: cartLine,
+                          ),
                         ),
                       ),
+                    Positioned(
+                      top: AppSpacing.xs,
+                      right: AppSpacing.xs,
+                      child: WishlistButton(productId: product.id),
                     ),
-                  Positioned(
-                    top: AppSpacing.xs,
-                    right: AppSpacing.xs,
-                    child: WishlistButton(productId: product.id),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md,
-              AppSpacing.sm,
-              AppSpacing.sm,
-              AppSpacing.sm,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.sm,
+                AppSpacing.sm,
+                AppSpacing.sm,
+              ),
+              child: _CardInfo(
+                product: product,
+                showQuickAdd: product.isInStock && cartLine == null,
+                onProductTap: () => _open(context),
+                onHighlightChanged: _setHighlighted,
+                onQuickAdd: product.isInStock && cartLine == null
+                    ? () => showQuickAddSheet(context, product)
+                    : null,
+              ),
             ),
-            child: _CardInfo(
-              product: product,
-              showQuickAdd: product.isInStock && cartLine == null,
-              onProductTap: () => _open(context),
-              onQuickAdd: product.isInStock && cartLine == null
-                  ? () => showQuickAddSheet(context, product)
-                  : null,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -207,12 +234,14 @@ class _CardInfo extends StatelessWidget {
   const _CardInfo({
     required this.product,
     required this.onProductTap,
+    required this.onHighlightChanged,
     required this.showQuickAdd,
     required this.onQuickAdd,
   });
 
   final ProductSummary product;
   final VoidCallback onProductTap;
+  final ValueChanged<bool> onHighlightChanged;
   final bool showQuickAdd;
 
   /// Null when sold out (the (+) is disabled).
@@ -220,7 +249,6 @@ class _CardInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
     final oldPrice = product.compareAtPrice;
     final secondary = textTheme.bodySmall?.copyWith(
@@ -232,6 +260,7 @@ class _CardInfo extends StatelessWidget {
       children: [
         InkWell(
           onTap: onProductTap,
+          onHighlightChanged: onHighlightChanged,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -293,7 +322,7 @@ class _CardInfo extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      l10n.productMoq(product.moq),
+                      'MOQ ${product.unitLabel.formatQuantity(product.moq)}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: secondary?.copyWith(fontSize: 11),

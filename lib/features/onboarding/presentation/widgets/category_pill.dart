@@ -1,7 +1,6 @@
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
-
 /// Small label pill ("JEWELRY", "COSMETICS") above the first slide's picture.
 class CategoryPill extends StatelessWidget {
   const CategoryPill({super.key, required this.label});

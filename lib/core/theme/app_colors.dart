@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 /// Brand colours (blueprint §6.3). Values are approximate until the logo files arrive (D-16).
 ///
 /// Rule: green = navigate/confirm, orange = buy.
