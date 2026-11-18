@@ -242,6 +242,7 @@
   "paymentStatusSubmitted": "Inakaguliwa",
   "paymentStatusConfirmed": "Imethibitishwa",
   "paymentStatusRejected": "Imekataliwa",
+  "paymentStatusFailed": "Haikukamilika",
   "paymentOrderLine": "Oda #{number} · {date}",
   "@paymentOrderLine": {
     "placeholders": {
@@ -740,8 +741,21 @@
   "copiedMessage": "Imenakiliwa.",
   "actionIPaid": "Nimelipa",
   "actionChangePaymentMethod": "Badilisha njia ya malipo",
+  "actionChangePaymentNetwork": "Badilisha mtandao",
   "changePaymentMethodTitle": "Badilisha njia ya malipo",
   "changePaymentMethodMessage": "Chagua njia nyingine. Muda wa kulipa hauanzi upya.",
+  "changePaymentNetworkTitle": "Chagua mtandao wa malipo",
+  "changePaymentNetworkMessage": "Chagua mtandao utakaotuma ombi la malipo kwenye simu yako.",
+  "selcomPayTitle": "Lipa {amount} kwa simu",
+  "@selcomPayTitle": { "placeholders": { "amount": { "type": "String" } } },
+  "selcomPayMessage": "Tuma ombi la malipo kwenye simu yako kupitia mtandao uliochagua.",
+  "selcomSheetTitle": "Lipa kwa simu",
+  "selcomSheetMessage": "Weka namba itakayopokea ombi la malipo la Selcom.",
+  "selcomRequestSent": "Ombi la malipo limetumwa kwenye simu yako.",
+  "selcomPendingTitle": "Tunasubiri uthibitisho wa malipo",
+  "selcomPendingMessage": "Kamilisha ombi la malipo kwenye simu yako, kisha angalia hali ya malipo hapa.",
+  "selcomCheckStatus": "Angalia hali ya malipo",
+  "selcomStatusUpdated": "Hali ya malipo imesasishwa.",
   "paymentMethodChanged": "Sasa utalipa kwa {method}.",
   "@paymentMethodChanged": {
     "placeholders": {

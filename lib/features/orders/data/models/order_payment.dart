@@ -1,16 +1,23 @@
 import 'package:chimbo/features/checkout/data/models/payment_method.dart';
+
 /// Where staff are with a "Nimelipa" the customer sent (`latest_payment.payment_status`).
 enum PaymentAttemptStatus {
+  initiated('initiated'),
+  pending('pending'),
+  failed('failed'),
   submitted('submitted'),
   confirmed('confirmed'),
-  rejected('rejected');
+  rejected('rejected'),
+  unknown('unknown');
 
   const PaymentAttemptStatus(this.apiValue);
 
   final String apiValue;
 
-  static PaymentAttemptStatus fromApi(String value) =>
-      values.firstWhere((status) => status.apiValue == value);
+  static PaymentAttemptStatus fromApi(String value) => values.firstWhere(
+    (status) => status.apiValue == value,
+    orElse: () => unknown,
+  );
 }
 
 /// The newest "Nimelipa" for an order.
@@ -19,19 +26,22 @@ class PaymentAttempt {
     required this.payerAccount,
     required this.reference,
     required this.status,
+    this.id,
     this.reviewNote,
   });
 
   factory PaymentAttempt.fromJson(Map<String, dynamic> json) {
     return PaymentAttempt(
-      payerAccount: json['payment_payer_account'] as String,
-      reference: json['payment_reference'] as String,
+      payerAccount: json['payment_payer_account'] as String? ?? '',
+      reference: json['payment_reference'] as String? ?? '',
+      id: json['payment_id'] as int?,
       status: PaymentAttemptStatus.fromApi(json['payment_status'] as String),
       reviewNote: json['payment_review_note'] as String?,
     );
   }
 
   final String payerAccount;
+  final int? id;
 
   /// The confirmation code from the payment SMS.
   final String reference;
@@ -39,6 +49,26 @@ class PaymentAttempt {
 
   /// Why staff rejected it.
   final String? reviewNote;
+}
+
+/// Safe status returned by `POST /payments/initiate` and `GET /payments/{id}/status`.
+class SelcomPaymentStatus {
+  const SelcomPaymentStatus({
+    required this.paymentId,
+    required this.orderId,
+    required this.status,
+  });
+
+  factory SelcomPaymentStatus.fromJson(Map<String, dynamic> json) =>
+      SelcomPaymentStatus(
+        paymentId: json['payment_id'] as int,
+        orderId: json['order_id'] as int,
+        status: json['payment_status'] as String,
+      );
+
+  final int paymentId;
+  final int orderId;
+  final String status;
 }
 
 /// The order's payment box (`payment` in the order): where to pay, how much, and the state of
@@ -49,6 +79,9 @@ class OrderPayment {
     required this.amount,
     required this.noteHint,
     required this.canSubmit,
+    this.paymentFlow = 'manual',
+    this.canInitiate = false,
+    this.availableMethods = const [],
     this.canChangeMethod = false,
     this.deadlinePassed = false,
     this.latest,
@@ -65,6 +98,14 @@ class OrderPayment {
       amount: json['payment_amount'] as int,
       noteHint: json['payment_note_hint'] as String,
       canSubmit: json['can_submit_payment'] as bool,
+      paymentFlow: json['payment_flow'] as String? ?? 'manual',
+      canInitiate: json['can_initiate_payment'] as bool? ?? false,
+      availableMethods:
+          (json['available_payment_methods'] as List<dynamic>? ?? [])
+              .map(
+                (item) => PaymentMethod.fromJson(item as Map<String, dynamic>),
+              )
+              .toList(growable: false),
       canChangeMethod: json['can_change_payment_method'] as bool,
       deadlinePassed: json['payment_deadline_passed'] as bool? ?? false,
       latest: latest == null ? null : PaymentAttempt.fromJson(latest),
@@ -93,6 +134,15 @@ class OrderPayment {
   /// True while the server waits for "Nimelipa" (unpaid, not expired, not cash).
   final bool canSubmit;
 
+  /// `manual` or `selcom`, as selected in the backend configuration.
+  final String paymentFlow;
+
+  /// True when the backend allows a Selcom mobile-money request for this order.
+  final bool canInitiate;
+
+  /// Methods available for this order, including Selcom mobile-money networks.
+  final List<PaymentMethod> availableMethods;
+
   /// "Badilisha njia ya malipo" is offered (unpaid, not under review, time not over).
   final bool canChangeMethod;
 
@@ -107,6 +157,11 @@ class OrderPayment {
   /// Staff refused the last one; the form is shown again with their note.
   bool get wasRejected =>
       canSubmit && latest?.status == PaymentAttemptStatus.rejected;
+
+  bool get isSelcomPending =>
+      paymentFlow == 'selcom' &&
+      (latest?.status == PaymentAttemptStatus.initiated ||
+          latest?.status == PaymentAttemptStatus.pending);
 }
 
 /// What "Nimelipa" sends (`POST /orders/{id}/payment`).

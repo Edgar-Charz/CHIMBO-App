@@ -31,6 +31,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   generate: true
@@ -55,3 +56,9 @@ flutter:
           weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
+
+flutter_launcher_icons:
+  android: true
+  image_path: assets/images/brand/launcher.png
+  adaptive_icon_background: "#FBF6EE"
+  adaptive_icon_foreground: assets/images/brand/launcher.png

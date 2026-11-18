@@ -93,7 +93,7 @@ class OrderCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.md),
               if (status.isActive)
                 AppButton(
-                  label: order.payment.canSubmit
+                  label: order.payment.canSubmit || order.payment.canInitiate
                       ? l10n.actionPayNow
                       : l10n.actionTrackOrder,
                   onPressed: open,

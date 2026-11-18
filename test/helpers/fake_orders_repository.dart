@@ -192,6 +192,21 @@ class FakeOrdersRepository implements OrdersRepository {
     return _toOrder(paid);
   }
 
+  @override
+  Future<SelcomPaymentStatus> initiatePayment({
+    required int orderId,
+    required String paymentMethodCode,
+    required String phoneNumber,
+    required String idempotencyKey,
+  }) async {
+    throw const ApiException(code: ApiErrorCode.unknown);
+  }
+
+  @override
+  Future<SelcomPaymentStatus> getPaymentStatus(int paymentId) async {
+    throw const ApiException(code: ApiErrorCode.notFound);
+  }
+
   /// Like the server: only while waiting for payment; cash on delivery confirms at once.
   @override
   Future<Order> changePaymentMethod(

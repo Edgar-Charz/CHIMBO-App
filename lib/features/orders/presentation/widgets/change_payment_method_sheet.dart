@@ -11,6 +11,7 @@ import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 /// "Badilisha njia ya malipo": every method switched on, the order's current one marked.
 /// Choosing another changes it at once; "Lipa ukipokea" also confirms the order.
 Future<void> showChangePaymentMethodSheet(BuildContext context, Order order) {
@@ -39,6 +40,31 @@ class _ChangePaymentMethodSheetState
   String? _errorText;
 
   String? get _currentCode => widget.order.payment.method?.code;
+
+  List<Widget> _methodTiles(List<PaymentMethod> methods) => [
+    for (final method in methods)
+      ChoiceTile(
+        title: method.name,
+        isSelected: method.code == _currentCode,
+        onTap: () => _choose(method),
+        leading: PaymentMethodIconView(method: method),
+        trailing: method.code == _changingTo
+            ? const ChimboLoader(compact: true, showMessage: false)
+            : null,
+      ),
+  ];
+
+  List<PaymentMethod> _choices(List<PaymentMethod> fallback) {
+    final available = widget.order.payment.availableMethods;
+    if (available.isNotEmpty) return available;
+    return fallback
+        .where(
+          (method) =>
+              widget.order.payment.paymentFlow != 'selcom' ||
+              method.type == PaymentMethodType.mobileMoney,
+        )
+        .toList(growable: false);
+  }
 
   Future<void> _choose(PaymentMethod method) async {
     if (method.code == _currentCode || _changingTo != null) {
@@ -91,9 +117,19 @@ class _ChangePaymentMethodSheetState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(l10n.changePaymentMethodTitle, style: textTheme.titleMedium),
+              Text(
+                widget.order.payment.paymentFlow == 'selcom'
+                    ? l10n.changePaymentNetworkTitle
+                    : l10n.changePaymentMethodTitle,
+                style: textTheme.titleMedium,
+              ),
               const SizedBox(height: AppSpacing.xs),
-              Text(l10n.changePaymentMethodMessage, style: textTheme.bodySmall),
+              Text(
+                widget.order.payment.paymentFlow == 'selcom'
+                    ? l10n.changePaymentNetworkMessage
+                    : l10n.changePaymentMethodMessage,
+                style: textTheme.bodySmall,
+              ),
               if (errorText != null) ...[
                 const SizedBox(height: AppSpacing.md),
                 Text(
@@ -105,33 +141,27 @@ class _ChangePaymentMethodSheetState
               ],
               const SizedBox(height: AppSpacing.md),
               ...methods.when(
-                data: (list) => [
-                  for (final method in list)
-                    ChoiceTile(
-                      title: method.name,
-                      isSelected: method.code == _currentCode,
-                      onTap: () => _choose(method),
-                      leading: PaymentMethodIconView(method: method),
-                      trailing: method.code == _changingTo
-                          ? const ChimboLoader(
-                              compact: true,
-                              showMessage: false,
-                            )
-                          : null,
-                    ),
-                ],
-                error: (error, _) => [
-                  ErrorState(
-                    error: error,
-                    onRetry: () => ref.invalidate(paymentMethodsProvider),
-                  ),
-                ],
-                loading: () => [
-                  const Padding(
-                    padding: EdgeInsets.all(AppSpacing.lg),
-                    child: ChimboLoader(compact: true, showMessage: false),
-                  ),
-                ],
+                data: (list) => _methodTiles(_choices(list)),
+                error: (error, _) =>
+                    widget.order.payment.availableMethods.isNotEmpty
+                    ? _methodTiles(_choices(const []))
+                    : [
+                        ErrorState(
+                          error: error,
+                          onRetry: () => ref.invalidate(paymentMethodsProvider),
+                        ),
+                      ],
+                loading: () => widget.order.payment.availableMethods.isNotEmpty
+                    ? _methodTiles(_choices(const []))
+                    : [
+                        const Padding(
+                          padding: EdgeInsets.all(AppSpacing.lg),
+                          child: ChimboLoader(
+                            compact: true,
+                            showMessage: false,
+                          ),
+                        ),
+                      ],
               ),
             ],
           ),

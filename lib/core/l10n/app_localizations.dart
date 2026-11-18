@@ -1034,6 +1034,12 @@ abstract class AppLocalizations {
   /// **'Imekataliwa'**
   String get paymentStatusRejected;
 
+  /// No description provided for @paymentStatusFailed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Haikukamilika'**
+  String get paymentStatusFailed;
+
   /// No description provided for @paymentOrderLine.
   ///
   /// In sw, this message translates to:
@@ -2258,6 +2264,12 @@ abstract class AppLocalizations {
   /// **'Badilisha njia ya malipo'**
   String get actionChangePaymentMethod;
 
+  /// No description provided for @actionChangePaymentNetwork.
+  ///
+  /// In sw, this message translates to:
+  /// **'Badilisha mtandao'**
+  String get actionChangePaymentNetwork;
+
   /// No description provided for @changePaymentMethodTitle.
   ///
   /// In sw, this message translates to:
@@ -2269,6 +2281,72 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Chagua njia nyingine. Muda wa kulipa hauanzi upya.'**
   String get changePaymentMethodMessage;
+
+  /// No description provided for @changePaymentNetworkTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chagua mtandao wa malipo'**
+  String get changePaymentNetworkTitle;
+
+  /// No description provided for @changePaymentNetworkMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Chagua mtandao utakaotuma ombi la malipo kwenye simu yako.'**
+  String get changePaymentNetworkMessage;
+
+  /// No description provided for @selcomPayTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa {amount} kwa simu'**
+  String selcomPayTitle(String amount);
+
+  /// No description provided for @selcomPayMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tuma ombi la malipo kwenye simu yako kupitia mtandao uliochagua.'**
+  String get selcomPayMessage;
+
+  /// No description provided for @selcomSheetTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Lipa kwa simu'**
+  String get selcomSheetTitle;
+
+  /// No description provided for @selcomSheetMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka namba itakayopokea ombi la malipo la Selcom.'**
+  String get selcomSheetMessage;
+
+  /// No description provided for @selcomRequestSent.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ombi la malipo limetumwa kwenye simu yako.'**
+  String get selcomRequestSent;
+
+  /// No description provided for @selcomPendingTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tunasubiri uthibitisho wa malipo'**
+  String get selcomPendingTitle;
+
+  /// No description provided for @selcomPendingMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kamilisha ombi la malipo kwenye simu yako, kisha angalia hali ya malipo hapa.'**
+  String get selcomPendingMessage;
+
+  /// No description provided for @selcomCheckStatus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Angalia hali ya malipo'**
+  String get selcomCheckStatus;
+
+  /// No description provided for @selcomStatusUpdated.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hali ya malipo imesasishwa.'**
+  String get selcomStatusUpdated;
 
   /// No description provided for @paymentMethodChanged.
   ///

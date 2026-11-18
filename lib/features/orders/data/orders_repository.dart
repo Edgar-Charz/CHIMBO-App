@@ -7,6 +7,7 @@ import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_list_page.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 /// What "Thibitisha Oda" sends (`POST /orders`).
 class PlaceOrderInput {
   const PlaceOrderInput({
@@ -50,6 +51,17 @@ abstract interface class OrdersRepository {
 
   /// `POST /orders/{id}/payment` — "Nimelipa": the customer says they paid; staff check it.
   Future<Order> submitPayment(int orderId, PaymentSubmission submission);
+
+  /// `POST /payments/initiate`: asks Selcom to start a mobile-money payment.
+  Future<SelcomPaymentStatus> initiatePayment({
+    required int orderId,
+    required String paymentMethodCode,
+    required String phoneNumber,
+    required String idempotencyKey,
+  });
+
+  /// `GET /payments/{id}/status`: checks a Selcom attempt owned by the signed-in customer.
+  Future<SelcomPaymentStatus> getPaymentStatus(int paymentId);
 
   /// `POST /orders/{id}/payment-method` — "Badilisha njia ya malipo" on an unpaid order.
   /// Cash on delivery confirms the order at once.

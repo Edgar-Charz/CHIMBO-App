@@ -517,6 +517,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get paymentStatusRejected => 'Imekataliwa';
 
   @override
+  String get paymentStatusFailed => 'Haikukamilika';
+
+  @override
   String paymentOrderLine(String number, String date) {
     return 'Oda #$number · $date';
   }
@@ -1228,11 +1231,53 @@ class AppLocalizationsSw extends AppLocalizations {
   String get actionChangePaymentMethod => 'Badilisha njia ya malipo';
 
   @override
+  String get actionChangePaymentNetwork => 'Badilisha mtandao';
+
+  @override
   String get changePaymentMethodTitle => 'Badilisha njia ya malipo';
 
   @override
   String get changePaymentMethodMessage =>
       'Chagua njia nyingine. Muda wa kulipa hauanzi upya.';
+
+  @override
+  String get changePaymentNetworkTitle => 'Chagua mtandao wa malipo';
+
+  @override
+  String get changePaymentNetworkMessage =>
+      'Chagua mtandao utakaotuma ombi la malipo kwenye simu yako.';
+
+  @override
+  String selcomPayTitle(String amount) {
+    return 'Lipa $amount kwa simu';
+  }
+
+  @override
+  String get selcomPayMessage =>
+      'Tuma ombi la malipo kwenye simu yako kupitia mtandao uliochagua.';
+
+  @override
+  String get selcomSheetTitle => 'Lipa kwa simu';
+
+  @override
+  String get selcomSheetMessage =>
+      'Weka namba itakayopokea ombi la malipo la Selcom.';
+
+  @override
+  String get selcomRequestSent => 'Ombi la malipo limetumwa kwenye simu yako.';
+
+  @override
+  String get selcomPendingTitle => 'Tunasubiri uthibitisho wa malipo';
+
+  @override
+  String get selcomPendingMessage =>
+      'Kamilisha ombi la malipo kwenye simu yako, kisha angalia hali ya malipo hapa.';
+
+  @override
+  String get selcomCheckStatus => 'Angalia hali ya malipo';
+
+  @override
+  String get selcomStatusUpdated => 'Hali ya malipo imesasishwa.';
 
   @override
   String paymentMethodChanged(String method) {

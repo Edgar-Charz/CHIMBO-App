@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 /// "Oda Imepokelewa!" (design PDF p.8): a short check-mark celebration, the order number,
 /// total and delivery estimate, then Fuatilia Oda or Rudi Nyumbani.
 class OrderSuccessScreen extends ConsumerWidget {
@@ -106,7 +107,9 @@ class _SuccessContent extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.lg),
         // Mobile money / bank: pay now, then "Nimelipa" (upcountry: "Tunapima mzigo wako" first).
-        if (order.payment.canSubmit || order.isAwaitingTransportPrice) ...[
+        if (order.payment.canSubmit ||
+            order.payment.canInitiate ||
+            order.isAwaitingTransportPrice) ...[
           OrderPaymentSection(order: order),
           const SizedBox(height: AppSpacing.lg),
         ],

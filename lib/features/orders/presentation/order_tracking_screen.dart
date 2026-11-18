@@ -137,6 +137,7 @@ class _TrackingContent extends StatelessWidget {
         const SizedBox(height: AppSpacing.lg),
         OrderPaymentSection(order: order),
         if (order.payment.canSubmit ||
+            order.payment.canInitiate ||
             order.payment.isUnderReview ||
             order.isAwaitingTransportPrice)
           const SizedBox(height: AppSpacing.lg),

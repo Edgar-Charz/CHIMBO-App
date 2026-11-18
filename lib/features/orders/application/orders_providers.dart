@@ -6,6 +6,7 @@ import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 /// One Oda Zangu tab.
 final ordersProvider = FutureProvider.autoDispose
     .family<OrderListPage, OrderGroup>((ref, group) {
@@ -58,6 +59,30 @@ class OrderActions {
           .read(ordersRepositoryProvider)
           .submitPayment(orderId, submission),
     );
+  }
+
+  /// Starts a Selcom mobile-money prompt. The server response remains authoritative.
+  Future<SelcomPaymentStatus> initiatePayment({
+    required int orderId,
+    required String paymentMethodCode,
+    required String phoneNumber,
+    required String idempotencyKey,
+  }) async {
+    final result = await _ref
+        .read(ordersRepositoryProvider)
+        .initiatePayment(
+          orderId: orderId,
+          paymentMethodCode: paymentMethodCode,
+          phoneNumber: phoneNumber,
+          idempotencyKey: idempotencyKey,
+        );
+    _ref.invalidate(orderProvider(orderId));
+    _ref.invalidate(ordersProvider);
+    return result;
+  }
+
+  Future<SelcomPaymentStatus> checkPaymentStatus(int paymentId) async {
+    return _ref.read(ordersRepositoryProvider).getPaymentStatus(paymentId);
   }
 
   /// "Badilisha njia ya malipo". Returns the updated order (cash on delivery: confirmed).

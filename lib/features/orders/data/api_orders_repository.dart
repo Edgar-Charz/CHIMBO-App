@@ -5,6 +5,7 @@ import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_list_page.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/data/orders_repository.dart';
+
 /// Orders and tracking from the CHIMBO API (docs/API_REFERENCE.md, "Orders").
 class ApiOrdersRepository implements OrdersRepository {
   const ApiOrdersRepository(this._apiClient);
@@ -70,6 +71,31 @@ class ApiOrdersRepository implements OrdersRepository {
       body: submission.toJson(),
     );
     return Order.fromJson(response.dataAsMap);
+  }
+
+  @override
+  Future<SelcomPaymentStatus> initiatePayment({
+    required int orderId,
+    required String paymentMethodCode,
+    required String phoneNumber,
+    required String idempotencyKey,
+  }) async {
+    final response = await _apiClient.post(
+      '/payments/initiate',
+      headers: {'Idempotency-Key': idempotencyKey},
+      body: {
+        'order_id': orderId,
+        'payment_method': paymentMethodCode,
+        'phone_number': phoneNumber,
+      },
+    );
+    return SelcomPaymentStatus.fromJson(response.dataAsMap);
+  }
+
+  @override
+  Future<SelcomPaymentStatus> getPaymentStatus(int paymentId) async {
+    final response = await _apiClient.get('/payments/$paymentId/status');
+    return SelcomPaymentStatus.fromJson(response.dataAsMap);
   }
 
   @override

@@ -514,6 +514,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentStatusRejected => 'Rejected';
 
   @override
+  String get paymentStatusFailed => 'Failed';
+
+  @override
   String paymentOrderLine(String number, String date) {
     return 'Order #$number · $date';
   }
@@ -1225,11 +1228,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionChangePaymentMethod => 'Change payment method';
 
   @override
+  String get actionChangePaymentNetwork => 'Change network';
+
+  @override
   String get changePaymentMethodTitle => 'Change payment method';
 
   @override
   String get changePaymentMethodMessage =>
       'Choose another way to pay. The time to pay does not restart.';
+
+  @override
+  String get changePaymentNetworkTitle => 'Choose a payment network';
+
+  @override
+  String get changePaymentNetworkMessage =>
+      'Choose the network that should send the payment request to your phone.';
+
+  @override
+  String selcomPayTitle(String amount) {
+    return 'Pay $amount by phone';
+  }
+
+  @override
+  String get selcomPayMessage =>
+      'Send a payment request to your phone through the selected network.';
+
+  @override
+  String get selcomSheetTitle => 'Pay by phone';
+
+  @override
+  String get selcomSheetMessage =>
+      'Enter the number that should receive the Selcom payment request.';
+
+  @override
+  String get selcomRequestSent => 'The payment request was sent to your phone.';
+
+  @override
+  String get selcomPendingTitle => 'Waiting for payment confirmation';
+
+  @override
+  String get selcomPendingMessage =>
+      'Complete the payment request on your phone, then check the status here.';
+
+  @override
+  String get selcomCheckStatus => 'Check payment status';
+
+  @override
+  String get selcomStatusUpdated => 'Payment status refreshed.';
 
   @override
   String paymentMethodChanged(String method) {

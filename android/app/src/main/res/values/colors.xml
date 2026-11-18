@@ -2,4 +2,5 @@
 <resources>
     <!-- Same cream as AppColors.background, so launch and splash look continuous. -->
     <color name="splash_background">#FBF6EE</color>
+	<color name="ic_launcher_background">#FBF6EE</color>
 </resources>

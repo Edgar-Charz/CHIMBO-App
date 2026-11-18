@@ -236,11 +236,20 @@ class _StatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final (label, color, background, icon) = switch (status) {
-      PaymentAttemptStatus.submitted => (
+      PaymentAttemptStatus.initiated ||
+      PaymentAttemptStatus.pending ||
+      PaymentAttemptStatus.submitted ||
+      PaymentAttemptStatus.unknown => (
         l10n.paymentStatusSubmitted,
         AppColors.accent,
         AppColors.accentLight,
         Icons.schedule_rounded,
+      ),
+      PaymentAttemptStatus.failed => (
+        l10n.paymentStatusFailed,
+        AppColors.danger,
+        AppColors.dangerLight,
+        Icons.error_outline_rounded,
       ),
       PaymentAttemptStatus.confirmed => (
         l10n.paymentStatusConfirmed,

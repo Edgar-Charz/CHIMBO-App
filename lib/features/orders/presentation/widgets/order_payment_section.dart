@@ -4,26 +4,31 @@ import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/dates.dart';
 import 'package:chimbo/core/utils/money.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
+import 'package:chimbo/core/widgets/app_toast.dart';
 import 'package:chimbo/core/widgets/section_card.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/checkout_widgets.dart';
 import 'package:chimbo/features/checkout/presentation/widgets/payment_method_details.dart';
+import 'package:chimbo/features/orders/application/orders_providers.dart';
 import 'package:chimbo/features/orders/data/models/order.dart';
 import 'package:chimbo/features/orders/data/models/order_payment.dart';
 import 'package:chimbo/features/orders/presentation/widgets/change_payment_method_sheet.dart';
 import 'package:chimbo/features/orders/presentation/widgets/payment_submit_sheet.dart';
+import 'package:chimbo/features/orders/presentation/widgets/selcom_payment_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 /// Paying a mobile money / bank order (staff check it by hand):
 /// - upcountry, transport price not confirmed yet → "Tunapima mzigo wako" (no paying yet);
 /// - waiting for payment → where to pay and "Nimelipa" (after a rejection, staff's note first);
 /// - sent → "Tunakagua malipo yako";
 /// - anything else (cash, paid, expired) → nothing.
-class OrderPaymentSection extends StatelessWidget {
+class OrderPaymentSection extends ConsumerWidget {
   const OrderPaymentSection({super.key, required this.order});
 
   final Order order;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final payment = order.payment;
     final latest = payment.latest;
@@ -47,6 +52,69 @@ class OrderPaymentSection extends StatelessWidget {
         background: AppColors.infoLight,
         title: l10n.paymentUnderReviewTitle,
         message: l10n.paymentUnderReviewMessage(latest.reference),
+      );
+    }
+    if (payment.isSelcomPending) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _Notice(
+            icon: Icons.hourglass_top_rounded,
+            color: AppColors.info,
+            background: AppColors.infoLight,
+            title: l10n.selcomPendingTitle,
+            message: l10n.selcomPendingMessage,
+          ),
+          if (latest?.id != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            TextButton.icon(
+              onPressed: () => _checkSelcomStatus(context, ref, latest!.id!),
+              icon: const Icon(Icons.refresh_rounded),
+              label: Text(l10n.selcomCheckStatus),
+            ),
+          ],
+        ],
+      );
+    }
+    if (payment.canInitiate) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SectionCard(
+            color: AppColors.goldLight,
+            title: l10n.selcomPayTitle(Money.format(payment.amount)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  payment.method?.name ?? '',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(l10n.selcomPayMessage),
+                if (payment.canChangeMethod) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () =>
+                          showChangePaymentMethodSheet(context, order),
+                      icon: const Icon(Icons.swap_horiz_rounded),
+                      label: Text(l10n.actionChangePaymentNetwork),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AppButton(
+            label: l10n.actionPayNow,
+            icon: Icons.phone_android_rounded,
+            variant: AppButtonVariant.accent,
+            onPressed: () => showSelcomPaymentSheet(context, order),
+          ),
+        ],
       );
     }
     if (!payment.canSubmit) {
@@ -81,6 +149,24 @@ class OrderPaymentSection extends StatelessWidget {
           ),
       ],
     );
+  }
+}
+
+Future<void> _checkSelcomStatus(
+  BuildContext context,
+  WidgetRef ref,
+  int paymentId,
+) async {
+  final l10n = context.l10n;
+  try {
+    final result = await ref
+        .read(orderActionsProvider)
+        .checkPaymentStatus(paymentId);
+    if (!context.mounted) return;
+    ref.invalidate(orderProvider(result.orderId));
+    AppToast.of(context).success(l10n.selcomStatusUpdated);
+  } catch (error) {
+    if (context.mounted) AppToast.of(context).error(l10n.errorMessage(error));
   }
 }
 
