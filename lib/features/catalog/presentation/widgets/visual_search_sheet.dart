@@ -213,14 +213,18 @@ Future<String?> pickProductImage(
   if (source == null) {
     return null;
   }
-  final imagePicker = picker ?? ImagePicker();
-  final photo = await imagePicker.pickImage(
-    source: source == VisualSearchSource.camera
-        ? ImageSource.camera
-        : ImageSource.gallery,
-    maxWidth: _photoMaxSide,
-    maxHeight: _photoMaxSide,
-    imageQuality: _photoQuality,
-  );
-  return photo?.path;
+  try {
+    final imagePicker = picker ?? ImagePicker();
+    final photo = await imagePicker.pickImage(
+      source: source == VisualSearchSource.camera
+          ? ImageSource.camera
+          : ImageSource.gallery,
+      maxWidth: _photoMaxSide,
+      maxHeight: _photoMaxSide,
+      imageQuality: _photoQuality,
+    );
+    return photo?.path;
+  } catch (_) {
+    return null;
+  }
 }

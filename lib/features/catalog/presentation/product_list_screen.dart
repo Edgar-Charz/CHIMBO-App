@@ -158,6 +158,10 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
       final result = await ref
           .read(productListControllerProvider(_scope).notifier)
           .searchByImage(filePath);
+      if (isDialogShowing && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+        isDialogShowing = false;
+      }
       if (mounted) {
         if (result.isAiActive == false) {
           toast.error(l10n.visualSearchUnavailable);
@@ -166,10 +170,18 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
         }
       }
     } on ApiException catch (error) {
+      if (isDialogShowing && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+        isDialogShowing = false;
+      }
       if (mounted) {
         toast.error(l10n.errorMessage(error));
       }
     } catch (_) {
+      if (isDialogShowing && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+        isDialogShowing = false;
+      }
       if (mounted) {
         toast.error(l10n.errorUnknown);
       }
