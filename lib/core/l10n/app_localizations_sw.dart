@@ -1604,6 +1604,52 @@ class AppLocalizationsSw extends AppLocalizations {
   String get menuWishlistHint => 'Bidhaa ulizohifadhi';
 
   @override
+  String get menuProductRequests => 'Maombi ya bidhaa';
+
+  @override
+  String get menuProductRequestsHint => 'Angalia bidhaa ulizoomba zitafutwe';
+
+  @override
+  String get productRequestsTitle => 'Maombi ya bidhaa';
+
+  @override
+  String get productRequestsPending => 'Inasubiri kuchunguzwa';
+
+  @override
+  String get productRequestsMatched => 'Bidhaa inatafutwa';
+
+  @override
+  String get productRequestsNotified => 'Inapatikana';
+
+  @override
+  String get productRequestsMatchedProduct => 'Bidhaa inayolingana';
+
+  @override
+  String get productRequestsReferencePhoto => 'Picha uliyotuma';
+
+  @override
+  String get productRequestsMatchedPhoto => 'Picha ya bidhaa dukani';
+
+  @override
+  String get productRequestsCancel => 'Ondoa ombi';
+
+  @override
+  String get productRequestsCancelConfirmTitle => 'Ondoa ombi hili?';
+
+  @override
+  String get productRequestsCancelConfirmMessage =>
+      'Hutaendelea kufuatilia ombi hili.';
+
+  @override
+  String get productRequestsCancelSuccess => 'Ombi limeondolewa.';
+
+  @override
+  String get productRequestsEmptyTitle => 'Hakuna maombi ya bidhaa';
+
+  @override
+  String get productRequestsEmptyMessage => 'Maombi yako yote yameondolewa.';
+
+  @override
   String get wishlistEmptyTitle => 'Hakuna vipendwa bado';
 
   @override
@@ -1681,21 +1727,15 @@ class AppLocalizationsSw extends AppLocalizations {
   String get loadingLongWait => 'Tafadhali subiri kidogo...';
 
   @override
-  String get visualSearchScanBarcode => 'Skani Barcode / QR';
+  String get visualSearchRequestWhatsapp => 'Omba bidhaa hii WhatsApp';
 
   @override
-  String get visualSearchRequestWhatsapp => 'Omba bidhaa hii WhatsApp';
+  String get visualSearchRequestWithPhoto => 'Tuma ombi pamoja na picha';
 
   @override
   String visualSearchWhatsappMessage(String query) {
     return 'Habari CHIMBO, natafuta bidhaa hii lakini haikupatikana kwenye app: $query. Mnaweza kusaidia?';
   }
-
-  @override
-  String get barcodeScanning => 'Skani barcode...';
-
-  @override
-  String get barcodeNotFound => 'Barcode haikupatikana. Jaribu tena.';
 
   @override
   String get actionShareReceipt => 'Shiriki Risiti';

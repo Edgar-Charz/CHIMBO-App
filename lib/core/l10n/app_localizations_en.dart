@@ -1602,6 +1602,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuWishlistHint => 'Products you saved';
 
   @override
+  String get menuProductRequests => 'Product requests';
+
+  @override
+  String get menuProductRequestsHint => 'Check items you asked us to find';
+
+  @override
+  String get productRequestsTitle => 'Product requests';
+
+  @override
+  String get productRequestsPending => 'Waiting for review';
+
+  @override
+  String get productRequestsMatched => 'We are sourcing this item';
+
+  @override
+  String get productRequestsNotified => 'Available';
+
+  @override
+  String get productRequestsMatchedProduct => 'Matched product';
+
+  @override
+  String get productRequestsReferencePhoto => 'Your reference photo';
+
+  @override
+  String get productRequestsMatchedPhoto => 'Shop product photo';
+
+  @override
+  String get productRequestsCancel => 'Remove request';
+
+  @override
+  String get productRequestsCancelConfirmTitle => 'Remove this request?';
+
+  @override
+  String get productRequestsCancelConfirmMessage =>
+      'We will stop tracking this request.';
+
+  @override
+  String get productRequestsCancelSuccess => 'Request removed.';
+
+  @override
+  String get productRequestsEmptyTitle => 'No product requests';
+
+  @override
+  String get productRequestsEmptyMessage =>
+      'All your requests have been removed.';
+
+  @override
   String get wishlistEmptyTitle => 'No favourites yet';
 
   @override
@@ -1678,21 +1725,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingLongWait => 'Please wait a little longer...';
 
   @override
-  String get visualSearchScanBarcode => 'Scan Barcode / QR';
+  String get visualSearchRequestWhatsapp => 'Request this product on WhatsApp';
 
   @override
-  String get visualSearchRequestWhatsapp => 'Request this product on WhatsApp';
+  String get visualSearchRequestWithPhoto => 'Send request with photo';
 
   @override
   String visualSearchWhatsappMessage(String query) {
     return 'Hi CHIMBO, I am looking for this product but it was not found in the app: $query. Can you help?';
   }
-
-  @override
-  String get barcodeScanning => 'Scanning barcode...';
-
-  @override
-  String get barcodeNotFound => 'No barcode found. Please try again.';
 
   @override
   String get actionShareReceipt => 'Share Receipt';

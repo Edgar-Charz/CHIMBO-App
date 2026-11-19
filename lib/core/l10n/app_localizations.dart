@@ -2942,6 +2942,96 @@ abstract class AppLocalizations {
   /// **'Bidhaa ulizohifadhi'**
   String get menuWishlistHint;
 
+  /// No description provided for @menuProductRequests.
+  ///
+  /// In sw, this message translates to:
+  /// **'Maombi ya bidhaa'**
+  String get menuProductRequests;
+
+  /// No description provided for @menuProductRequestsHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Angalia bidhaa ulizoomba zitafutwe'**
+  String get menuProductRequestsHint;
+
+  /// No description provided for @productRequestsTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Maombi ya bidhaa'**
+  String get productRequestsTitle;
+
+  /// No description provided for @productRequestsPending.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inasubiri kuchunguzwa'**
+  String get productRequestsPending;
+
+  /// No description provided for @productRequestsMatched.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bidhaa inatafutwa'**
+  String get productRequestsMatched;
+
+  /// No description provided for @productRequestsNotified.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapatikana'**
+  String get productRequestsNotified;
+
+  /// No description provided for @productRequestsMatchedProduct.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bidhaa inayolingana'**
+  String get productRequestsMatchedProduct;
+
+  /// No description provided for @productRequestsReferencePhoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Picha uliyotuma'**
+  String get productRequestsReferencePhoto;
+
+  /// No description provided for @productRequestsMatchedPhoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Picha ya bidhaa dukani'**
+  String get productRequestsMatchedPhoto;
+
+  /// No description provided for @productRequestsCancel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ondoa ombi'**
+  String get productRequestsCancel;
+
+  /// No description provided for @productRequestsCancelConfirmTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ondoa ombi hili?'**
+  String get productRequestsCancelConfirmTitle;
+
+  /// No description provided for @productRequestsCancelConfirmMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hutaendelea kufuatilia ombi hili.'**
+  String get productRequestsCancelConfirmMessage;
+
+  /// No description provided for @productRequestsCancelSuccess.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ombi limeondolewa.'**
+  String get productRequestsCancelSuccess;
+
+  /// No description provided for @productRequestsEmptyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna maombi ya bidhaa'**
+  String get productRequestsEmptyTitle;
+
+  /// No description provided for @productRequestsEmptyMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Maombi yako yote yameondolewa.'**
+  String get productRequestsEmptyMessage;
+
   /// No description provided for @wishlistEmptyTitle.
   ///
   /// In sw, this message translates to:
@@ -3068,35 +3158,23 @@ abstract class AppLocalizations {
   /// **'Tafadhali subiri kidogo...'**
   String get loadingLongWait;
 
-  /// No description provided for @visualSearchScanBarcode.
-  ///
-  /// In sw, this message translates to:
-  /// **'Skani Barcode / QR'**
-  String get visualSearchScanBarcode;
-
   /// No description provided for @visualSearchRequestWhatsapp.
   ///
   /// In sw, this message translates to:
   /// **'Omba bidhaa hii WhatsApp'**
   String get visualSearchRequestWhatsapp;
 
+  /// No description provided for @visualSearchRequestWithPhoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tuma ombi pamoja na picha'**
+  String get visualSearchRequestWithPhoto;
+
   /// No description provided for @visualSearchWhatsappMessage.
   ///
   /// In sw, this message translates to:
   /// **'Habari CHIMBO, natafuta bidhaa hii lakini haikupatikana kwenye app: {query}. Mnaweza kusaidia?'**
   String visualSearchWhatsappMessage(String query);
-
-  /// No description provided for @barcodeScanning.
-  ///
-  /// In sw, this message translates to:
-  /// **'Skani barcode...'**
-  String get barcodeScanning;
-
-  /// No description provided for @barcodeNotFound.
-  ///
-  /// In sw, this message translates to:
-  /// **'Barcode haikupatikana. Jaribu tena.'**
-  String get barcodeNotFound;
 
   /// No description provided for @actionShareReceipt.
   ///
