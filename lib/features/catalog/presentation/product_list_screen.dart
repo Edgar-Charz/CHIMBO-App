@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:chimbo/core/l10n/l10n.dart';
 import 'package:chimbo/core/network/api_exception.dart';
@@ -15,6 +16,7 @@ import 'package:chimbo/features/cart/application/cart_controller.dart';
 import 'package:chimbo/features/catalog/application/catalog_providers.dart';
 import 'package:chimbo/features/catalog/application/product_actions.dart';
 import 'package:chimbo/features/catalog/application/product_list_controller.dart';
+import 'package:chimbo/features/catalog/application/product_requests_controller.dart';
 import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
@@ -28,6 +30,7 @@ import 'package:chimbo/features/support/application/support_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// Category screens show curated sections; other listings use search, filters and a paginated
 /// 2-column grid.
@@ -56,6 +59,11 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchTimer;
   bool _didOpenInitialCamera = false;
+  bool _isSubmittingProductRequest = false;
+
+  /// Path of the last image the customer searched with.
+  /// Kept so we can offer it as an attachment when no results are found.
+  String? _lastVisualSearchPath;
 
   @override
   void initState() {
@@ -84,6 +92,9 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
   }
 
   void _onSearchChanged(String text) {
+    if (_lastVisualSearchPath != null) {
+      setState(() => _lastVisualSearchPath = null);
+    }
     _searchTimer?.cancel();
     _searchTimer = Timer(_searchDelay, () => _queryController.search(text));
   }
@@ -122,21 +133,11 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
   }
 
   Future<void> _startVisualSearch() async {
-    final input = await pickVisualSearchInput(context);
-    if (input == null || !mounted) return;
-
-    // ── Barcode / QR path ───────────────────────────────────────────────────
-    if (input.source == VisualSearchSource.barcode) {
-      final value = input.barcodeValue;
-      if (value == null || !mounted) return;
-      _searchController.text = value;
-      _queryController.search(value);
-      return;
-    }
-
-    // ── Image (camera / gallery) path ───────────────────────────────────────
-    final filePath = input.imagePath;
+    final filePath = await pickProductImage(context);
     if (filePath == null || !mounted) return;
+
+    // Clear any previous photo so the empty-state doesn't offer a stale one.
+    setState(() => _lastVisualSearchPath = null);
 
     final toast = AppToast.of(context);
     final l10n = context.l10n;
@@ -180,6 +181,8 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
           toast.error(l10n.visualSearchUnavailable);
         } else {
           _searchController.text = result.detectedQuery;
+          // Keep the path so we can offer it as an attachment when no results.
+          setState(() => _lastVisualSearchPath = filePath);
         }
       }
     } on ApiException catch (error) {
@@ -205,16 +208,53 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     }
   }
 
+  /// Opens the Android share sheet with the WhatsApp message pre-filled and
+  /// the searched photo attached, so the customer can pick WhatsApp and send.
+  Future<void> _requestWithPhoto() async {
+    if (!mounted || _isSubmittingProductRequest) return;
+    final l10n = context.l10n;
+    final path = _lastVisualSearchPath;
+    if (path == null) {
+      unawaited(_requestOnWhatsApp());
+      return;
+    }
+    final query = _searchController.text.trim();
+    setState(() => _isSubmittingProductRequest = true);
+    try {
+      final requestId = await ref
+          .read(productListControllerProvider(_scope).notifier)
+          .createProductRequest(query, imagePath: path);
+      ref.invalidate(productRequestsControllerProvider);
+      final message =
+          '${l10n.visualSearchWhatsappMessage(query)}\nOmbi #$requestId';
+      await SharePlus.instance.share(
+        ShareParams(text: message, files: [XFile(path)]),
+      );
+    } on Exception catch (error) {
+      if (mounted) {
+        AppToast.of(context).error(context.l10n.errorMessage(error));
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmittingProductRequest = false);
+    }
+  }
+
   /// Opens WhatsApp with a pre-filled message so the customer can request a
   /// product that was not found by visual search.
   Future<void> _requestOnWhatsApp() async {
-    if (!mounted) return;
+    if (!mounted || _isSubmittingProductRequest) return;
     final toast = AppToast.of(context);
     final l10n = context.l10n;
+    setState(() => _isSubmittingProductRequest = true);
     try {
       final contacts = await ref.read(supportContactsProvider.future);
       final query = _searchController.text.trim();
-      final message = l10n.visualSearchWhatsappMessage(query);
+      final requestId = await ref
+          .read(productListControllerProvider(_scope).notifier)
+          .createProductRequest(query, imagePath: _lastVisualSearchPath);
+      ref.invalidate(productRequestsControllerProvider);
+      final message =
+          '${l10n.visualSearchWhatsappMessage(query)}\nOmbi #$requestId';
       final uri = Uri.parse(contacts.whatsappUrl)
           .replace(queryParameters: {'text': message});
       final opened = await ref.read(externalUrlLauncherProvider)(uri);
@@ -223,6 +263,8 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
       }
     } on Exception catch (error) {
       if (mounted) toast.error(l10n.errorMessage(error));
+    } finally {
+      if (mounted) setState(() => _isSubmittingProductRequest = false);
     }
   }
 
@@ -492,20 +534,31 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                           SliverFillRemaining(
                             hasScrollBody: false,
                             child: state.isVisualSearch
-                                ? EmptyState(
-                                    icon: Icons.search_off_rounded,
-                                    title: l10n.visualSearchEmptyTitle,
-                                    message: l10n.visualSearchEmptySubtitle,
-                                    actionLabel: l10n.visualSearchRetry,
-                                    onAction: _startVisualSearch,
-                                    secondaryActionLabel:
-                                        l10n.visualSearchRequestWhatsapp,
-                                    onSecondaryAction: _requestOnWhatsApp,
+                                ? _VisualSearchNoResult(
+                                    detectedQuery: _searchController.text
+                                        .trim(),
+                                    photoPath: _lastVisualSearchPath,
+                                    isRequesting: _isSubmittingProductRequest,
+                                    onRetry: _startVisualSearch,
+                                    onRequestWhatsApp: _requestOnWhatsApp,
+                                    onRequestWithPhoto:
+                                        _lastVisualSearchPath != null
+                                        ? _requestWithPhoto
+                                        : null,
                                   )
                                 : EmptyState(
                                     icon: Icons.search_off_rounded,
                                     title: l10n.productsEmptyTitle,
                                     message: l10n.productsEmptyMessage,
+                                    secondaryActionLabel:
+                                        query.search.trim().isNotEmpty
+                                        ? l10n.visualSearchRequestWhatsapp
+                                        : null,
+                                    onSecondaryAction:
+                                        query.search.trim().isNotEmpty &&
+                                            !_isSubmittingProductRequest
+                                        ? _requestOnWhatsApp
+                                        : null,
                                   ),
                           )
                         else
@@ -675,6 +728,148 @@ class _LoadingMore extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.all(AppSpacing.lg),
       child: ChimboLoader(compact: true, showMessage: false),
+    );
+  }
+}
+
+/// Shown when a visual (photo) search returns no results.
+///
+/// Displays the detected product description and two action options:
+/// - Request via WhatsApp text link only (always available).
+/// - Request via the share sheet with the searched photo attached.
+class _VisualSearchNoResult extends StatelessWidget {
+  const _VisualSearchNoResult({
+    required this.detectedQuery,
+    required this.photoPath,
+    required this.isRequesting,
+    required this.onRetry,
+    required this.onRequestWhatsApp,
+    required this.onRequestWithPhoto,
+  });
+
+  final String detectedQuery;
+  final String? photoPath;
+  final bool isRequesting;
+  final VoidCallback onRetry;
+  final VoidCallback onRequestWhatsApp;
+
+  /// null when no photo is available (should not happen in practice).
+  final VoidCallback? onRequestWithPhoto;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final textTheme = Theme.of(context).textTheme;
+    final hasPhoto = photoPath != null;
+
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ── Thumbnail of the searched photo ──────────────────────────
+            if (hasPhoto) ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.large),
+                child: Image.file(
+                  File(photoPath!),
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ] else ...[
+              const SizedBox(
+                width: 88,
+                height: 88,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [AppColors.accentLight, AppColors.primaryLight],
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.search_off_rounded,
+                    size: AppSizes.iconLarge,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+            ],
+            // ── Title + detected description ──────────────────────────────
+            Text(
+              l10n.visualSearchEmptyTitle,
+              style: textTheme.titleMedium?.copyWith(color: AppColors.primary),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            if (detectedQuery.isNotEmpty) ...[
+              Text(
+                detectedQuery,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+            ],
+            Text(
+              l10n.visualSearchEmptySubtitle,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            // ── Primary: retry ────────────────────────────────────────────
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(Icons.photo_camera_outlined),
+                label: Text(l10n.visualSearchRetry),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            // ── Secondary: share with photo (share sheet) ─────────────────
+            if (hasPhoto && onRequestWithPhoto != null) ...[
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: isRequesting ? null : onRequestWithPhoto,
+                  icon: isRequesting
+                      ? const SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.share_outlined),
+                  label: Text(l10n.visualSearchRequestWithPhoto),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: AppColors.onAccent,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
+            // ── Tertiary: WhatsApp text link only ─────────────────────────
+            TextButton.icon(
+              onPressed: isRequesting ? null : onRequestWhatsApp,
+              icon: const Icon(Icons.chat_outlined, size: 18),
+              label: Text(l10n.visualSearchRequestWhatsapp),
+              style: TextButton.styleFrom(foregroundColor: AppColors.primary),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

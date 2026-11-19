@@ -3,6 +3,7 @@ import 'package:chimbo/features/catalog/data/models/product_query.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/catalog/data/models/visual_search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 /// Which listing a screen shows: a category, a Home collection, or everything (Gundua).
 typedef ProductListScope = ({int? categoryId, ProductCollection? collection});
 
@@ -113,6 +114,10 @@ class ProductListController extends AsyncNotifier<ProductListState> {
       );
     }
     return result;
+  }
+
+  Future<int> createProductRequest(String description, {String? imagePath}) {
+    return _repository.createProductRequest(description, imagePath: imagePath);
   }
 
   /// Adds the next page; does nothing while a page is loading or when all are loaded.
