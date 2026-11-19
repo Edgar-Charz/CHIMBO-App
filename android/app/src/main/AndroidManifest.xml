@@ -2,7 +2,7 @@
     <!-- The app talks to the CHIMBO API. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <!-- Camera: needed for barcode scanner (mobile_scanner). image_picker merges its own. -->
+    <!-- Camera access supports visual product search. -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
