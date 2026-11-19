@@ -3,6 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets('can animate the success icon for a confirmed reorder', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () => AppToast.of(context)
+                .success('Bidhaa zimerudishwa kikapuni.', animateIcon: true),
+            child: const Text('Agiza tena'),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Agiza tena'));
+    await tester.pump();
+
+    expect(find.byType(ScaleTransition), findsOneWidget);
+  });
+
   testWidgets('shows at the top, runs its action, hides by itself', (
     tester,
   ) async {

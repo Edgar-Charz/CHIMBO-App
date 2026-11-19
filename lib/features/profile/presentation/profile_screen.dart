@@ -6,6 +6,7 @@ import 'package:chimbo/core/widgets/confirm_dialog.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/features/auth/application/auth_controller.dart';
 import 'package:chimbo/features/auth/data/models/app_user.dart';
+import 'package:chimbo/features/catalog/application/product_requests_controller.dart';
 import 'package:chimbo/features/profile/application/profile_controller.dart';
 import 'package:chimbo/features/profile/data/models/business_profile.dart';
 import 'package:chimbo/features/profile/data/models/profile.dart';
@@ -80,6 +81,7 @@ class _ProfileContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final productRequests = ref.watch(productRequestsControllerProvider);
     final menuSections = [
       (
         title: l10n.profileSectionBusiness,
@@ -117,6 +119,14 @@ class _ProfileContent extends ConsumerWidget {
             subtitle: l10n.menuWishlistHint,
             onTap: () => context.push(AppRoutes.wishlist),
           ),
+          if (productRequests.asData?.value.isNotEmpty ?? false)
+            ProfileMenuTile(
+              icon: Icons.inventory_2_outlined,
+              tone: MenuTone.blue,
+              title: l10n.menuProductRequests,
+              subtitle: l10n.menuProductRequestsHint,
+              onTap: () => context.push(AppRoutes.productRequests),
+            ),
           ProfileMenuTile(
             icon: Icons.receipt_long_outlined,
             tone: MenuTone.blue,

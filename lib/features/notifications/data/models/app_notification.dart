@@ -1,9 +1,11 @@
 import 'dart:convert';
+
 /// What a notification is about (`notification_type`); decides its icon.
 enum NotificationType {
   orderStatus('order_status'),
   payment('payment'),
   promo('promo'),
+  productRequest('product_request'),
   system('system');
 
   const NotificationType(this.apiValue);

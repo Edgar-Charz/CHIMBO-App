@@ -81,6 +81,8 @@ void main() {
 
     expect(find.byType(ProductCard), findsNothing);
     expect(find.text('Hakuna bidhaa'), findsOneWidget);
+    expect(find.text('Omba bidhaa hii WhatsApp'), findsOneWidget);
+    expect(find.text('Tuma ombi pamoja na picha'), findsNothing);
   });
 
   testWidgets('Ofa quick action filters for active timed offers', (

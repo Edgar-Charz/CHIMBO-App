@@ -168,6 +168,11 @@ _TypeStyle _styleOf(NotificationType type) => switch (type) {
     color: AppColors.gold,
     background: AppColors.goldLight,
   ),
+  NotificationType.productRequest => (
+    icon: Icons.shopping_bag_outlined,
+    color: AppColors.primary,
+    background: AppColors.primaryLight,
+  ),
   NotificationType.system => (
     icon: Icons.info_outline_rounded,
     color: AppColors.purple,

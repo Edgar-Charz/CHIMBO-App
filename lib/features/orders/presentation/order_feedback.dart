@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+
 /// "Agiza Tena": items back in the cart, then open Kikapu. Items the server skipped (sold out,
 /// hidden …) are explained instead of the plain success message.
 Future<void> reorderAndOpenCart(
@@ -24,7 +25,7 @@ Future<void> reorderAndOpenCart(
   try {
     final skipped = await ref.read(orderActionsProvider).reorder(orderId);
     if (skipped.isEmpty) {
-      toast.success(l10n.reorderDone);
+      toast.success(l10n.reorderDone, animateIcon: true);
     } else {
       toast.info(skipped.join(' '));
     }
@@ -61,7 +62,9 @@ Future<void> shareReceipt(
   final l10n = context.l10n;
   toast.info(l10n.receiptSharing);
   try {
-    final bytes = await ref.read(orderActionsProvider).downloadReceiptBytes(order.id);
+    final bytes = await ref
+        .read(orderActionsProvider)
+        .downloadReceiptBytes(order.id);
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/Risiti-${order.number}.pdf');
     await file.writeAsBytes(bytes, flush: true);

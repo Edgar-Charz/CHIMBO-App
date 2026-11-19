@@ -4,6 +4,7 @@ import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
 import 'package:chimbo/features/catalog/data/models/product_page.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
+import 'package:chimbo/features/catalog/data/models/product_request.dart';
 import 'package:chimbo/features/catalog/data/models/product_summary.dart';
 import 'package:chimbo/features/catalog/data/models/visual_search_result.dart';
 import 'package:chimbo/features/home/data/home_data.dart';
@@ -98,6 +99,18 @@ class FakeCatalogRepository implements CatalogRepository {
       items: devProducts.take(3).map((p) => p.summary).toList(),
     );
   }
+
+  @override
+  Future<int> createProductRequest(
+    String description, {
+    String? imagePath,
+  }) async => 1;
+
+  @override
+  Future<List<ProductRequest>> getProductRequests() async => const [];
+
+  @override
+  Future<void> cancelProductRequest(int requestId) async {}
 
   @override
   Future<bool> isSubscribedStockNotification(int productId) async => false;
