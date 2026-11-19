@@ -1676,4 +1676,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingLongWait => 'Please wait a little longer...';
+
+  @override
+  String get visualSearchScanBarcode => 'Scan Barcode / QR';
+
+  @override
+  String get visualSearchRequestWhatsapp => 'Request this product on WhatsApp';
+
+  @override
+  String visualSearchWhatsappMessage(String query) {
+    return 'Hi CHIMBO, I am looking for this product but it was not found in the app: $query. Can you help?';
+  }
+
+  @override
+  String get barcodeScanning => 'Scanning barcode...';
+
+  @override
+  String get barcodeNotFound => 'No barcode found. Please try again.';
+
+  @override
+  String get actionShareReceipt => 'Share Receipt';
+
+  @override
+  String get receiptSharing => 'Preparing receipt to share…';
+
+  @override
+  String get notifyMeInStock => 'Notify me when available';
+
+  @override
+  String get notifyMeSubscribed =>
+      'We\'ll notify you when it\'s back in stock.';
+
+  @override
+  String get notifyMeUnsubscribed => 'Notification removed.';
+
+  @override
+  String get notifyMeAlreadyInStock => 'This product is already in stock.';
+
+  @override
+  String get notifyMeRemove => 'Remove notification';
 }

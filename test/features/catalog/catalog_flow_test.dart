@@ -23,26 +23,27 @@ void main() {
     expect(find.text('JEWELRY'), findsOneWidget);
   });
 
-  testWidgets('Cosmetics → a chip narrows the grid to that sub-category', (
-    tester,
-  ) async {
-    await openHome(tester);
-    await tester.tap(find.text('Angalia').first);
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Cosmetics Ã¢â€ â€™ a chip narrows the grid to that sub-category',
+    (tester) async {
+      await openHome(tester);
+      await tester.tap(find.text('Angalia').first);
+      await tester.pumpAndSettle();
 
-    expect(find.text('Tafuta kwenye Cosmetics...'), findsOneWidget);
-    expect(find.text('Vaseline Petroleum Jelly 400ml'), findsOneWidget);
+      expect(find.text('Tafuta kwenye Cosmetics...'), findsOneWidget);
+      expect(find.text('Vaseline Petroleum Jelly 400ml'), findsOneWidget);
 
-    // Chips scroll sideways: bring it into view first.
-    await tester.ensureVisible(find.text('Hair Care'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Hair Care'));
-    await tester.pumpAndSettle();
+      // Chips scroll sideways: bring it into view first.
+      await tester.ensureVisible(find.text('Hair Care'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Hair Care'));
+      await tester.pumpAndSettle();
 
-    // The category page shows rails above the full grid, so a product can appear twice.
-    expect(find.text('Hair Food 500ml (Dark & Lovely)'), findsWidgets);
-    expect(find.text('Vaseline Petroleum Jelly 400ml'), findsNothing);
-  });
+      // The category page shows rails above the full grid, so a product can appear twice.
+      expect(find.text('Hair Food 500ml (Dark & Lovely)'), findsWidgets);
+      expect(find.text('Vaseline Petroleum Jelly 400ml'), findsNothing);
+    },
+  );
 
   testWidgets('product page: tiers, stepper and live savings', (tester) async {
     await openHome(tester);
@@ -53,7 +54,7 @@ void main() {
     expect(find.text('Nunua zaidi, lipa kidogo'), findsOneWidget);
     expect(find.text('60+ pcs'), findsOneWidget);
 
-    // From the MOQ (1) up to 8 pieces: the 6–23 tier, saving (5,500 − 5,000) × 8.
+    // From the MOQ (1) up to 8 pieces: the 6Ã¢â‚¬â€œ23 tier, saving (5,500 Ã¢Ë†â€™ 5,000) Ãƒâ€” 8.
     final increase = find.byTooltip('Ongeza');
     await tester.ensureVisible(increase);
     await tester.pumpAndSettle();
@@ -65,7 +66,7 @@ void main() {
 
     expect(find.text('Unaokoa TZS 4,000'), findsOneWidget);
     expect(
-      find.text('Ongeza pcs 16 upate TZS 4,700 kila moja'),
+      find.text('Ongeza 16 pcs upate TZS 4,700 kila moja'),
       findsOneWidget,
     );
   });
@@ -82,7 +83,9 @@ void main() {
     expect(find.text('Hakuna bidhaa'), findsOneWidget);
   });
 
-  testWidgets('Ofa quick action filters for active timed offers', (tester) async {
+  testWidgets('Ofa quick action filters for active timed offers', (
+    tester,
+  ) async {
     await openHome(tester);
     await tester.tap(find.text('Ofa za muda'));
     await tester.pumpAndSettle();
@@ -114,14 +117,14 @@ void main() {
     expect(soldOut, findsOneWidget);
 
     await tapText(tester, 'Nourish Body Oil 100ml');
-    expect(find.text('Imeisha stock'), findsOneWidget);
+    expect(find.text('Nijulishe ikipatikana'), findsOneWidget);
     final addButton = tester.widget<FilledButton>(
       find.ancestor(
-        of: find.text('Imeisha stock'),
+        of: find.text('Nijulishe ikipatikana'),
         matching: find.byType(FilledButton),
       ),
     );
-    expect(addButton.onPressed, isNull);
+    expect(addButton.onPressed, isNotNull);
   });
 
   test('dev catalog lists sold-out products last', () async {

@@ -108,6 +108,10 @@ class OrderActions {
     });
   }
 
+  /// Returns the raw PDF bytes without saving. Used by [shareReceipt] to share via the OS sheet.
+  Future<Uint8List> downloadReceiptBytes(int orderId) =>
+      _ref.read(ordersRepositoryProvider).downloadReceipt(orderId);
+
   /// Shows the server's answer on the order's screen; the lists reload (status may move).
   void _showUpdated(Order order) {
     _ref.read(orderProvider(order.id).notifier).show(order);

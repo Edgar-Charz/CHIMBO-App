@@ -53,6 +53,7 @@ class ProductCard extends ConsumerStatefulWidget {
 }
 
 class _ProductCardState extends ConsumerState<ProductCard> {
+  final Object _heroTag = Object();
   bool _isHighlighted = false;
 
   void _setHighlighted(bool highlighted) {
@@ -62,7 +63,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
   }
 
   void _open(BuildContext context) {
-    context.push(AppRoutes.productDetails(widget.product.id));
+    context.push(AppRoutes.productDetails(widget.product.id), extra: _heroTag);
   }
 
   @override
@@ -96,7 +97,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                   fit: StackFit.expand,
                   children: [
                     Hero(
-                      tag: 'product-image-${product.id}',
+                      tag: _heroTag,
                       child: AppNetworkImage(
                         url: product.imageUrl,
                         placeholderIcon: ProductCard.placeholderIcon,

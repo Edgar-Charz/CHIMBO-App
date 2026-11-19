@@ -29,7 +29,6 @@ import 'package:chimbo/features/orders/presentation/widgets/pickup_point_details
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 /// Fuatilia Oda (design PDF p.9): status banner, timeline, ETA, agent, and the order itself.
 /// The live map is deferred (D-15).
 class OrderTrackingScreen extends ConsumerWidget {
@@ -71,6 +70,8 @@ class OrderTrackingScreen extends ConsumerWidget {
             order: value,
             onCancel: () => _cancel(context, ref),
             onReorder: () => reorderAndOpenCart(context, ref, orderId),
+            onDownloadReceipt: () => downloadReceipt(context, ref, value),
+            onShareReceipt: () => shareReceipt(context, ref, value),
           ),
         ),
         error: (error, _) {
@@ -107,11 +108,15 @@ class _TrackingContent extends StatelessWidget {
     required this.order,
     required this.onCancel,
     required this.onReorder,
+    required this.onDownloadReceipt,
+    required this.onShareReceipt,
   });
 
   final Order order;
   final VoidCallback onCancel;
   final VoidCallback onReorder;
+  final VoidCallback onDownloadReceipt;
+  final VoidCallback onShareReceipt;
 
   @override
   Widget build(BuildContext context) {
@@ -297,6 +302,41 @@ class _TrackingContent extends StatelessWidget {
             label: l10n.quickReorder,
             variant: AppButtonVariant.accent,
             onPressed: onReorder,
+          ),
+        if (order.status == OrderStatus.delivered)
+          Row(
+            children: [
+              Expanded(
+                child: TextButton.icon(
+                  onPressed: onShareReceipt,
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                  ),
+                  icon: const Icon(Icons.share_outlined, size: 16),
+                  label: Text(
+                    l10n.actionShareReceipt,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TextButton.icon(
+                  onPressed: onDownloadReceipt,
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                  ),
+                  icon: const Icon(Icons.download_outlined, size: 16),
+                  label: Text(
+                    l10n.actionDownloadReceipt,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ],
           ),
         const SizedBox(height: AppSpacing.md),
         Row(

@@ -12,18 +12,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// One order in Oda Zangu. Active: status, ETA, Fuatilia Oda. Delivered: date, items, total,
-/// Agiza Tena and Pakua Risiti.
+/// Agiza Tena, Pakua Risiti, and Shiriki Risiti.
 class OrderCard extends StatelessWidget {
   const OrderCard({
     super.key,
     required this.order,
     required this.onReorder,
     required this.onDownloadReceipt,
+    required this.onShareReceipt,
   });
 
   final Order order;
   final VoidCallback onReorder;
   final VoidCallback onDownloadReceipt;
+  final VoidCallback onShareReceipt;
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +108,43 @@ class OrderCard extends StatelessWidget {
                     onPressed: onReorder,
                   ),
                 if (status == OrderStatus.delivered)
-                  TextButton.icon(
-                    onPressed: onDownloadReceipt,
-                    icon: const Icon(Icons.receipt_long_outlined),
-                    label: Text(l10n.actionDownloadReceipt),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton.icon(
+                          onPressed: onShareReceipt,
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(fontSize: 12),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                            ),
+                          ),
+                          icon: const Icon(Icons.share_outlined, size: 16),
+                          label: Text(
+                            l10n.actionShareReceipt,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextButton.icon(
+                          onPressed: onDownloadReceipt,
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(fontSize: 12),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                            ),
+                          ),
+                          icon: const Icon(Icons.download_outlined, size: 16),
+                          label: Text(
+                            l10n.actionDownloadReceipt,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
               ],
             ],

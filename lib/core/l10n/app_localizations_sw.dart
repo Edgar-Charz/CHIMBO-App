@@ -1679,4 +1679,42 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get loadingLongWait => 'Tafadhali subiri kidogo...';
+
+  @override
+  String get visualSearchScanBarcode => 'Skani Barcode / QR';
+
+  @override
+  String get visualSearchRequestWhatsapp => 'Omba bidhaa hii WhatsApp';
+
+  @override
+  String visualSearchWhatsappMessage(String query) {
+    return 'Habari CHIMBO, natafuta bidhaa hii lakini haikupatikana kwenye app: $query. Mnaweza kusaidia?';
+  }
+
+  @override
+  String get barcodeScanning => 'Skani barcode...';
+
+  @override
+  String get barcodeNotFound => 'Barcode haikupatikana. Jaribu tena.';
+
+  @override
+  String get actionShareReceipt => 'Shiriki Risiti';
+
+  @override
+  String get receiptSharing => 'Inashiriki risiti…';
+
+  @override
+  String get notifyMeInStock => 'Nijulishe ikipatikana';
+
+  @override
+  String get notifyMeSubscribed => 'Utajulishwa ikipatikana.';
+
+  @override
+  String get notifyMeUnsubscribed => 'Umeondoa arifa.';
+
+  @override
+  String get notifyMeAlreadyInStock => 'Bidhaa hii bado iko dukani.';
+
+  @override
+  String get notifyMeRemove => 'Ondoa arifa';
 }

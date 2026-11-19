@@ -20,6 +20,7 @@ class AppButton extends StatelessWidget {
     this.contentPadding,
     this.labelStyle,
     this.foregroundColor,
+    this.iconSize,
   });
 
   final String label;
@@ -40,6 +41,9 @@ class AppButton extends StatelessWidget {
   final TextStyle? labelStyle;
   final Color? foregroundColor;
 
+  /// Icon size override for compact buttons. Defaults to 18 when an icon is shown.
+  final double? iconSize;
+
   @override
   Widget build(BuildContext context) {
     final handler = isLoading ? null : onPressed;
@@ -48,6 +52,7 @@ class AppButton extends StatelessWidget {
       icon: icon,
       isLoading: isLoading,
       labelStyle: labelStyle,
+      iconSize: iconSize,
     );
     final button = switch (variant) {
       AppButtonVariant.primary => FilledButton(
@@ -97,12 +102,14 @@ class _ButtonContent extends StatelessWidget {
     required this.icon,
     required this.isLoading,
     required this.labelStyle,
+    this.iconSize,
   });
 
   final String label;
   final IconData? icon;
   final bool isLoading;
   final TextStyle? labelStyle;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +123,7 @@ class _ButtonContent extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(buttonIcon),
+        Icon(buttonIcon, size: iconSize),
         const SizedBox(width: AppSpacing.sm),
         Flexible(
           child: Text(

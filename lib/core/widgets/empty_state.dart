@@ -2,7 +2,7 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/widgets/app_button.dart';
 import 'package:flutter/material.dart';
-/// Friendly "nothing here" view: icon + optional title + one sentence + at most one action.
+/// Friendly "nothing here" view: icon + optional title + one sentence + at most two actions.
 ///
 /// [ErrorState] uses it too, so empty and error screens look alike.
 class EmptyState extends StatelessWidget {
@@ -14,6 +14,8 @@ class EmptyState extends StatelessWidget {
     this.actionLabel,
     this.onAction,
     this.isLoading = false,
+    this.secondaryActionLabel,
+    this.onSecondaryAction,
   });
 
   final IconData icon;
@@ -22,6 +24,9 @@ class EmptyState extends StatelessWidget {
   final String? actionLabel;
   final VoidCallback? onAction;
   final bool isLoading;
+  /// Optional second action rendered as a [TextButton] below the primary action.
+  final String? secondaryActionLabel;
+  final VoidCallback? onSecondaryAction;
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +109,17 @@ class EmptyState extends StatelessWidget {
                   onPressed: onAction,
                   isLoading: isLoading,
                   expand: false,
+                ),
+              ],
+              if (secondaryActionLabel != null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                TextButton.icon(
+                  onPressed: onSecondaryAction,
+                  icon: const Icon(Icons.chat_outlined, size: 18),
+                  label: Text(secondaryActionLabel!),
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                  ),
                 ),
               ],
             ],

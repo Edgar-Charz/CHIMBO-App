@@ -1,4 +1,4 @@
-import 'package:chimbo/core/l10n/app_localizations.dart';
+﻿import 'package:chimbo/core/l10n/app_localizations.dart';
 import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/features/addresses/application/addresses_controller.dart';
 import 'package:chimbo/features/addresses/data/address_repository.dart';
@@ -27,7 +27,7 @@ void main() {
       tester.getTopLeft(find.text('Joyce Joseph')).dy,
       lessThan(tester.getTopLeft(find.text('Asha Mussa')).dy),
     );
-    expect(find.text('Chaguo-msingi'), findsOneWidget);
+    expect(find.byTooltip('Chaguo-msingi'), findsOneWidget);
   });
 
   testWidgets('edits an address using the shared address form', (tester) async {
@@ -72,7 +72,7 @@ void main() {
 
     expect(repository.addresses.first.id, 2);
     expect(repository.addresses.first.isDefault, isTrue);
-    expect(find.text('Chaguo-msingi'), findsOneWidget);
+    expect(find.byTooltip('Chaguo-msingi'), findsOneWidget);
     expect(
       tester.getTopLeft(find.text('Asha Mussa')).dy,
       lessThan(tester.getTopLeft(find.text('Joyce Joseph')).dy),

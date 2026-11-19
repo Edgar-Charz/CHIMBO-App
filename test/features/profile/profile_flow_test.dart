@@ -1,4 +1,4 @@
-import 'package:chimbo/core/widgets/app_text_field.dart';
+﻿import 'package:chimbo/core/widgets/app_text_field.dart';
 import 'package:chimbo/features/notifications/presentation/notifications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -141,7 +141,7 @@ void main() {
       expect(find.text('Namba ya muamala: QJK3X7ABC1'), findsOneWidget);
       expect(find.text('123456'), findsNothing);
 
-      await tester.tap(find.text('Njia za malipo'));
+      await tester.tap(find.text('Mahali pa kulipia'));
       await tester.pumpAndSettle();
 
       expect(find.text('Njia za malipo tunazokubali'), findsOneWidget);

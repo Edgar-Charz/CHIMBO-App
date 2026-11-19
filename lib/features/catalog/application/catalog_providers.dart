@@ -140,6 +140,14 @@ final relatedProductsProvider = FutureProvider.autoDispose
           ref.watch(catalogRepositoryProvider).getRelatedProducts(productId),
     );
 
+/// Whether the signed-in customer is subscribed to back-in-stock push for [productId].
+/// Re-fetched automatically when invalidated (e.g., after subscribe/unsubscribe).
+final stockNotificationProvider = FutureProvider.autoDispose
+    .family<bool, int>(
+      (ref, productId) =>
+          ref.watch(catalogRepositoryProvider).isSubscribedStockNotification(productId),
+    );
+
 /// A time-limited offer just ended on a card: Home and the product lists load again, so they
 /// show the prices the server now charges.
 extension ReloadCatalogPrices on WidgetRef {

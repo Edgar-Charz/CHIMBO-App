@@ -14,7 +14,7 @@ enum _PinStep { current, create, confirm }
 /// [askCurrentPin], for "Badilisha PIN"), the new PIN, then the same again.
 ///
 /// [onSubmit] sends it; an `ApiException` it throws is shown on the step it is about
-/// (`current_pin`, `user_pin` — e.g. an easy PIN — or `user_pin_confirmation`).
+/// (`current_pin`, `user_pin` â€” e.g. an easy PIN â€” or `user_pin_confirmation`).
 class PinSetupForm extends StatefulWidget {
   const PinSetupForm({
     super.key,
@@ -232,12 +232,10 @@ class _PinSetupFormState extends State<PinSetupForm> {
                   constraints: BoxConstraints(
                     minHeight: constraints.maxHeight - AppSpacing.md,
                   ),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: formContent,
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: formContent,
                   ),
                 ),
               ),

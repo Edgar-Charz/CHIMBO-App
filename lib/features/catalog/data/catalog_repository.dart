@@ -28,6 +28,15 @@ abstract interface class CatalogRepository {
 
   /// `POST /products/search-by-image`.
   Future<VisualSearchResult> searchByImage(String filePath);
+
+  /// `GET /products/{id}/notify-me` — true if the signed-in customer is subscribed.
+  Future<bool> isSubscribedStockNotification(int productId);
+
+  /// `POST /products/{id}/notify-me` — subscribe to back-in-stock push. Idempotent.
+  Future<void> subscribeStockNotification(int productId);
+
+  /// `DELETE /products/{id}/notify-me` — unsubscribe.
+  Future<void> unsubscribeStockNotification(int productId);
 }
 
 final catalogRepositoryProvider = Provider<CatalogRepository>(

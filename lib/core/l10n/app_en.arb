@@ -579,5 +579,24 @@
   "visualSearchRetry": "Take another photo",
   "visualSearchTooltip": "Search by image",
   "visualSearchUnavailable": "Image search is temporarily unavailable. Please try again later.",
-  "loadingLongWait": "Please wait a little longer..."
+  "loadingLongWait": "Please wait a little longer...",
+  "visualSearchScanBarcode": "Scan Barcode / QR",
+  "visualSearchRequestWhatsapp": "Request this product on WhatsApp",
+  "visualSearchWhatsappMessage": "Hi CHIMBO, I am looking for this product but it was not found in the app: {query}. Can you help?",
+  "@visualSearchWhatsappMessage": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "barcodeScanning": "Scanning barcode...",
+  "barcodeNotFound": "No barcode found. Please try again.",
+  "actionShareReceipt": "Share Receipt",
+  "receiptSharing": "Preparing receipt to share…",
+  "notifyMeInStock": "Notify me when available",
+  "notifyMeSubscribed": "We'll notify you when it's back in stock.",
+  "notifyMeUnsubscribed": "Notification removed.",
+  "notifyMeAlreadyInStock": "This product is already in stock.",
+  "notifyMeRemove": "Remove notification"
 }

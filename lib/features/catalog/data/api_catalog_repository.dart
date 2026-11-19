@@ -69,4 +69,23 @@ class ApiCatalogRepository implements CatalogRepository {
     );
     return VisualSearchResult.fromJson(response.dataAsMap);
   }
+
+  /// `GET /products/{id}/notify-me` — true if signed-in customer is subscribed.
+  @override
+  Future<bool> isSubscribedStockNotification(int productId) async {
+    final response = await _apiClient.get('/products/$productId/notify-me');
+    return response.dataAsMap['is_subscribed'] as bool? ?? false;
+  }
+
+  /// `POST /products/{id}/notify-me` — subscribe to back-in-stock push.
+  @override
+  Future<void> subscribeStockNotification(int productId) async {
+    await _apiClient.post('/products/$productId/notify-me');
+  }
+
+  /// `DELETE /products/{id}/notify-me` — unsubscribe.
+  @override
+  Future<void> unsubscribeStockNotification(int productId) async {
+    await _apiClient.delete('/products/$productId/notify-me');
+  }
 }

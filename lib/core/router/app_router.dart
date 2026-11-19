@@ -1,4 +1,4 @@
-import 'package:chimbo/core/router/app_routes.dart';
+﻿import 'package:chimbo/core/router/app_routes.dart';
 import 'package:chimbo/core/router/auth_redirect.dart';
 import 'package:chimbo/features/addresses/data/models/address.dart';
 import 'package:chimbo/features/addresses/presentation/address_form_screen.dart';
@@ -36,11 +36,12 @@ import 'package:chimbo/features/wishlist/presentation/wishlist_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 /// App navigation. The 5 bottom tabs live in a [StatefulShellRoute], so each tab keeps its own
 /// history and scroll position when the user switches tabs.
 ///
 /// Every navigation passes [authRedirect], and the router re-checks it whenever the login state
-/// changes — so logging in, finishing step 3 or logging out moves to the right screen by itself.
+/// changes â€” so logging in, finishing step 3 or logging out moves to the right screen by itself.
 final appRouterProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
     initialLocation: AppRoutes.splash,
@@ -258,6 +259,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.productPattern,
         builder: (context, state) => ProductDetailsScreen(
           productId: int.parse(state.pathParameters['productId']!),
+          heroTag: state.extra,
         ),
       ),
       if (kDebugMode)
@@ -272,8 +274,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return router;
 });
 
-/// '/profile/edit' → 'edit': child routes are written relative to their parent.
-/// [levels] > 1 keeps more of the end ('/discover/category/:id' → 'category/:id').
+/// '/profile/edit' â†’ 'edit': child routes are written relative to their parent.
+/// [levels] > 1 keeps more of the end ('/discover/category/:id' â†’ 'category/:id').
 String _childPath(String fullPath, {int levels = 1}) {
   final parts = fullPath.split('/');
   return parts.sublist(parts.length - levels).join('/');

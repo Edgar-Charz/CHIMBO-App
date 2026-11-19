@@ -1,4 +1,5 @@
-import 'package:chimbo/core/l10n/app_localizations.dart';
+﻿import 'package:chimbo/core/l10n/app_localizations.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,7 +27,8 @@ void main() {
     await tester.pump();
 
     expect(retryCount, 1);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(ChimboLoader), findsOneWidget);
+    await tester.pump(const Duration(seconds: 2));
     expect(find.text('Inapakia...'), findsOneWidget);
   });
 }

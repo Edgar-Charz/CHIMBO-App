@@ -3067,6 +3067,78 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Tafadhali subiri kidogo...'**
   String get loadingLongWait;
+
+  /// No description provided for @visualSearchScanBarcode.
+  ///
+  /// In sw, this message translates to:
+  /// **'Skani Barcode / QR'**
+  String get visualSearchScanBarcode;
+
+  /// No description provided for @visualSearchRequestWhatsapp.
+  ///
+  /// In sw, this message translates to:
+  /// **'Omba bidhaa hii WhatsApp'**
+  String get visualSearchRequestWhatsapp;
+
+  /// No description provided for @visualSearchWhatsappMessage.
+  ///
+  /// In sw, this message translates to:
+  /// **'Habari CHIMBO, natafuta bidhaa hii lakini haikupatikana kwenye app: {query}. Mnaweza kusaidia?'**
+  String visualSearchWhatsappMessage(String query);
+
+  /// No description provided for @barcodeScanning.
+  ///
+  /// In sw, this message translates to:
+  /// **'Skani barcode...'**
+  String get barcodeScanning;
+
+  /// No description provided for @barcodeNotFound.
+  ///
+  /// In sw, this message translates to:
+  /// **'Barcode haikupatikana. Jaribu tena.'**
+  String get barcodeNotFound;
+
+  /// No description provided for @actionShareReceipt.
+  ///
+  /// In sw, this message translates to:
+  /// **'Shiriki Risiti'**
+  String get actionShareReceipt;
+
+  /// No description provided for @receiptSharing.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inashiriki risiti…'**
+  String get receiptSharing;
+
+  /// No description provided for @notifyMeInStock.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nijulishe ikipatikana'**
+  String get notifyMeInStock;
+
+  /// No description provided for @notifyMeSubscribed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Utajulishwa ikipatikana.'**
+  String get notifyMeSubscribed;
+
+  /// No description provided for @notifyMeUnsubscribed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Umeondoa arifa.'**
+  String get notifyMeUnsubscribed;
+
+  /// No description provided for @notifyMeAlreadyInStock.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bidhaa hii bado iko dukani.'**
+  String get notifyMeAlreadyInStock;
+
+  /// No description provided for @notifyMeRemove.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ondoa arifa'**
+  String get notifyMeRemove;
 }
 
 class _AppLocalizationsDelegate

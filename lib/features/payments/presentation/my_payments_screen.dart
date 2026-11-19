@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Wasifu → "Malipo yangu", in two tabs: the customer's payments (newest first) and the payment
+/// Wasifu â†’ "Malipo yangu", in two tabs: the customer's payments (newest first) and the payment
 /// methods CHIMBO accepts with where to send the money. Each tab loads on its own.
 class MyPaymentsScreen extends StatelessWidget {
   const MyPaymentsScreen({super.key});
@@ -160,10 +160,12 @@ class _PaymentCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: AppSpacing.xs,
             children: [
-              Row(
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                runSpacing: AppSpacing.xs,
                 children: [
                   _StatusChip(status: payment.status),
-                  const Spacer(),
                   Text(
                     Money.format(payment.amount),
                     style: textTheme.titleSmall?.copyWith(

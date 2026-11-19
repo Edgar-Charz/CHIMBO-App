@@ -115,6 +115,8 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                           ),
                           onDownloadReceipt: () =>
                               downloadReceipt(context, ref, page.orders[index]),
+                          onShareReceipt: () =>
+                              shareReceipt(context, ref, page.orders[index]),
                         ),
                       ),
                 error: (error, _) => ErrorState(

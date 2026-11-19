@@ -99,6 +99,15 @@ class FakeCatalogRepository implements CatalogRepository {
     );
   }
 
+  @override
+  Future<bool> isSubscribedStockNotification(int productId) async => false;
+
+  @override
+  Future<void> subscribeStockNotification(int productId) async {}
+
+  @override
+  Future<void> unsubscribeStockNotification(int productId) async {}
+
   DevProduct _find(int productId) {
     for (final product in devProducts) {
       if (product.summary.id == productId) {

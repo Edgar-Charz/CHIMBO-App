@@ -13,6 +13,7 @@ import 'package:chimbo/core/widgets/error_state.dart';
 import 'package:chimbo/core/widgets/section_header.dart';
 import 'package:chimbo/features/cart/application/cart_controller.dart';
 import 'package:chimbo/features/catalog/application/catalog_providers.dart';
+import 'package:chimbo/features/catalog/application/product_actions.dart';
 import 'package:chimbo/features/catalog/application/product_list_controller.dart';
 import 'package:chimbo/features/catalog/data/models/category.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
@@ -23,6 +24,7 @@ import 'package:chimbo/features/catalog/presentation/widgets/listing_sheets.dart
 import 'package:chimbo/features/catalog/presentation/widgets/product_card.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/product_grid.dart';
 import 'package:chimbo/features/catalog/presentation/widgets/visual_search_sheet.dart';
+import 'package:chimbo/features/support/application/support_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -120,10 +122,21 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
   }
 
   Future<void> _startVisualSearch() async {
-    final filePath = await pickProductImage(context);
-    if (filePath == null || !mounted) {
+    final input = await pickVisualSearchInput(context);
+    if (input == null || !mounted) return;
+
+    // ── Barcode / QR path ───────────────────────────────────────────────────
+    if (input.source == VisualSearchSource.barcode) {
+      final value = input.barcodeValue;
+      if (value == null || !mounted) return;
+      _searchController.text = value;
+      _queryController.search(value);
       return;
     }
+
+    // ── Image (camera / gallery) path ───────────────────────────────────────
+    final filePath = input.imagePath;
+    if (filePath == null || !mounted) return;
 
     final toast = AppToast.of(context);
     final l10n = context.l10n;
@@ -189,6 +202,27 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
       if (isDialogShowing && mounted) {
         Navigator.of(context, rootNavigator: true).pop();
       }
+    }
+  }
+
+  /// Opens WhatsApp with a pre-filled message so the customer can request a
+  /// product that was not found by visual search.
+  Future<void> _requestOnWhatsApp() async {
+    if (!mounted) return;
+    final toast = AppToast.of(context);
+    final l10n = context.l10n;
+    try {
+      final contacts = await ref.read(supportContactsProvider.future);
+      final query = _searchController.text.trim();
+      final message = l10n.visualSearchWhatsappMessage(query);
+      final uri = Uri.parse(contacts.whatsappUrl)
+          .replace(queryParameters: {'text': message});
+      final opened = await ref.read(externalUrlLauncherProvider)(uri);
+      if (!opened && mounted) {
+        toast.error(l10n.helpCannotOpen);
+      }
+    } on Exception catch (error) {
+      if (mounted) toast.error(l10n.errorMessage(error));
     }
   }
 
@@ -464,6 +498,9 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                                     message: l10n.visualSearchEmptySubtitle,
                                     actionLabel: l10n.visualSearchRetry,
                                     onAction: _startVisualSearch,
+                                    secondaryActionLabel:
+                                        l10n.visualSearchRequestWhatsapp,
+                                    onSecondaryAction: _requestOnWhatsApp,
                                   )
                                 : EmptyState(
                                     icon: Icons.search_off_rounded,

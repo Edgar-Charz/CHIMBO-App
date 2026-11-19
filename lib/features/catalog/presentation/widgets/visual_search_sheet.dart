@@ -3,14 +3,15 @@ import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 /// Choice made in the visual search modal sheet.
-enum VisualSearchSource { camera, gallery }
+enum VisualSearchSource { camera, gallery, barcode }
 
 const double _photoMaxSide = 1080;
 const int _photoQuality = 85;
 
-/// Modal bottom sheet for choosing between camera and gallery.
+/// Modal bottom sheet for choosing between camera, gallery, and barcode scanner.
 Future<VisualSearchSource?> showVisualSearchSheet(BuildContext context) {
   return showModalBottomSheet<VisualSearchSource>(
     context: context,
@@ -94,6 +95,21 @@ Future<VisualSearchSource?> showVisualSearchSheet(BuildContext context) {
                   borderColor: AppColors.accent.withValues(alpha: 0.20),
                   onTap: () =>
                       Navigator.of(context).pop(VisualSearchSource.gallery),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                _VisualSearchOption(
+                  icon: Icons.qr_code_scanner_outlined,
+                  label: l10n.visualSearchScanBarcode,
+                  gradient: const [AppColors.primaryLight, AppColors.surface],
+                  pressedGradient: const [
+                    AppColors.primaryLight,
+                    AppColors.primaryLight,
+                  ],
+                  iconGradient: const [AppColors.primary, AppColors.accent],
+                  iconColor: AppColors.onPrimary,
+                  borderColor: AppColors.primary.withValues(alpha: 0.14),
+                  onTap: () =>
+                      Navigator.of(context).pop(VisualSearchSource.barcode),
                 ),
               ],
             ),
@@ -205,12 +221,15 @@ class _VisualSearchOptionState extends State<_VisualSearchOption> {
 }
 
 /// Shows the visual search sheet and picks an image via [ImagePicker].
+///
+/// Returns the file path for camera/gallery, or `null` if cancelled.
+/// For barcode, returns `null` — use [scanBarcode] instead.
 Future<String?> pickProductImage(
   BuildContext context, {
   ImagePicker? picker,
 }) async {
   final source = await showVisualSearchSheet(context);
-  if (source == null) {
+  if (source == null || source == VisualSearchSource.barcode) {
     return null;
   }
   try {
@@ -226,5 +245,138 @@ Future<String?> pickProductImage(
     return photo?.path;
   } catch (_) {
     return null;
+  }
+}
+
+/// Shows the visual search sheet and, if the user picks "Barcode", opens the
+/// on-device scanner and returns the scanned value.
+///
+/// Returns `null` if cancelled or no barcode was detected.
+Future<({VisualSearchSource source, String? imagePath, String? barcodeValue})?>
+    pickVisualSearchInput(BuildContext context, {ImagePicker? picker}) async {
+  final source = await showVisualSearchSheet(context);
+  if (source == null) return null;
+
+  if (source == VisualSearchSource.barcode) {
+    if (!context.mounted) return null;
+    final barcode = await Navigator.of(context).push<String>(
+      MaterialPageRoute<String>(
+        builder: (_) => const _BarcodeScannerScreen(),
+      ),
+    );
+    return (source: source, imagePath: null, barcodeValue: barcode);
+  }
+
+  try {
+    final imagePicker = picker ?? ImagePicker();
+    final photo = await imagePicker.pickImage(
+      source: source == VisualSearchSource.camera
+          ? ImageSource.camera
+          : ImageSource.gallery,
+      maxWidth: _photoMaxSide,
+      maxHeight: _photoMaxSide,
+      imageQuality: _photoQuality,
+    );
+    return (source: source, imagePath: photo?.path, barcodeValue: null);
+  } catch (_) {
+    return null;
+  }
+}
+
+/// Full-screen barcode scanner that pops with the first detected barcode value.
+class _BarcodeScannerScreen extends StatefulWidget {
+  const _BarcodeScannerScreen();
+
+  @override
+  State<_BarcodeScannerScreen> createState() => _BarcodeScannerScreenState();
+}
+
+class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen> {
+  final MobileScannerController _controller = MobileScannerController();
+  bool _popped = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onDetect(BarcodeCapture capture) {
+    if (_popped) return;
+    final value = capture.barcodes.firstOrNull?.rawValue;
+    if (value != null && value.isNotEmpty) {
+      _popped = true;
+      Navigator.of(context).pop(value);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        title: Text(
+          l10n.visualSearchScanBarcode,
+          style: const TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: ValueListenableBuilder(
+              valueListenable: _controller,
+              builder: (_, state, child) => Icon(
+                state.torchState == TorchState.on
+                    ? Icons.flash_on
+                    : Icons.flash_off,
+                color: Colors.white,
+              ),
+            ),
+            onPressed: _controller.toggleTorch,
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          MobileScanner(
+            controller: _controller,
+            onDetect: _onDetect,
+          ),
+          // Scanning hint overlay
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.7),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+              child: Text(
+                l10n.barcodeScanning,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

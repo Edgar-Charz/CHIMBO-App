@@ -24,7 +24,7 @@ class ProductGallery extends StatefulWidget {
 
   /// Medium for the big photo, thumb for the strip, large for zoom.
   final List<ProductPhoto> photos;
-  final String heroTag;
+  final Object? heroTag;
 
   @override
   State<ProductGallery> createState() => _ProductGalleryState();
@@ -135,8 +135,9 @@ class _ProductGalleryState extends State<ProductGallery> {
                       previewMaxWidthDiskCache: _galleryThumbnailCacheSize,
                       previewMaxHeightDiskCache: _galleryThumbnailCacheSize,
                     );
-                    return index == 0
-                        ? Hero(tag: widget.heroTag, child: image)
+                    final heroTag = widget.heroTag;
+                    return index == 0 && heroTag != null
+                        ? Hero(tag: heroTag, child: image)
                         : image;
                   },
                 ),

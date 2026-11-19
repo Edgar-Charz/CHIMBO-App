@@ -8,7 +8,7 @@ import '../../helpers/pump_app.dart';
 
 void main() {
   testWidgets(
-    'product → Kikapu → new address → Hakiki → order → tracking → cancel',
+    'product ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Kikapu ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ new address ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Hakiki ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ order ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ tracking ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ cancel',
     (tester) async {
       await pumpAppPastSplash(
         tester,
@@ -35,10 +35,10 @@ void main() {
       await tester.tap(find.text('Ona Kikapu'));
       await tester.pumpAndSettle();
       expect(find.text('Kikapu Chako'), findsOneWidget);
-      expect(find.text('6+ pcs @ TZS 5,000'), findsOneWidget);
+      expect(find.text('6 pcs @ TZS 5,000'), findsOneWidget);
       await tapText(tester, 'Endelea kwenye Malipo');
 
-      // Checkout: no address yet → add one (name and phone come from the profile).
+      // Checkout: no address yet ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ add one (name and phone come from the profile).
       expect(find.text('Malipo na Usafirishaji'), findsOneWidget);
       await tapText(tester, 'Ongeza anwani');
       await tester.enterText(
@@ -46,9 +46,16 @@ void main() {
         'Kariakoo, Mtaa wa Lumumba',
       );
       await tapText(tester, 'Hifadhi anwani');
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
       expect(find.text('Kariakoo, Mtaa wa Lumumba, Arusha'), findsOneWidget);
 
       // 40,000 + Standard 5,000.
+      await tester.dragUntilVisible(
+        find.text('TZS 45,000'),
+        find.byType(ListView).first,
+        const Offset(0, -300),
+      );
       expect(find.text('TZS 45,000'), findsOneWidget);
       await tapText(tester, 'Endelea Kuhakiki');
       expect(find.text('Hakiki Oda'), findsOneWidget);

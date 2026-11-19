@@ -966,5 +966,24 @@
   "visualSearchRetry": "Piga picha nyingine",
   "visualSearchTooltip": "Tafuta kwa picha",
   "visualSearchUnavailable": "Utafutaji wa picha haupatikani kwa sasa. Tafadhali jaribu tena baadaye.",
-  "loadingLongWait": "Tafadhali subiri kidogo..."
+  "loadingLongWait": "Tafadhali subiri kidogo...",
+  "visualSearchScanBarcode": "Skani Barcode / QR",
+  "visualSearchRequestWhatsapp": "Omba bidhaa hii WhatsApp",
+  "visualSearchWhatsappMessage": "Habari CHIMBO, natafuta bidhaa hii lakini haikupatikana kwenye app: {query}. Mnaweza kusaidia?",
+  "@visualSearchWhatsappMessage": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "barcodeScanning": "Skani barcode...",
+  "barcodeNotFound": "Barcode haikupatikana. Jaribu tena.",
+  "actionShareReceipt": "Shiriki Risiti",
+  "receiptSharing": "Inashiriki risiti…",
+  "notifyMeInStock": "Nijulishe ikipatikana",
+  "notifyMeSubscribed": "Utajulishwa ikipatikana.",
+  "notifyMeUnsubscribed": "Umeondoa arifa.",
+  "notifyMeAlreadyInStock": "Bidhaa hii bado iko dukani.",
+  "notifyMeRemove": "Ondoa arifa"
 }

@@ -1,4 +1,7 @@
+﻿import 'dart:async';
+
 import 'package:chimbo/core/l10n/l10n.dart';
+import 'package:chimbo/core/network/api_exception.dart';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:chimbo/core/utils/money.dart';
@@ -10,6 +13,7 @@ import 'package:chimbo/core/widgets/quantity_stepper.dart';
 import 'package:chimbo/features/cart/presentation/add_to_cart.dart';
 import 'package:chimbo/features/catalog/application/catalog_providers.dart';
 import 'package:chimbo/features/catalog/application/product_actions.dart';
+import 'package:chimbo/features/catalog/data/catalog_repository.dart';
 import 'package:chimbo/features/catalog/data/models/product_details.dart';
 import 'package:chimbo/features/catalog/data/product_links.dart';
 import 'package:chimbo/features/catalog/data/tier_pricing.dart';
@@ -28,16 +32,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Product page (design PDF p.6): photos, seller, MOQ/stock/delivery, tier ladder, quantity with
 /// live savings, and the Uliza Muuzaji / Ongeza Kikapuni bar.
 class ProductDetailsScreen extends ConsumerWidget {
-  const ProductDetailsScreen({super.key, required this.productId});
+  const ProductDetailsScreen({
+    super.key,
+    required this.productId,
+    this.heroTag,
+  });
 
   final int productId;
+  final Object? heroTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref
         .watch(productDetailsProvider(productId))
         .when(
-          data: (details) => _ProductView(details: details),
+          data: (details) => _ProductView(details: details, heroTag: heroTag),
           error: (error, _) => Scaffold(
             appBar: AppBar(),
             body: ErrorState(
@@ -51,9 +60,10 @@ class ProductDetailsScreen extends ConsumerWidget {
 }
 
 class _ProductView extends ConsumerStatefulWidget {
-  const _ProductView({required this.details});
+  const _ProductView({required this.details, required this.heroTag});
 
   final ProductDetails details;
+  final Object? heroTag;
 
   @override
   ConsumerState<_ProductView> createState() => _ProductViewState();
@@ -63,6 +73,54 @@ class _ProductViewState extends ConsumerState<_ProductView> {
   late final TierPricing _pricing = TierPricing(widget.details.tiers);
   late int _quantity = _pricing.moq;
   bool _isAdding = false;
+  bool _isTogglingNotify = false;
+
+  /// Holds the status fetched for this product; changes stay local to this view.
+  bool? _isSubscribedLocal;
+  bool _isCheckingNotifyStatus = false;
+  int _notifyStatusRequest = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.details.summary.isInStock) {
+      _isCheckingNotifyStatus = true;
+      unawaited(_loadNotifyMeStatus(widget.details.summary.id));
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _ProductView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.details.summary.id == widget.details.summary.id) return;
+
+    _notifyStatusRequest++;
+    _isSubscribedLocal = null;
+    _isCheckingNotifyStatus = !widget.details.summary.isInStock;
+    if (_isCheckingNotifyStatus) {
+      unawaited(_loadNotifyMeStatus(widget.details.summary.id));
+    }
+  }
+
+  Future<void> _loadNotifyMeStatus(int productId) async {
+    final requestId = ++_notifyStatusRequest;
+    try {
+      final isSubscribed = await ref
+          .read(catalogRepositoryProvider)
+          .isSubscribedStockNotification(productId);
+      if (!mounted || requestId != _notifyStatusRequest) return;
+      setState(() {
+        _isSubscribedLocal = isSubscribed;
+        _isCheckingNotifyStatus = false;
+      });
+    } catch (_) {
+      if (!mounted || requestId != _notifyStatusRequest) return;
+      setState(() {
+        _isSubscribedLocal = false;
+        _isCheckingNotifyStatus = false;
+      });
+    }
+  }
 
   Future<void> _addToCart() async {
     setState(() => _isAdding = true);
@@ -80,7 +138,7 @@ class _ProductViewState extends ConsumerState<_ProductView> {
   Future<void> _shareProduct() async {
     final product = widget.details.summary;
     final message =
-        '${product.name} â€” ${Money.format(product.price)} kwenye CHIMBO\n'
+        '${product.name} — ${Money.format(product.price)} kwenye CHIMBO\n'
         '${ProductLinks.webUrl(product)}';
     await ref.read(productShareProvider)(message);
   }
@@ -109,11 +167,43 @@ class _ProductViewState extends ConsumerState<_ProductView> {
     }
   }
 
+  /// Subscribes or unsubscribes the customer from back-in-stock push notifications.
+  Future<void> _toggleNotifyMe({required bool isSubscribed}) async {
+    if (_isCheckingNotifyStatus || _isTogglingNotify) return;
+    _notifyStatusRequest++;
+    setState(() => _isTogglingNotify = true);
+    final toast = AppToast.of(context);
+    final l10n = context.l10n;
+    try {
+      final repo = ref.read(catalogRepositoryProvider);
+      final productId = widget.details.summary.id;
+      if (isSubscribed) {
+        await repo.unsubscribeStockNotification(productId);
+        // Update local state â€” do NOT invalidate stockNotificationProvider;
+        // that would cascade through autoDispose and briefly show the loading screen.
+        if (mounted) setState(() => _isSubscribedLocal = false);
+        if (mounted) toast.success(l10n.notifyMeUnsubscribed);
+      } else {
+        await repo.subscribeStockNotification(productId);
+        if (mounted) setState(() => _isSubscribedLocal = true);
+        if (mounted) toast.success(l10n.notifyMeSubscribed);
+      }
+    } on ApiException catch (error) {
+      if (mounted) toast.error(l10n.errorMessage(error));
+    } finally {
+      if (mounted) setState(() => _isTogglingNotify = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final details = widget.details;
     final supportState = ref.watch(supportContactsProvider);
+
+    // Subscription status updates stay local and never replace this product page.
+    final isSubscribed =
+        !details.summary.isInStock && (_isSubscribedLocal ?? false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -128,10 +218,7 @@ class _ProductViewState extends ConsumerState<_ProductView> {
       ),
       body: ListView(
         children: [
-          ProductGallery(
-            photos: details.photos,
-            heroTag: 'product-image-${details.summary.id}',
-          ),
+          ProductGallery(photos: details.photos, heroTag: widget.heroTag),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
@@ -217,22 +304,49 @@ class _ProductViewState extends ConsumerState<_ProductView> {
                 ),
               ),
               Expanded(
-                child: AppButton(
-                  label: details.summary.isInStock
-                      ? l10n.actionAddToCart
-                      : l10n.actionOutOfStock,
-                  icon: Icons.shopping_cart_outlined,
-                  variant: AppButtonVariant.accent,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.xs,
-                  ),
-                  labelStyle: Theme.of(context).textTheme.labelLarge
-                      ?.copyWith(fontSize: 13, color: AppColors.surface),
-                  foregroundColor: AppColors.surface,
-                  isLoading: _isAdding,
-                  // Disabled (null) when sold out.
-                  onPressed: details.summary.isInStock ? _addToCart : null,
-                ),
+                child: details.summary.isInStock
+                    // â”€â”€ In stock: add to cart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                    ? AppButton(
+                        label: l10n.actionAddToCart,
+                        icon: Icons.shopping_cart_outlined,
+                        variant: AppButtonVariant.accent,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.xs,
+                        ),
+                        labelStyle: Theme.of(context).textTheme.labelLarge
+                            ?.copyWith(fontSize: 13, color: AppColors.surface),
+                        foregroundColor: AppColors.surface,
+                        isLoading: _isAdding,
+                        onPressed: _addToCart,
+                      )
+                    // â”€â”€ Out of stock: notify-me toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                    : AppButton(
+                        label: isSubscribed
+                            ? l10n.notifyMeRemove
+                            : l10n.notifyMeInStock,
+                        icon: isSubscribed
+                            ? Icons.notifications_off_outlined
+                            : Icons.notifications_outlined,
+                        variant: isSubscribed
+                            ? AppButtonVariant.outlined
+                            : AppButtonVariant.accent,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.xs,
+                        ),
+                        labelStyle: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(
+                              color: isSubscribed
+                                  ? AppColors.primary
+                                  : AppColors.surface,
+                            ),
+                        foregroundColor: isSubscribed
+                            ? AppColors.primary
+                            : AppColors.surface,
+                        iconSize: 18,
+                        onPressed: _isCheckingNotifyStatus || _isTogglingNotify
+                            ? null
+                            : () => _toggleNotifyMe(isSubscribed: isSubscribed),
+                      ),
               ),
             ],
           ),
@@ -291,7 +405,7 @@ class _NameAndSeller extends StatelessWidget {
   }
 }
 
-/// "Kiasi [âˆ’ 8 +]", then "Unaokoa TZS 4,000" and the next-tier hint.
+/// "Kiasi [Ã¢Ë†â€™ 8 +]", then "Unaokoa TZS 4,000" and the next-tier hint.
 class _QuantityCard extends StatelessWidget {
   const _QuantityCard({
     required this.pricing,

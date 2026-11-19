@@ -1,8 +1,8 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:chimbo/core/network/api_exception.dart';
+import 'package:chimbo/core/widgets/chimbo_loader.dart';
 import 'package:chimbo/features/home/data/home_data.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/fake_catalog_repository.dart';
@@ -28,7 +28,8 @@ void main() {
     await tester.tap(find.text('Jaribu tena'));
     await tester.pump();
     expect(catalog.homeRequests, 2);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(ChimboLoader), findsOneWidget);
+    await tester.pump(const Duration(seconds: 2));
     expect(find.text('Inapakia duka...'), findsOneWidget);
 
     catalog.retryCompleter.complete();

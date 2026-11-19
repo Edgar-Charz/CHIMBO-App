@@ -1,4 +1,4 @@
-import 'package:chimbo/core/widgets/otp_input.dart';
+﻿import 'package:chimbo/core/widgets/otp_input.dart';
 import 'package:chimbo/core/widgets/phone_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,7 +46,7 @@ void main() {
     expect(find.text('Thibitisha Namba'), findsNothing);
   });
 
-  testWidgets('phone → any code → PIN → business info → Nyumbani', (
+  testWidgets('phone â†’ any code â†’ PIN â†’ business info â†’ Nyumbani', (
     tester,
   ) async {
     await pumpAppPastSplash(tester, hasSeenOnboarding: true);
@@ -96,7 +96,12 @@ void main() {
       'Joyce Joseph',
     );
     await tester.ensureVisible(find.text('Chagua mkoa'));
-    await tester.tap(find.text('Chagua mkoa'));
+    await tester.tap(
+      find.ancestor(
+        of: find.text('Chagua mkoa'),
+        matching: find.byType(InkWell),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Dar es Salaam').last);
     await tester.pumpAndSettle();
