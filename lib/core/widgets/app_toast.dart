@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:chimbo/core/theme/app_colors.dart';
 import 'package:chimbo/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
+
 enum _ToastKind {
   success(Icons.check_circle_rounded, AppColors.success),
   error(Icons.error_rounded, AppColors.danger),
@@ -32,8 +33,19 @@ class AppToast {
 
   final OverlayState _overlay;
 
-  void success(String message, {String? actionLabel, VoidCallback? onAction}) {
-    _show(_ToastKind.success, message, actionLabel, onAction);
+  void success(
+    String message, {
+    String? actionLabel,
+    VoidCallback? onAction,
+    bool animateIcon = false,
+  }) {
+    _show(
+      _ToastKind.success,
+      message,
+      actionLabel,
+      onAction,
+      animateIcon: animateIcon,
+    );
   }
 
   void error(String message) => _show(_ToastKind.error, message, null, null);
@@ -44,8 +56,9 @@ class AppToast {
     _ToastKind kind,
     String message,
     String? actionLabel,
-    VoidCallback? onAction,
-  ) {
+    VoidCallback? onAction, {
+    bool animateIcon = false,
+  }) {
     _removeCurrent();
     late final OverlayEntry entry;
     entry = OverlayEntry(
@@ -54,6 +67,7 @@ class AppToast {
         message: message,
         actionLabel: actionLabel,
         onAction: onAction,
+        animateIcon: animateIcon,
         visibleFor: actionLabel == null ? _visibleFor : _visibleWithActionFor,
         onDismissed: () {
           if (identical(_current, entry)) {
@@ -81,6 +95,7 @@ class _ToastView extends StatefulWidget {
     required this.message,
     required this.actionLabel,
     required this.onAction,
+    required this.animateIcon,
     required this.visibleFor,
     required this.onDismissed,
   });
@@ -89,6 +104,7 @@ class _ToastView extends StatefulWidget {
   final String message;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final bool animateIcon;
   final Duration visibleFor;
   final VoidCallback onDismissed;
 
@@ -105,6 +121,10 @@ class _ToastViewState extends State<_ToastView>
   late final Animation<Offset> _slide = Tween(
     begin: const Offset(0, -1),
     end: Offset.zero,
+  ).animate(CurvedAnimation(parent: _animation, curve: Curves.easeOutCubic));
+  late final Animation<double> _iconScale = Tween<double>(
+    begin: 0.85,
+    end: 1,
   ).animate(CurvedAnimation(parent: _animation, curve: Curves.easeOutCubic));
   late final Timer _hideTimer;
 
@@ -176,7 +196,16 @@ class _ToastViewState extends State<_ToastView>
                     ),
                     child: Row(
                       children: [
-                        Icon(widget.kind.icon, color: widget.kind.color),
+                        if (widget.animateIcon)
+                          ScaleTransition(
+                            scale: _iconScale,
+                            child: Icon(
+                              widget.kind.icon,
+                              color: widget.kind.color,
+                            ),
+                          )
+                        else
+                          Icon(widget.kind.icon, color: widget.kind.color),
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: Padding(

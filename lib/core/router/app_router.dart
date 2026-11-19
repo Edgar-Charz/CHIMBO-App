@@ -13,6 +13,7 @@ import 'package:chimbo/features/cart/presentation/cart_screen.dart';
 import 'package:chimbo/features/catalog/data/models/product_query.dart';
 import 'package:chimbo/features/catalog/presentation/product_details_screen.dart';
 import 'package:chimbo/features/catalog/presentation/product_list_screen.dart';
+import 'package:chimbo/features/catalog/presentation/product_requests_screen.dart';
 import 'package:chimbo/features/checkout/presentation/checkout_screen.dart';
 import 'package:chimbo/features/checkout/presentation/review_screen.dart';
 import 'package:chimbo/features/debug/presentation/debug_screen.dart';
@@ -218,6 +219,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: _childPath(AppRoutes.wishlist),
                     builder: (context, state) => const WishlistScreen(),
+                  ),
+                  GoRoute(
+                    path: _childPath(AppRoutes.productRequests),
+                    builder: (context, state) => const ProductRequestsScreen(),
                   ),
                   GoRoute(
                     path: _childPath(AppRoutes.myPayments),

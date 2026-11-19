@@ -1,4 +1,5 @@
 import 'package:chimbo/features/support/data/models/legal_page.dart';
+
 /// Every route path in one place, so screens never hard-code URLs.
 abstract final class AppRoutes {
   static const String splash = '/splash';
@@ -17,6 +18,7 @@ abstract final class AppRoutes {
   static const String profileEdit = '/profile/edit';
   static const String settings = '/profile/settings';
   static const String wishlist = '/profile/wishlist';
+  static const String productRequests = '/profile/product-requests';
   static const String profileAddresses = '/profile/addresses';
   static const String addProfileAddress = '/profile/addresses/add';
   static const String editProfileAddressPattern =
